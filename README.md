@@ -10,6 +10,10 @@ Ce TP utilise une base de données MySQL qu'on peut créer sous Docker avec la c
 Pour relancer la base de données créée précédemment, il faut exécuter la commande suivante :
 ###### docker start BDMIAGique
 
+###### docker run --name phpmyadmin -d --link BDMIAGique:db -p 8080:80 phpmyadmin
+
+###### docker start phpmyadmin
+
 # Getting Started
 
 ### Reference Documentation
