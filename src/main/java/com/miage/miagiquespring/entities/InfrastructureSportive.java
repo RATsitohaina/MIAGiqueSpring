@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -36,6 +38,13 @@ public class InfrastructureSportive {
     private int capacite;
 
     /**
+     * Liste des epreuves dans l'infrastructure sportive
+     */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "infrastructureAccueil")
+    @JsonManagedReference
+    private List<Epreuve> epreuveList;
+
+    /**
      * Méthode pour afficher une Infrastructure_sportive
      * @return une représentation textuelle de l'Infrastructure_sportive
      */
@@ -46,6 +55,7 @@ public class InfrastructureSportive {
                 ", nom='" + nom + '\'' +
                 ", adresse='" + adresse + '\'' +
                 ", capacite=" + capacite + '\'' +
+                ", epreuveList=" + epreuveList +
                 '}';
     }
 }

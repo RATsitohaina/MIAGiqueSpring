@@ -70,3 +70,44 @@ Content-Type: application/json
 ###
 DELETE http://localhost:9000/api/comptes/2
 
+###generate project test
+###
+GET http://localhost:9000/api/infrastructuresportive/{{id}}/epreuve
+
+###
+POST http://localhost:9000/api/epreuve
+Content-Type: application/json
+
+###
+POST http://localhost:9000/api/infrastructuresportive
+Content-Type: application/json
+{
+    "id": 1,
+    "nom": "Test",
+    "adresse": "test",
+    "capacite": 100,
+    "epreuveList": null
+}
+
+###
+POST http://localhost:9000/api/infrastructuresportive/1
+{
+  "nomEpreuve": "Epreuve 1",
+  "dateEpreuve": "2024-06-06T14:45:30.000+0000",
+  "infrastructureAccueil":
+{
+    "id": 1,
+    "nom": "Test",
+    "adresse": "test",
+    "capacite": 100,
+    "epreuveList": null
+  },
+  "nbPlacesDispo": 35
+}
+
+###
+POST http://localhost:9000/api/epreu
+Content-Type: application/jsonve
+
+###
+GET http://localhost:9000/api/infrastructuresportive/{{id}}/epreuve

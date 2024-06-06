@@ -2,9 +2,11 @@ package com.miage.miagiquespring.metier;
 
 
 import com.miage.miagiquespring.dao.InfrastructureSportiveRepository;
+import com.miage.miagiquespring.entities.Epreuve;
 import com.miage.miagiquespring.entities.InfrastructureSportive;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -20,12 +22,13 @@ public class ServiceInfrastructureSportive {
         this.sportiveRepository = sportiveRepository;
     }
 
-    public InfrastructureSportive creerInfrastructureSportive(String nom, String adresse, int capacite) {
+    public InfrastructureSportive creerInfrastructureSportive(String nom, String adresse, int capacite, List<Epreuve> epreuveList) {
         InfrastructureSportive infrastructureSportive = new InfrastructureSportive();
 
         infrastructureSportive.setNom(nom);
         infrastructureSportive.setAdresse(adresse);
         infrastructureSportive.setCapacite(capacite);
+        infrastructureSportive.setEpreuveList(epreuveList);
 
         // Ajout à la base de donnée
         infrastructureSportive = sportiveRepository.save(infrastructureSportive);

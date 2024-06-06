@@ -1,8 +1,12 @@
 package com.miage.miagiquespring.exposition;
 
+import com.miage.miagiquespring.entities.Epreuve;
 import com.miage.miagiquespring.entities.InfrastructureSportive;
+import com.miage.miagiquespring.metier.ServiceEpreuve;
 import com.miage.miagiquespring.metier.ServiceInfrastructureSportive;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -27,7 +31,7 @@ public class RestServiceInfrastructureSportive {
      */
     @PostMapping
     public InfrastructureSportive creerInfrastructureSportive(@RequestBody InfrastructureSportive infrastructureSportive) {
-        return serviceInfrastructureSportive.creerInfrastructureSportive(infrastructureSportive.getNom(), infrastructureSportive.getAdresse(), infrastructureSportive.getCapacite());
+        return serviceInfrastructureSportive.creerInfrastructureSportive(infrastructureSportive.getNom(), infrastructureSportive.getAdresse(), infrastructureSportive.getCapacite(), infrastructureSportive.getEpreuveList());
     }
 
     /**
@@ -37,5 +41,10 @@ public class RestServiceInfrastructureSportive {
     @GetMapping("{id}")
     public InfrastructureSportive getInfrastructureSportive(@PathVariable("id") long idInfrastructureSportive) throws Exception {
         return serviceInfrastructureSportive.recupererInfrastructureSportive(idInfrastructureSportive);
+    }
+
+    @GetMapping("{id}/epreuve")
+    public List<Epreuve> listerEpreuves(@PathVariable("id") long idInfrastructureSportive) throws Exception {
+        return serviceInfrastructureSportive.recupererInfrastructureSportive(idInfrastructureSportive).getEpreuveList();
     }
 }
