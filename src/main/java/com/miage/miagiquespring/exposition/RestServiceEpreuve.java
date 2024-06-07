@@ -3,11 +3,13 @@ package com.miage.miagiquespring.exposition;
 
 import com.miage.miagiquespring.entities.Epreuve;
 import com.miage.miagiquespring.entities.InfrastructureSportive;
+import com.miage.miagiquespring.entities.Spectateur;
 import com.miage.miagiquespring.metier.ServiceEpreuve;
 import com.miage.miagiquespring.metier.ServiceInfrastructureSportive;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Calendar;
+import java.util.List;
 
 
 /**
@@ -19,7 +21,6 @@ public class RestServiceEpreuve {
 
     private final ServiceEpreuve serviceEpreuve;
 
-
     public RestServiceEpreuve(ServiceEpreuve serviceEpreuve) {
         this.serviceEpreuve = serviceEpreuve;
     }
@@ -27,26 +28,19 @@ public class RestServiceEpreuve {
     /**
      *Permet d'ajouter une épreuve
      * @param epreuve
-     * @return
+     * @return Epreuve
      */
     @PostMapping
-    public Epreuve ajouterEpreuve(@RequestBody Epreuve epreuve) {
-        return serviceEpreuve.ajouterEpreuve(epreuve.getNomEpreuve(), epreuve.getDateEpreuve(), epreuve.getInfrastructureAccueil(),epreuve.getNbPlacesDispo());
+    public Epreuve creerEpreuve(@RequestBody Epreuve epreuve) {
+        return serviceEpreuve.creerEpreuve(epreuve.getNomEpreuve(), epreuve.getDateEpreuve(), epreuve.getInfrastructureAccueil(),epreuve.getNbPlacesDispo(), epreuve.getSpectateurs());
     }
 
     /**
      * Permet de récupérer une epreuve pour une requête GET
      * @param idEpreuve
-     * @return
-     * @throws Exception
      */
     @GetMapping("{id}")
     public Epreuve getEpreuve(@PathVariable("id") long idEpreuve) throws Exception {
         return serviceEpreuve.recupererEpreuve(idEpreuve);
     }
-    /**
-     * AJouter la méthode modifier
-     */
-
-
 }

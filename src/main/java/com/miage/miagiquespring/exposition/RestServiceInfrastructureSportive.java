@@ -29,7 +29,7 @@ public class RestServiceInfrastructureSportive {
      * Permet de créer un nouveau client
      * @param infrastructureSportive les détails du client envoyés par le front
      */
-    @PostMapping
+    @PostMapping(consumes = "application/json", produces = "application/json")
     public InfrastructureSportive creerInfrastructureSportive(@RequestBody InfrastructureSportive infrastructureSportive) {
         return serviceInfrastructureSportive.creerInfrastructureSportive(infrastructureSportive.getNom(), infrastructureSportive.getAdresse(), infrastructureSportive.getCapacite(), infrastructureSportive.getEpreuveList());
     }
