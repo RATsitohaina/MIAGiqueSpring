@@ -2,7 +2,6 @@ package com.miage.miagiquespring.metier;
 
 
 import com.miage.miagiquespring.dao.InfrastructureSportiveRepository;
-import com.miage.miagiquespring.entities.Epreuve;
 import com.miage.miagiquespring.entities.InfrastructureSportive;
 import org.springframework.stereotype.Service;
 
@@ -17,21 +16,26 @@ public class ServiceInfrastructureSportive {
 
     private final InfrastructureSportiveRepository sportiveRepository;
 
-
     public ServiceInfrastructureSportive(InfrastructureSportiveRepository sportiveRepository) {
         this.sportiveRepository = sportiveRepository;
     }
 
-    public InfrastructureSportive creerInfrastructureSportive(String nom, String adresse, int capacite, List<Epreuve> epreuveList) {
-        InfrastructureSportive infrastructureSportive = new InfrastructureSportive();
+    public InfrastructureSportive creerInfrastructureSportive(String nom, String adresse, int capacite) {
+        List<InfrastructureSportive> infrastructureSportiveList = sportiveRepository.findByNom(nom);
+        InfrastructureSportive infrastructureSportive;
 
-        infrastructureSportive.setNom(nom);
-        infrastructureSportive.setAdresse(adresse);
-        infrastructureSportive.setCapacite(capacite);
-        infrastructureSportive.setEpreuveList(epreuveList);
+        if(infrastructureSportiveList.isEmpty()) {
+            infrastructureSportive = new InfrastructureSportive();
+            infrastructureSportive.setNom(nom);
+            infrastructureSportive.setAdresse(adresse);
+            infrastructureSportive.setCapacite(capacite);
 
-        // Ajout à la base de donnée
-        infrastructureSportive = sportiveRepository.save(infrastructureSportive);
+            // Ajout à la base de donnée
+            infrastructureSportive = sportiveRepository.save(infrastructureSportive);
+        }else {
+            infrastructureSportive = infrastructureSportiveList.get(0);
+        }
+
         return infrastructureSportive;
     }
 
@@ -43,5 +47,16 @@ public class ServiceInfrastructureSportive {
           throw new Exception("Erreur infrastucture inexistant");
         // sinon, on renvoie les infos
         return optionalInfrastructureSportive.get();
+    }
+
+    public String supprimerInfrastructureSportive(Long idInfrastructureSportive) throws Exception {
+        // on cherche le client
+        final Optional<InfrastructureSportive> optionalInfrastructureSportive = sportiveRepository.findById(idInfrastructureSportive);
+        // s'il n'existe pas on lance une exception
+        if(optionalInfrastructureSportive.isEmpty())
+            throw new Exception("Erreur infrastucture inexistant");
+        // sinon, on renvoie les infos
+        sportiveRepository.delete(optionalInfrastructureSportive.get());
+        return "InfrastructureSportive :"+idInfrastructureSportive+" removed";
     }
 }

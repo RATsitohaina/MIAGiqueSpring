@@ -28,9 +28,9 @@ public class RestServiceSpectateur {
      * Permet de créer un nouveau spectateur
      * @param spectateur les détails du client envoyés par le front
      */
-    @PostMapping(consumes = "application/json", produces = "application/json")
+    @PostMapping
     public Spectateur creerSpectateur(@RequestBody Spectateur spectateur) {
-        return serviceSpectateur.creerSpectateur(spectateur.getNom(), spectateur.getPrenom(), spectateur.getEmail(),spectateur.getEpreuves());
+        return serviceSpectateur.creerSpectateur(spectateur.getNom(), spectateur.getPrenom(), spectateur.getEmail(), spectateur.getBillets());
     }
 
     /**
@@ -46,13 +46,17 @@ public class RestServiceSpectateur {
      * Permet de récupérer les détails d'un Utilisateur
      * @param idSpectateur id d'un Utilisateur
      */
-    @GetMapping("delete/{id}")
-    public void deleteSpectateur(@PathVariable("id") long idSpectateur) throws Exception {
-        serviceSpectateur.supprimerSpectateur(idSpectateur);
+    @DeleteMapping("{id}")
+    public String supprimerSpectateur(@PathVariable("id") long idSpectateur) throws Exception {
+        return serviceSpectateur.supprimerSpectateur(idSpectateur);
     }
 
-    @GetMapping("{id}/epreuves")
-    public List<Epreuve> listerEpreuves(@PathVariable("id") long idSpectateur) throws Exception {
-        return serviceSpectateur.recupererSpectateur(idSpectateur).getEpreuves();
+    /**
+     * Permet de créer un nouveau spectateur
+     * @param spectateur les détails du client envoyés par le front
+     */
+    @PostMapping("/null")
+    public Spectateur creerSpectateurNull(@RequestBody Spectateur spectateur) {
+        return serviceSpectateur.creerSpectateur(spectateur.getNom(), spectateur.getPrenom(), spectateur.getEmail(), null);
     }
 }

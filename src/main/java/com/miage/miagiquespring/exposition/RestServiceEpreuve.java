@@ -1,6 +1,7 @@
 package com.miage.miagiquespring.exposition;
 
 
+import com.miage.miagiquespring.entities.Billet;
 import com.miage.miagiquespring.entities.Epreuve;
 import com.miage.miagiquespring.entities.InfrastructureSportive;
 import com.miage.miagiquespring.entities.Spectateur;
@@ -32,7 +33,7 @@ public class RestServiceEpreuve {
      */
     @PostMapping
     public Epreuve creerEpreuve(@RequestBody Epreuve epreuve) {
-        return serviceEpreuve.creerEpreuve(epreuve.getNomEpreuve(), epreuve.getDateEpreuve(), epreuve.getInfrastructureAccueil(),epreuve.getNbPlacesDispo(), epreuve.getSpectateurs());
+        return serviceEpreuve.creerEpreuve(epreuve.getNomEpreuve(), epreuve.getDateEpreuve(), epreuve.getInfrastructureAccueil(),epreuve.getNbPlacesDispo(), epreuve.getBillets());
     }
 
     /**
@@ -42,5 +43,24 @@ public class RestServiceEpreuve {
     @GetMapping("{id}")
     public Epreuve getEpreuve(@PathVariable("id") long idEpreuve) throws Exception {
         return serviceEpreuve.recupererEpreuve(idEpreuve);
+    }
+
+    /**
+     * Permet de supprimer une epreuve pour une requête DELETE
+     * @param idEpreuve
+     */
+    @DeleteMapping("{id}")
+    public String supprimerEpreuve(@PathVariable("id") long idEpreuve) throws Exception {
+        return serviceEpreuve.supprimerEpreuve(idEpreuve);
+    }
+
+    /**
+     *Permet d'ajouter une épreuve
+     * @param epreuve
+     * @return Epreuve
+     */
+    @PostMapping("/null")
+    public Epreuve creerEpreuveNull(@RequestBody Epreuve epreuve) {
+        return serviceEpreuve.creerEpreuve(epreuve.getNomEpreuve(), epreuve.getDateEpreuve(), null,epreuve.getNbPlacesDispo(),null);
     }
 }

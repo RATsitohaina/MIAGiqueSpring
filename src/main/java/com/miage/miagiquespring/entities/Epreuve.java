@@ -2,11 +2,11 @@ package com.miage.miagiquespring.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Calendar;
@@ -14,7 +14,11 @@ import java.util.List;
 
 @Entity
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class Epreuve {
     /**
      * Id de l'entité
@@ -26,21 +30,12 @@ public class Epreuve {
     /**
      * Nom de l'épreuve
      */
-    @NotNull
     private String nomEpreuve;
 
     /**
      * Date de dernière interrogation du compte
      */
-    @Temporal(TemporalType.TIMESTAMP)
-    private Calendar dateEpreuve;
-
-    /**
-     * Référence vers l'infrastructureSportive d'accueil
-     */
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JsonBackReference // pour éviter les cycles lors de la transformation en JSON
-    private InfrastructureSportive infrastructureAccueil;
+   private String dateEpreuve;
 
     /**
      * Nombre de places mises en vente
@@ -48,27 +43,14 @@ public class Epreuve {
     private int nbPlacesDispo;
 
     /**
-     * Liste des spectateurs assistant à l'épreuve
+     * Liste des billets disponibles pour l'epreuve
      */
-    @ManyToMany(mappedBy = "epreuves")
-    @JsonIgnore
-    private List<Spectateur> spectateurs;
+    @OneToMany
+    private List<Billet> billets;
 
     /**
-     * Méthode pour afficher l'épreuve
-     * @return une représentation textuelle
+     * Référence vers l'infrastructureSportive d'accueil
      */
-    @Override
-    public String toString() {
-        // attention aux cycles
-        // Ici on choisit de ne pas afficher ni le client ni la liste d'opérations
-        return "Epreuve{" +
-                "id=" + idEpreuve +
-                ", nom=" + nomEpreuve +
-                ", infrastructureAccueil=" + infrastructureAccueil +
-                ", dateEpreuve=" + dateEpreuve +
-                ", nbPlacesDispo=" + nbPlacesDispo +
-                ", spectateurs=" + spectateurs +
-                '}';
-    }
+    @ManyToOne
+    private InfrastructureSportive infrastructureAccueil;
 }

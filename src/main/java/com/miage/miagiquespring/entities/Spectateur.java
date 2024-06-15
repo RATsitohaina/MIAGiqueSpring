@@ -4,14 +4,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.util.List;
 
 @Entity
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class Spectateur{
     /**
      * Id de l'entité
@@ -23,46 +26,21 @@ public class Spectateur{
     /**
      * Nom de l'Utilisateur
      */
-    @NotNull
     protected String nom;
 
     /**
      * Prenom de l'Utilisateur
      */
-    @NotNull
     protected String prenom;
 
     /**
      * email de l'Utilisateur
      */
-    @NotNull
     protected String email;
 
     /**
-     * Liste des épreuves auxquelles le spectateur assiste
+     * Liste des billets du specatateur
      */
-
-    @ManyToMany
-    @JoinTable(
-            name = "spectateur_epreuve",
-            joinColumns = @JoinColumn(name = "idSpectateur"),
-            inverseJoinColumns = @JoinColumn(name = "idEpreuve")
-    )
-    @JsonIgnore
-    private List<Epreuve> epreuves;
-
-    /**
-     * Méthode pour afficher un spéctateur
-     * @return une représentation textuelle du spéctateur
-     */
-    @Override
-    public String toString() {
-        return "Spectateur{" +
-                "id=" + idSpectateur +
-                ", nom=" + nom + '\'' +
-                ", prenom=" + prenom + '\'' +
-                ", email=" + email + '\'' +
-                ", epreuves=" + epreuves +
-                '}';
-    }
+    @OneToMany
+    private List<Billet> billets;
 }
