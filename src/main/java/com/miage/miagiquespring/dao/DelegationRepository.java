@@ -17,6 +17,5 @@ public interface DelegationRepository extends CrudRepository<Delegation, Long> {
      * @param nom
      * @return Delegation
      */
-    List<Delegation> findByNomDelegation(String nom);
-    List<Delegation> findByIdDelegation(long idDelegation);
+    List<Delegation> findByNom(String nom);
 }

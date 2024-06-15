@@ -23,14 +23,12 @@ public class Billet {
      * Id de l'épreuve
      * Qui va premettre de vérifier l'existance de l'epreuve
      */
-    @Null
     private Long idEpreuve;
 
     /**
      * Id du spectateur
      * Qui va permettre de vérifier le spectateur auquel le billet est assigné
      */
-    @Null
     private Long idSpectateur;
 
     /**

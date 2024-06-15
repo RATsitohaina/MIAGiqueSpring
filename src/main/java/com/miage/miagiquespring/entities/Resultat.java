@@ -1,9 +1,11 @@
 package com.miage.miagiquespring.entities;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Null;
 import lombok.*;
 
 @Entity
@@ -13,31 +15,31 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class Delegation {
+public class Resultat {
     /**
      * Id de l'entité
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idInfrastructureSportive;
+    private Long idResultat;
 
     /**
-     * Nom de l'infrastructure sportive
+     * Id de l'epreuve
      */
-    private String nom;
+    private Long idEpreuve;
 
     /**
-     * Nombre de medailles d'or
+     * Id du participant
      */
-    private int nbMedailleOr;
+    private Long idParticipant;
 
     /**
-     * Nombre de medailles d'argrent
+     * Temps enregistrer pour le resultat
      */
-    private int nbMedailleArgent;
+    private float temps;
 
     /**
-     * Nombre de medailles de bronze
+     * Position du participant
      */
-    private int nbMedailleBronze;
+    private int position;
 }
