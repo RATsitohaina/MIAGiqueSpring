@@ -40,17 +40,19 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
     private final SpectateurRepository spectateurRepository;
     private final DelegationRepository delegationRepository;
     private final ResultatRepository resultatRepository;
+    private final ParticipantRepository participantRepository;
 
     public MiaGiqueSpringApplication(BilletRepository billetRepository,
                                      EpreuveRepository epreuveRepository,
                                      InfrastructureSportiveRepository infrastructureSportiveRepository,
-                                     SpectateurRepository spectateurRepository, DelegationRepository delegationRepository, ResultatRepository resultatRepository) {
+                                     SpectateurRepository spectateurRepository, DelegationRepository delegationRepository, ResultatRepository resultatRepository, ParticipantRepository participantRepository) {
         this.billetRepository = billetRepository;
         this.epreuveRepository = epreuveRepository;
         this.infrastructureSportiveRepository = infrastructureSportiveRepository;
         this.spectateurRepository = spectateurRepository;
         this.delegationRepository = delegationRepository;
         this.resultatRepository = resultatRepository;
+        this.participantRepository = participantRepository;
     }
 
     /**
@@ -139,6 +141,10 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
         e_2 = epreuveRepository.save(e_2);
         logger.info("Epreuve " + e_2);
 
+        List<Epreuve> epreuveList = new ArrayList<>();
+        epreuveList.add(e_1);
+        epreuveList.add(e_2);
+
         /**
          * Spectateur
          */
@@ -171,5 +177,21 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
         resultat.setPosition(0);
         resultat = resultatRepository.save(resultat);
         logger.info("Resultat " + resultat);
+
+        List<Resultat> resultats = new ArrayList<>();
+        resultats.add(resultat);
+
+        /**
+         * Participant
+         */
+        Participant participant = new Participant();
+        participant.setNom("Zandry");
+        participant.setPrenom("kely");
+        participant.setEmail("@hotmail.com");
+        participant.setDelegation(delegation);
+        participant.setResultatList(resultats);
+        participant.setEpreuveList(epreuveList);
+        participant = participantRepository.save(participant);
+        logger.info("Participant " + participant);
     }
 }
