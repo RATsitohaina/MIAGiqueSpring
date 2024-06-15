@@ -18,6 +18,8 @@ import java.util.List;
 @SpringBootApplication
 public class MiaGiqueSpringApplication implements CommandLineRunner {
 
+    private final OrganisateurRepository organisateurRepository;
+
     /**
      * Main de l'application
      * @param args arguments pour Spring
@@ -45,7 +47,7 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
     public MiaGiqueSpringApplication(BilletRepository billetRepository,
                                      EpreuveRepository epreuveRepository,
                                      InfrastructureSportiveRepository infrastructureSportiveRepository,
-                                     SpectateurRepository spectateurRepository, DelegationRepository delegationRepository, ResultatRepository resultatRepository, ParticipantRepository participantRepository) {
+                                     SpectateurRepository spectateurRepository, DelegationRepository delegationRepository, ResultatRepository resultatRepository, ParticipantRepository participantRepository, OrganisateurRepository organisateurRepository) {
         this.billetRepository = billetRepository;
         this.epreuveRepository = epreuveRepository;
         this.infrastructureSportiveRepository = infrastructureSportiveRepository;
@@ -53,6 +55,7 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
         this.delegationRepository = delegationRepository;
         this.resultatRepository = resultatRepository;
         this.participantRepository = participantRepository;
+        this.organisateurRepository = organisateurRepository;
     }
 
     /**
@@ -193,5 +196,36 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
         participant.setEpreuveList(epreuveList);
         participant = participantRepository.save(participant);
         logger.info("Participant " + participant);
+
+        List<Delegation> delegations = new ArrayList<>();
+        delegations.add(delegation);
+
+        List<Participant> participants = new ArrayList<>();
+        participants.add(participant);
+
+        List<InfrastructureSportive> infra_sportives = new ArrayList<>();
+        infra_sportives.add(infra_1);
+        infra_sportives.add(infra_2);
+
+        List<Billet> billets = new ArrayList<>();
+        billets.add(b_1);
+        billets.add(b_2);
+
+        /**
+         * Organisateur
+         */
+        Organisateur organisateur = new Organisateur();
+        organisateur.setNom("Patron");
+        organisateur.setPrenom("Be");
+        organisateur.setEmail("@hotmail.com");
+        organisateur.setDelegationList(delegations);
+        organisateur.setParticipantList(participants);
+        organisateur.setResultatList(resultats);
+        organisateur.setEpreuveList(epreuveList);
+        organisateur.setBilletList(billets);
+        organisateur.setInfrastructureSportiveList(infra_sportives);
+
+        organisateur = organisateurRepository.save(organisateur);
+        logger.info("Organisateur " + organisateur);
     }
 }
