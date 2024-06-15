@@ -21,7 +21,7 @@ public class Participant {
     protected Long idParticipant;
 
     /**
-     * Nom du participant
+     * Nom du participant participant
      */
     protected String nom;
 
