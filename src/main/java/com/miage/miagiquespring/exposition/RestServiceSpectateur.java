@@ -27,7 +27,7 @@ public class RestServiceSpectateur {
      */
     @PostMapping
     public Spectateur creerSpectateur(@RequestBody Spectateur spectateur) {
-        return serviceSpectateur.creerSpectateur(spectateur.getNom(), spectateur.getPrenom(), spectateur.getEmail(), spectateur.getBillets());
+        return serviceSpectateur.creerSpectateur(spectateur.getNom(), spectateur.getPrenom(), spectateur.getEmail(), spectateur.getBillets(), spectateur.getResultats());
     }
 
     /**
@@ -54,6 +54,6 @@ public class RestServiceSpectateur {
      */
     @PostMapping("/null")
     public Spectateur creerSpectateurNull(@RequestBody Spectateur spectateur) {
-        return serviceSpectateur.creerSpectateur(spectateur.getNom(), spectateur.getPrenom(), spectateur.getEmail(), null);
+        return serviceSpectateur.creerSpectateur(spectateur.getNom(), spectateur.getPrenom(), spectateur.getEmail(), null, null);
     }
 }

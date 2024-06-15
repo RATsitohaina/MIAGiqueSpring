@@ -148,16 +148,6 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
         epreuveList.add(e_1);
         epreuveList.add(e_2);
 
-        /**
-         * Spectateur
-         */
-        Spectateur sp = new Spectateur();
-        sp.setNom("Razanajatovo");
-        sp.setPrenom("Andrianaivo Tsitohaina");
-        sp.setEmail("@hotmail.com");
-        sp.setBillets(billets_3);
-        sp = spectateurRepository.save(sp);
-        logger.info("Spectateur " + sp);
 
         /**
          * Delegation
@@ -183,6 +173,18 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
 
         List<Resultat> resultats = new ArrayList<>();
         resultats.add(resultat);
+
+        /**
+         * Spectateur
+         */
+        Spectateur sp = new Spectateur();
+        sp.setNom("Razanajatovo");
+        sp.setPrenom("Andrianaivo Tsitohaina");
+        sp.setEmail("@hotmail.com");
+        sp.setBillets(billets_3);
+        sp.setResultats(resultats);
+        sp = spectateurRepository.save(sp);
+        logger.info("Spectateur " + sp);
 
         /**
          * Participant
