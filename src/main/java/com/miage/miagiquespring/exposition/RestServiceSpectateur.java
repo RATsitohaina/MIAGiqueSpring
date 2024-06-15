@@ -1,11 +1,8 @@
 package com.miage.miagiquespring.exposition;
 
-import com.miage.miagiquespring.entities.Epreuve;
 import com.miage.miagiquespring.entities.Spectateur;
 import com.miage.miagiquespring.metier.ServiceSpectateur;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Contrôleur REST pour la ressource utilisateur

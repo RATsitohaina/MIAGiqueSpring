@@ -80,16 +80,16 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
              * InfrastructureSportive
              */
             InfrastructureSportive infra_1 = new InfrastructureSportive();
-            infra_1.setNom("Mahamasina");
+            infra_1.setNom("Complexe Mahamasina");
             infra_1.setAdresse("Analakely");
             infra_1.setCapacite(200);
             infra_1 = infrastructureSportiveRepository.save(infra_1);
             logger.info("InfrastructureSportive " + infra_1);
 
             InfrastructureSportive infra_2 = new InfrastructureSportive();
-            infra_2.setNom("Mahamasina");
-            infra_2.setAdresse("Analakely");
-            infra_2.setCapacite(200);
+            infra_2.setNom("Palais des sports");
+            infra_2.setAdresse("Ankorondrano");
+            infra_2.setCapacite(400);
             infra_2 = infrastructureSportiveRepository.save(infra_2);
             logger.info("InfrastructureSportive " + infra_2);
 
