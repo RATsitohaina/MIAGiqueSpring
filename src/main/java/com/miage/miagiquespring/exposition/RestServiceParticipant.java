@@ -51,7 +51,7 @@ public class RestServiceParticipant {
     /**
      * Permet de récupérer tout les détails d'un Utilisateur
      */
-    @GetMapping()
+    @GetMapping("all")
     public Iterable<Participant> getAllParticipant() throws Exception {
         return serviceParticipant.recupererAllParticipant();
     }

@@ -42,7 +42,7 @@ public class RestServiceResultat {
     /**
      * Permet de récupérer les détails d'une Resultat
      */
-    @GetMapping()
+    @GetMapping("all")
     public Iterable<Resultat> getAllResultat() throws Exception {
         return serviceResultat.recupererAllResultat();
     }

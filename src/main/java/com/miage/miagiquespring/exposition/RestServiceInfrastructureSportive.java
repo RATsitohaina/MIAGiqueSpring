@@ -50,7 +50,7 @@ public class RestServiceInfrastructureSportive {
     /**
      * Permet de récupérer tout les détails d'une InfrastructureSportive
      */
-    @GetMapping()
+    @GetMapping("all")
     public Iterable<InfrastructureSportive> getAllInfrastructureSportive() throws Exception {
         return serviceInfrastructureSportive.recupererAllInfrastructureSportive();
     }

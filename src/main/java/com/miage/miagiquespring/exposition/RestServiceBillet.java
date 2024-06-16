@@ -49,7 +49,7 @@ public class RestServiceBillet {
     /**
      * Permet de récupérer tout les détails d'un Billet
      */
-    @GetMapping()
+    @GetMapping("all")
     public Iterable<Billet> getAllBillet() throws Exception {
         return serviceBillet.recupererAllBillet();
     }

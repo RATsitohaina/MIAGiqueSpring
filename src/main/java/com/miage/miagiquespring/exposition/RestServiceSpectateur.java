@@ -50,7 +50,7 @@ public class RestServiceSpectateur {
     /**
      * Permet de récupérer tous les détails d'un Utilisateur
      */
-    @GetMapping()
+    @GetMapping("all")
     public Iterable<Spectateur> getAllSpectateur() throws Exception {
         return serviceSpectateur.recupererAllSpectateur();
     }

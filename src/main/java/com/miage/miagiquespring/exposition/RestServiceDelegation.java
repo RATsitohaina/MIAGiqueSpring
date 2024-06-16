@@ -55,7 +55,7 @@ public class RestServiceDelegation {
     /**
      * Permet de récupérer tout les détails d'un Delegation
      */
-    @GetMapping()
+    @GetMapping("all")
     public Iterable<Delegation> getAllDelegation() throws Exception {
         return serviceDelegation.recupererAllDelegation();
     }

@@ -70,7 +70,7 @@ public class RestServiceEpreuve {
     /**
      * Permet de récupérer toute les epreuve pour une requête GET
      */
-    @GetMapping()
+    @GetMapping("all")
     public Iterable<Epreuve> getAllEpreuve() throws Exception {
         return serviceEpreuve.recupererAllEpreuve();
     }
