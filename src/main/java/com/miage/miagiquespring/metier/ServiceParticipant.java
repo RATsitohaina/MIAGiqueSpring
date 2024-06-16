@@ -1,5 +1,6 @@
 package com.miage.miagiquespring.metier;
 
+import com.miage.miagiquespring.dao.EpreuveRepository;
 import com.miage.miagiquespring.dao.ParticipantRepository;
 import com.miage.miagiquespring.entities.*;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,11 @@ public class ServiceParticipant {
 
     private final ParticipantRepository participantRepository;
 
-    public ServiceParticipant(ParticipantRepository participantRepository) {
+    private final EpreuveRepository epreuveRepository;
+
+    public ServiceParticipant(ParticipantRepository participantRepository, EpreuveRepository epreuveRepository) {
         this.participantRepository = participantRepository;
+        this.epreuveRepository = epreuveRepository;
     }
 
     /**
@@ -105,5 +109,85 @@ public class ServiceParticipant {
         }
         participantRepository.delete(optionalParticipant.get());
         return "Participant :"+idParticipant+" removed";
+    }
+
+    /**
+     * ACTION POSSIBLE POUR LE PARTICIPANT
+     */
+
+    /** PROCESSUS D'INSCRIPTION AUX EPREUVES **/
+
+    /**
+     * Consulter toutes les epreuves
+     * disponibles dans la base de données
+     * @return
+     * @throws Exception
+     */
+    public Iterable<Epreuve> consulterEpreuvesDisponible() throws Exception {
+        return epreuveRepository.findAll();
+    }
+
+    /**
+     * Participer a une epreuve
+     * Et avoir une confirmation
+     * @param nomParticipant
+     * @param prenomParticipant
+     * @param nomEpreuve
+     * @return
+     * @throws Exception
+     */
+    public String participerEpreuve(String nomParticipant,
+                                    String prenomParticipant,
+                                    String nomEpreuve) throws Exception {
+
+        //Vérification existance et recupreation participant
+        Participant participant = recupererParticipant(prenomParticipant,nomParticipant);
+
+        //Vérification existance et recuperation epreuve
+        List<Epreuve> optionalEpreuve = epreuveRepository.findByNomEpreuve(nomEpreuve);
+        if (optionalEpreuve.isEmpty()){
+            throw new Exception("Epreuve inexistante");
+        }
+        Epreuve epreuve = optionalEpreuve.get(0);
+
+        //Ajout du l'epreuve chez le participant
+        List<Epreuve> epreuveList = participant.getEpreuveList();
+        epreuveList.add(epreuve);
+
+        //Verification si 10 Jours
+
+        participant.setEpreuveList(epreuveList);
+        participantRepository.save(participant);
+
+        return "/** CONFIRMATION **/ Participant :"+nomParticipant+
+                " : "+prenomParticipant+" inscrit à : "+nomEpreuve;
+    }
+
+    public String desengagerEpreuve(String nomParticipant,
+                             String prenomParticipant,
+                             String nomEpreuve) throws Exception {
+
+        //Vérification existance et recupreation participant
+        Participant participant = recupererParticipant(prenomParticipant,nomParticipant);
+
+        //Vérification existance et recuperation epreuve
+        List<Epreuve> optionalEpreuve = epreuveRepository.findByNomEpreuve(nomEpreuve);
+        if (optionalEpreuve.isEmpty()){
+            throw new Exception("Epreuve inexistante");
+        }
+        Epreuve epreuve = optionalEpreuve.get(0);
+
+        //Vérification si participant inscrit
+        List<Epreuve> epreuveList = participant.getEpreuveList();
+        if(epreuveList.contains(epreuve)){
+            epreuveList.remove(epreuve);
+            participant.setEpreuveList(epreuveList);
+            participantRepository.save(participant);
+        }else{
+            throw new Exception("Participant non inscrit");
+        }
+
+        return "/** FORFAIT **/ Participant :"+nomParticipant+
+                " : "+prenomParticipant+" déinscrit à : "+nomEpreuve;
     }
 }

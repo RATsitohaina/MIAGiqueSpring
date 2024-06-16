@@ -1,7 +1,6 @@
 package com.miage.miagiquespring.exposition;
 
 import com.miage.miagiquespring.entities.Billet;
-import com.miage.miagiquespring.entities.Participant;
 import com.miage.miagiquespring.metier.ServiceBillet;
 import org.springframework.web.bind.annotation.*;
 

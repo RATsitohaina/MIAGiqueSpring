@@ -1,6 +1,8 @@
 package com.miage.miagiquespring.metier;
 
+import com.miage.miagiquespring.dao.DelegationRepository;
 import com.miage.miagiquespring.dao.OrganisateurRepository;
+import com.miage.miagiquespring.dao.ParticipantRepository;
 import com.miage.miagiquespring.entities.*;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +17,13 @@ public class ServiceOrganisateur {
 
     private final OrganisateurRepository organisateurRepository;
 
-    public ServiceOrganisateur(OrganisateurRepository organisateurRepository) {
+    private final ParticipantRepository participantRepository;
+    private final DelegationRepository delegationRepository;
+
+    public ServiceOrganisateur(OrganisateurRepository organisateurRepository, ParticipantRepository participantRepository, DelegationRepository delegationRepository) {
         this.organisateurRepository = organisateurRepository;
+        this.participantRepository = participantRepository;
+        this.delegationRepository = delegationRepository;
     }
 
     /**
@@ -107,4 +114,40 @@ public class ServiceOrganisateur {
         // on cherche le organisateur
         return organisateurRepository.findAll();
     }
+
+    /**
+     * ACTION POSSIBLE POUR L'ORGANISATEUR
+     */
+
+
+    /** PROCESSUS DE GESTION DES DELEGATIONS
+     * Ajout de la delegation dans participant
+     * @param nomDelegation
+     * @param prenomParticipant
+     * @param nomParticipant
+     * @return
+     * @throws Exception
+     */
+    public String ajouterParticipant(String nomDelegation, String prenomParticipant, String nomParticipant) throws Exception {
+        //Vérification existance et recupreation delegation
+        List<Delegation> optionalDelegation = delegationRepository.findByNom(nomDelegation);
+        if (optionalDelegation.isEmpty()){
+            throw new Exception("Délégation inexistante");
+        }
+        Delegation delegation = optionalDelegation.get(0);
+
+        //Vérification existance et recuperation participant
+        List<Participant> optionalParticipant = participantRepository.findByPrenomAndNom(prenomParticipant,nomParticipant);
+        if (optionalDelegation.isEmpty()){
+            throw new Exception("Participant inexistante");
+        }
+        Participant participant = optionalParticipant.get(0);
+
+        //Ajout du participant dans la delegation
+        participant.setDelegation(delegation);
+        participantRepository.save(participant);
+
+        return "Delegation :"+nomDelegation+" added in "+nomParticipant;
+    }
+
 }

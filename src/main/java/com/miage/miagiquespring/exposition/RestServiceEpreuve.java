@@ -1,17 +1,9 @@
 package com.miage.miagiquespring.exposition;
 
 
-import com.miage.miagiquespring.entities.Billet;
 import com.miage.miagiquespring.entities.Epreuve;
-import com.miage.miagiquespring.entities.InfrastructureSportive;
-import com.miage.miagiquespring.entities.Spectateur;
 import com.miage.miagiquespring.metier.ServiceEpreuve;
-import com.miage.miagiquespring.metier.ServiceInfrastructureSportive;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Calendar;
-import java.util.List;
-
 
 /**
  * Contrôleur REST pour la ressource infrastructuresportive

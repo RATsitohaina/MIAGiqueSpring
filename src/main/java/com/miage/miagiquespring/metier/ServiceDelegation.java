@@ -1,8 +1,9 @@
 package com.miage.miagiquespring.metier;
 
 import com.miage.miagiquespring.dao.DelegationRepository;
+import com.miage.miagiquespring.dao.ParticipantRepository;
 import com.miage.miagiquespring.entities.Delegation;
-import com.miage.miagiquespring.entities.InfrastructureSportive;
+import com.miage.miagiquespring.entities.Participant;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -2,13 +2,8 @@ package com.miage.miagiquespring.exposition;
 
 
 import com.miage.miagiquespring.entities.Delegation;
-import com.miage.miagiquespring.entities.InfrastructureSportive;
-import com.miage.miagiquespring.entities.Organisateur;
 import com.miage.miagiquespring.metier.ServiceDelegation;
-import com.miage.miagiquespring.metier.ServiceInfrastructureSportive;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Contrôleur REST pour la ressource Delegation

@@ -2,11 +2,8 @@ package com.miage.miagiquespring.metier;
 
 import com.miage.miagiquespring.dao.BilletRepository;
 import com.miage.miagiquespring.entities.Billet;
-import com.miage.miagiquespring.entities.Epreuve;
-import com.miage.miagiquespring.entities.Spectateur;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service

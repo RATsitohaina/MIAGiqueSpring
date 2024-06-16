@@ -1,16 +1,13 @@
 package com.miage.miagiquespring.metier;
 
+import com.miage.miagiquespring.dao.BilletRepository;
 import com.miage.miagiquespring.dao.EpreuveRepository;
-import com.miage.miagiquespring.dao.InfrastructureSportiveRepository;
-import com.miage.miagiquespring.dao.SpectateurRepository;
 import com.miage.miagiquespring.entities.Billet;
 import com.miage.miagiquespring.entities.Epreuve;
 import com.miage.miagiquespring.entities.InfrastructureSportive;
-import com.miage.miagiquespring.entities.Spectateur;
+import com.miage.miagiquespring.entities.Participant;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,12 +15,15 @@ import java.util.Optional;
 public class ServiceEpreuve {
 
     private final EpreuveRepository epreuveRepository;
+
+    private final BilletRepository billetRepository;
     /**
      *
      * @param epreuveRepository : Repository sur laquelle on va travailler
      */
-    public ServiceEpreuve(EpreuveRepository epreuveRepository) {
+    public ServiceEpreuve(EpreuveRepository epreuveRepository, BilletRepository billetRepository) {
         this.epreuveRepository = epreuveRepository;
+        this.billetRepository = billetRepository;
     }
 
     /**
@@ -108,5 +108,25 @@ public class ServiceEpreuve {
         // sinon, on renvoie les infos
         epreuveRepository.delete(optionalEpreuve.get());
         return "Epreuve :"+idEpreuve+" removed";
+    }
+
+    public List<Billet> genererBilletEpreuve(Long idEpreuve, int prix) throws Exception {
+        //Vérificaton et récupération epreuve
+        Epreuve epreuve = recupererEpreuve(idEpreuve);
+        List<Billet> epreuveBillets = epreuve.getBillets();
+
+        for(int i=0;i<epreuve.getNbPlacesDispo();i++){
+            Billet billet = new Billet();
+            billet.setIdEpreuve(epreuve.getIdEpreuve());
+            billet.setEtat(false);
+            billet.setPrix(prix);
+            billetRepository.save(billet);
+
+            epreuveBillets.add(billet);
+        }
+
+        epreuve.setBillets(epreuveBillets);
+        epreuveRepository.save(epreuve);
+        return epreuve.getBillets();
     }
 }
