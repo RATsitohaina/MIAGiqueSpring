@@ -70,4 +70,9 @@ public class Organisateur {
      */
     @OneToMany
     private List<InfrastructureSportive> infrastructureSportiveList;
+
+    /**
+     * Rôle de l'orga: True si organisateur, false si controlleur
+     */
+    private Boolean roleOrganisateur = true;
 }

@@ -129,6 +129,7 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
         Epreuve e_1 = new Epreuve();
         e_1.setNomEpreuve("Petanque");
         e_1.setNbPlacesDispo(100);
+        e_1.setNbPlacesInit(100);
         e_1.setDateEpreuve("Lundi");
         e_1.setInfrastructureAccueil(infra_1);
         e_1.setBillets(billets_1);
@@ -138,6 +139,7 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
         Epreuve e_2 = new Epreuve();
         e_2.setNomEpreuve("Course à pied");
         e_2.setNbPlacesDispo(100);
+        e_2.setNbPlacesInit(100);
         e_2.setDateEpreuve("Mardi");
         e_2.setInfrastructureAccueil(infra_1);
         e_2.setBillets(billets_2);
@@ -226,8 +228,25 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
         organisateur.setEpreuveList(epreuveList);
         organisateur.setBilletList(billets);
         organisateur.setInfrastructureSportiveList(infra_sportives);
-
+        organisateur.setRoleOrganisateur(true);
         organisateur = organisateurRepository.save(organisateur);
         logger.info("Organisateur " + organisateur);
+
+        /**
+         * Contrôlleur
+         */
+        Organisateur controlleur = new Organisateur();
+        controlleur.setNom("Goal");
+        controlleur.setPrenom("Kely");
+        controlleur.setEmail("@hotmail.com");
+        controlleur.setDelegationList(delegations);
+        controlleur.setParticipantList(participants);
+        controlleur.setResultatList(resultats);
+        controlleur.setEpreuveList(epreuveList);
+        controlleur.setBilletList(billets);
+        controlleur.setInfrastructureSportiveList(infra_sportives);
+        controlleur.setRoleOrganisateur(false);
+        controlleur = organisateurRepository.save(controlleur);
+        logger.info("Controlleur " + controlleur);
     }
 }

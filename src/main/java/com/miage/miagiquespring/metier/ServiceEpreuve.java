@@ -34,7 +34,7 @@ public class ServiceEpreuve {
      * @param nbPlacesDispo
      * @return l'épreuve créée
      */
-    public Epreuve creerEpreuve(String nomEpreuve, String dateEpreuve, InfrastructureSportive infrastructureAccueil , int nbPlacesDispo, List<Billet> billets) {
+    public Epreuve creerEpreuve(String nomEpreuve, String dateEpreuve, InfrastructureSportive infrastructureAccueil , int nbPlacesDispo,int nbPlacesInit, List<Billet> billets) {
         List<Epreuve> epreuveList = epreuveRepository.findByNomEpreuve(nomEpreuve);
         Epreuve epreuve;
         if(epreuveList.isEmpty()){
@@ -43,6 +43,7 @@ public class ServiceEpreuve {
             epreuve.setDateEpreuve(dateEpreuve);
             epreuve.setInfrastructureAccueil(infrastructureAccueil);
             epreuve.setNbPlacesDispo(nbPlacesDispo);
+            epreuve.setNbPlacesInit(nbPlacesInit);
             epreuve.setBillets(billets);
 
             // Ajout à la base de donnée
@@ -114,8 +115,14 @@ public class ServiceEpreuve {
         //Vérificaton et récupération epreuve
         Epreuve epreuve = recupererEpreuve(idEpreuve);
         List<Billet> epreuveBillets = epreuve.getBillets();
+        //Mise en place de la jauge des ventes, gestion des erreurs
+        if(!(epreuve.getNbPlacesInit()<=epreuve.getInfrastructureAccueil().getCapacite())){
+            throw new Exception("Nombre de places initiales de l'epreuve supérieure à la capacité de l'infrastructure");
+        }
 
-        for(int i=0;i<epreuve.getNbPlacesDispo();i++){
+        //pour ne pas générer plus de places que l'infra ne puisse contenir
+
+        for(int i=0;i<epreuve.getNbPlacesInit();i++){
             Billet billet = new Billet();
             billet.setIdEpreuve(epreuve.getIdEpreuve());
             billet.setEtat(false);

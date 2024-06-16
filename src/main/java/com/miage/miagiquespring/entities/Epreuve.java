@@ -43,6 +43,11 @@ public class Epreuve {
     private int nbPlacesDispo;
 
     /**
+     * Nombre de places initiales (pour
+     */
+    private int nbPlacesInit;
+
+    /**
      * Liste des billets disponibles pour l'epreuve
      */
     @OneToMany

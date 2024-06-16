@@ -25,7 +25,7 @@ public class RestServiceEpreuve {
      */
     @PostMapping
     public Epreuve creerEpreuve(@RequestBody Epreuve epreuve) {
-        return serviceEpreuve.creerEpreuve(epreuve.getNomEpreuve(), epreuve.getDateEpreuve(), epreuve.getInfrastructureAccueil(),epreuve.getNbPlacesDispo(), epreuve.getBillets());
+        return serviceEpreuve.creerEpreuve(epreuve.getNomEpreuve(), epreuve.getDateEpreuve(), epreuve.getInfrastructureAccueil(),epreuve.getNbPlacesDispo(), epreuve.getNbPlacesInit(), epreuve.getBillets());
     }
 
     /**
@@ -83,6 +83,6 @@ public class RestServiceEpreuve {
      */
     @PostMapping("/null")
     public Epreuve creerEpreuveNull(@RequestBody Epreuve epreuve) {
-        return serviceEpreuve.creerEpreuve(epreuve.getNomEpreuve(), epreuve.getDateEpreuve(), null,epreuve.getNbPlacesDispo(),null);
+        return serviceEpreuve.creerEpreuve(epreuve.getNomEpreuve(), epreuve.getDateEpreuve(), null,epreuve.getNbPlacesDispo(), epreuve.getNbPlacesInit(), null);
     }
 }

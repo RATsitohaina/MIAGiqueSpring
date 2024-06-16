@@ -1,7 +1,9 @@
 package com.miage.miagiquespring.exposition;
 
 import com.miage.miagiquespring.entities.Organisateur;
+import com.miage.miagiquespring.entities.Resultat;
 import com.miage.miagiquespring.metier.ServiceOrganisateur;
+import com.miage.miagiquespring.metier.ServiceResultat;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -13,13 +15,14 @@ import org.springframework.web.bind.annotation.*;
 public class RestServiceOrganisateur {
 
     private final ServiceOrganisateur serviceOrganisateur;
-
+    private final ServiceResultat serviceResultat;
     /**
      * Constructeur pour l'injection (remplace les @Autowired)
      * @param serviceOrganisateur le bean métier client injecté
      */
-    public RestServiceOrganisateur(ServiceOrganisateur serviceOrganisateur) {
+    public RestServiceOrganisateur(ServiceOrganisateur serviceOrganisateur, ServiceResultat serviceResultat) {
         this.serviceOrganisateur = serviceOrganisateur;
+        this.serviceResultat = serviceResultat;
     }
 
     /**
@@ -32,7 +35,8 @@ public class RestServiceOrganisateur {
                 organisateur.getEmail(),organisateur.getDelegationList(),
                 organisateur.getParticipantList(),organisateur.getResultatList(),
                 organisateur.getEpreuveList(), organisateur.getBilletList(),
-                organisateur.getInfrastructureSportiveList());
+                organisateur.getInfrastructureSportiveList(),
+                organisateur.getRoleOrganisateur());
     }
 
     /**
@@ -79,6 +83,16 @@ public class RestServiceOrganisateur {
                 , organisateur.getEmail(), null
                 , null, null
                 , null, null
-                , null);
+                , null
+                ,true);
+    }
+
+    /**
+     * Permet de créer un nouveau resultat
+     * @param resultat les détails d'un resultat envoyés par le front
+     */
+    @PostMapping("resultat")
+    public Resultat creerResultat(@RequestBody Resultat resultat) {
+        return serviceResultat.creerResultat(resultat.getIdEpreuve(),resultat.getIdParticipant(),resultat.getTemps(), resultat.getPosition());
     }
 }

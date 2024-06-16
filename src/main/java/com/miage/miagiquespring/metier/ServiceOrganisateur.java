@@ -1,11 +1,11 @@
 package com.miage.miagiquespring.metier;
 
-import com.miage.miagiquespring.dao.DelegationRepository;
-import com.miage.miagiquespring.dao.OrganisateurRepository;
-import com.miage.miagiquespring.dao.ParticipantRepository;
+import com.miage.miagiquespring.dao.*;
 import com.miage.miagiquespring.entities.*;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,11 +19,17 @@ public class ServiceOrganisateur {
 
     private final ParticipantRepository participantRepository;
     private final DelegationRepository delegationRepository;
+    private final BilletRepository billetRepository;
+    private final SpectateurRepository spectateurRepository;
+    private final EpreuveRepository epreuveRepository;
 
-    public ServiceOrganisateur(OrganisateurRepository organisateurRepository, ParticipantRepository participantRepository, DelegationRepository delegationRepository) {
+    public ServiceOrganisateur(OrganisateurRepository organisateurRepository, ParticipantRepository participantRepository, DelegationRepository delegationRepository, BilletRepository billetRepository, SpectateurRepository spectateurRepository, EpreuveRepository epreuveRepository) {
         this.organisateurRepository = organisateurRepository;
         this.participantRepository = participantRepository;
         this.delegationRepository = delegationRepository;
+        this.billetRepository = billetRepository;
+        this.spectateurRepository = spectateurRepository;
+        this.epreuveRepository = epreuveRepository;
     }
 
     /**
@@ -33,7 +39,8 @@ public class ServiceOrganisateur {
     public Organisateur creerOrganisateur(String nom, String prenom, String email,
                                           List<Delegation> delegationList, List<Participant> participantList,
                                           List<Resultat> resultatList, List<Epreuve> epreuveList,
-                                          List<Billet> billetList, List<InfrastructureSportive> infrastructureSportiveList) {
+                                          List<Billet> billetList, List<InfrastructureSportive> infrastructureSportiveList,
+                                          boolean roleOrganisateur) {
         //Opération métier
         //On cherche si le client est déjà présent
         List<Organisateur> organisateurs = organisateurRepository.findByPrenomAndNom(prenom, nom);
@@ -51,6 +58,7 @@ public class ServiceOrganisateur {
             organisateur.setEpreuveList(epreuveList);
             organisateur.setBilletList(billetList);
             organisateur.setInfrastructureSportiveList(infrastructureSportiveList);
+            organisateur.setRoleOrganisateur(roleOrganisateur);
 
             // on l'ajoute à la BD
             organisateur = organisateurRepository.save(organisateur);
@@ -150,4 +158,70 @@ public class ServiceOrganisateur {
         return "Delegation :"+nomDelegation+" added in "+nomParticipant;
     }
 
+    /** PROCESSUS DE VALIDATION
+     * Vérifie la validité d'un billet, verifie le role de l'organisateur concerné
+     * @param nomOrganisateur
+     * @param prenomOrganisateur
+     * @param idBillet
+     * @param idSpectateur
+     * @return Billet validé
+     * @throws Exception
+     */
+    public String validerBillet(String nomOrganisateur,String prenomOrganisateur, Long idBillet, Long idSpectateur) throws Exception {
+        //verification des roles de l'organisateur
+        Organisateur organisateur= recupererOrganisateur(nomOrganisateur, prenomOrganisateur);
+        if (organisateur.getRoleOrganisateur()){
+            throw new Exception("Cet organisateur n'est pas un controlleur!");
+        }
+
+        //Verification billet
+        Optional<Billet> optionalBillet = billetRepository.findById(idBillet);
+        if(optionalBillet.isEmpty()){
+            throw new Exception("Billet inexistant");
+        }
+        Billet billet= optionalBillet.get();
+
+        //Verification existance billet et spactateur dans la base
+        //Verification spectateur
+        Optional<Spectateur> optionalSpectateur = spectateurRepository.findById(idSpectateur);
+        if(optionalSpectateur.isEmpty()){
+            throw new Exception("Spectateur inexistant");
+        }
+        Spectateur spectateur= optionalSpectateur.get();
+
+
+
+        //Verification correspondance spectateur-billet
+        if (billet.getIdBillet()!=spectateur.getIdSpectateur()){
+            throw new Exception("Le billet ne correspond pas au spectateur.");
+        }
+
+        //Billet valide ou non
+        return "Billet validé";
+    }
+
+    /**
+     * Calcule le pourcentage des billets vendus par épreuves
+     * @param nomOrganisateur
+     * @param prenomOrganisateur
+     * @return une hashmap avec comme clé le nom de l'épreuve et comme valeur la statistique des ventes
+     * @throws Exception
+     */
+    //Processus supervision epreuve
+    public HashMap<String, Float> calculerStatDeVentes(String nomOrganisateur, String prenomOrganisateur) throws Exception{
+        Organisateur organisateur= recupererOrganisateur(nomOrganisateur, prenomOrganisateur);
+        if (!organisateur.getRoleOrganisateur()){
+            throw new Exception("Cet organisateur est un controlleur!");
+        }
+        //calcul des res
+        Iterable<Epreuve> epreuves=epreuveRepository.findAll();
+        HashMap<String, Float> statistiques= new HashMap<String, Float>();
+        //boucler sur les epreuves (ratio: pourcentage des ventes)
+        for (Epreuve epreuve: epreuves){
+            statistiques.put(epreuve.getNomEpreuve(), (float) ((epreuve.getNbPlacesInit()-epreuve.getNbPlacesDispo())/epreuve.getNbPlacesInit())*100);
+        }
+
+
+        return statistiques;
+    }
 }

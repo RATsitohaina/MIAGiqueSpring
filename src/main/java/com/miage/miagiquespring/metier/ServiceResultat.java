@@ -16,7 +16,7 @@ public class ServiceResultat {
     }
 
     /**
-     * Demande la création d'un nouveau Resultat
+     * Demande la création d'un nouveau Resultat / Publication d'un nouveau resultat
      * @param idEpreuve
      * @param idParticipant
      * @param temps

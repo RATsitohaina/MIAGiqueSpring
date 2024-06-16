@@ -22,7 +22,7 @@ public class RestServiceResultat {
     }
 
     /**
-     * Permet de créer un nouveau client
+     * Permet de créer un nouveau resultat
      * @param resultat les détails d'un resultat envoyés par le front
      */
     @PostMapping
