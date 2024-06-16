@@ -1,8 +1,8 @@
 package com.miage.miagiquespring.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Null;
 import lombok.*;
+
 
 @Entity
 @Data
@@ -13,7 +13,7 @@ import lombok.*;
 @ToString
 public class Billet {
     /**
-     * Id de l'entité
+     * Id du billet
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

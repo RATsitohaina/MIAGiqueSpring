@@ -14,24 +14,24 @@ import java.util.List;
 @ToString
 public class Organisateur {
     /**
-     * Id de l'entité
+     * Id de l'organisateur
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long idOrganisateur;
 
     /**
-     * Nom de l'Organisateur
+     * Nom de l'organisateur
      */
     protected String nom;
 
     /**
-     * Prenom de l'Organisateur
+     * Prenom de l'organisateur
      */
     protected String prenom;
 
     /**
-     * email de l'Organisateur
+     * email de l'organisateur
      */
     protected String email;
 
@@ -72,7 +72,8 @@ public class Organisateur {
     private List<InfrastructureSportive> infrastructureSportiveList;
 
     /**
-     * Rôle de l'orga: True si organisateur, false si controlleur
+     * Rôle de l'organisateur
+     * True si organisateur, false si controlleur
      */
     private Boolean roleOrganisateur = true;
 }

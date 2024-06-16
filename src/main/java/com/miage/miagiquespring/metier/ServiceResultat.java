@@ -6,21 +6,34 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Bean métier pour la gestion des resultats {
+ */
 @Service
 public class ServiceResultat {
-
+    /**
+     * Bean repository qui sera injecté par le constructeur
+     */
     private final ResultatRepository resultatRepository;
 
+    /**
+     * Constructeur pour l'injection du bean repository
+     *
+     * @param resultatRepository
+     */
     public ServiceResultat(ResultatRepository resultatRepository) {
         this.resultatRepository = resultatRepository;
     }
 
+
     /**
-     * Demande la création d'un nouveau Resultat / Publication d'un nouveau resultat
+     * Créer un résultat
+     *
      * @param idEpreuve
      * @param idParticipant
      * @param temps
      * @param position
+     * @return
      */
     public Resultat creerResultat(Long idEpreuve, Long idParticipant, float temps, int position) {
         //Opération métier
@@ -36,42 +49,48 @@ public class ServiceResultat {
     }
 
     /**
-     * Permet de récupérer les infos d'un Spectateur
-     * @param idResultat du Spectateur
-     * @return infos du Spectateur
+     * Récuperer un résultat
+     *
+     * @param idResultat
+     * @return le résultat qui correspond
+     * @throws Exception
      */
     public Resultat recupererResultat(long idResultat) throws Exception {
         // on cherche le client
         final Optional<Resultat> optionalResultat = resultatRepository.findById(idResultat);
         // s'il n'existe pas on lance une exception
-        if(optionalResultat.isEmpty())
+        if (optionalResultat.isEmpty())
             throw new Exception("Resultat inexistant");
         // sinon, on renvoie les infos
         return optionalResultat.get();
     }
 
     /**
-     * Permet de récupérer les infos d'un Resultat
-     * @return infos du Resultat
+     * Récuperer tous les résultats
+     *
+     * @return
+     * @throws Exception
      */
     public Iterable<Resultat> recupererAllResultat() throws Exception {
         // on cherche le Resultat
         return resultatRepository.findAll();
     }
 
-
     /**
-     * Permet de récupérer les infos d'un Spectateur
+     * Supprimer un résultat
+     *
      * @param idResultat
+     * @return confirmation de suppression
+     * @throws Exception
      */
     public String supprimerResultat(long idResultat) throws Exception {
         // on cherche le client
         final Optional<Resultat> optionalResultat = resultatRepository.findById(idResultat);
         // s'il n'existe pas on lance une exception
-        if(optionalResultat.isEmpty()){
+        if (optionalResultat.isEmpty()) {
             throw new Exception("idResultat inexistant");
         }
         resultatRepository.delete(optionalResultat.get());
-        return "Spectateur :"+idResultat+" removed";
+        return "Spectateur :" + idResultat + " removed";
     }
 }

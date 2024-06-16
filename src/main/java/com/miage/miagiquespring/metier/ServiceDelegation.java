@@ -1,36 +1,48 @@
 package com.miage.miagiquespring.metier;
 
 import com.miage.miagiquespring.dao.DelegationRepository;
-import com.miage.miagiquespring.dao.ParticipantRepository;
 import com.miage.miagiquespring.entities.Delegation;
-import com.miage.miagiquespring.entities.Participant;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+
+/**
+ * Bean métier pour la gestion des délégations {
+ */
 @Service
 public class ServiceDelegation {
 
+    /**
+     * Bean repository qui sera injecté par le constructeur
+     */
     private final DelegationRepository delegationRepository;
 
+    /**
+     * Constructeur pour l'injection du bean repository
+     *
+     * @param serviceDelegation
+     */
     public ServiceDelegation(DelegationRepository serviceDelegation) {
         this.delegationRepository = serviceDelegation;
     }
 
     /**
-     * Crée une délégation
-     * @param nom nom de la délégation
-     * @param nbMedailleOr nombre de medailles d'or
-     * @param nbMedailleArgent nombre de medailles d'argent
-     * @param nbMedailleBronze nombre de medailles de  bronze
+     * Créer un délégations
+     *
+     * @param nom
+     * @param nbMedailleOr
+     * @param nbMedailleArgent
+     * @param nbMedailleBronze
+     * @return
      */
-    public Delegation creerDelegation(String nom,  int nbMedailleOr, int nbMedailleArgent, int nbMedailleBronze){
+    public Delegation creerDelegation(String nom, int nbMedailleOr, int nbMedailleArgent, int nbMedailleBronze) {
         List<Delegation> delegationList = delegationRepository.findByNom(nom);
         Delegation delegation;
 
-        if (delegationList.isEmpty()){
-            delegation=new Delegation();
+        if (delegationList.isEmpty()) {
+            delegation = new Delegation();
             delegation.setNom(nom);
             delegation.setNbMedailleOr(nbMedailleOr);
             delegation.setNbMedailleArgent(nbMedailleArgent);
@@ -38,55 +50,67 @@ public class ServiceDelegation {
 
             // Ajout à la base de donnée
             delegation = delegationRepository.save(delegation);
-        }else{
+        } else {
             delegation = delegationList.get(0);
         }
         return delegation;
     }
 
     /**
-     *  Récuperer une délégation
+     * Récupérer une délégation
+     *
      * @param IdDelegation
+     * @return la délégation qui correspond
+     * @throws Exception
      */
     public Delegation recupererDelegation(Long IdDelegation) throws Exception {
         Optional<Delegation> optionalDelegation = delegationRepository.findById(IdDelegation);
 
-        if (optionalDelegation.isEmpty()){
+        if (optionalDelegation.isEmpty()) {
             throw new Exception("Délégation inexistante");
         }
-       return optionalDelegation.get();
+        return optionalDelegation.get();
     }
 
     /**
-     *  Récuperer une délégation
+     * Récupérer une délégations
+     *
      * @param nomDelegation
+     * @return la délégation qui correspond
+     * @throws Exception
      */
     public Delegation recupererDelegation(String nomDelegation) throws Exception {
         List<Delegation> optionalDelegation = delegationRepository.findByNom(nomDelegation);
 
-        if (optionalDelegation.isEmpty()){
+        if (optionalDelegation.isEmpty()) {
             throw new Exception("Délégation inexistante");
         }
         return optionalDelegation.get(0);
     }
 
     /**
-     *  Récuperer les délégations
+     * Récupérer toutes les délégations
+     *
+     * @return la liste des délégations
+     * @throws Exception
      */
     public Iterable<Delegation> recupererAllDelegation() throws Exception {
         return delegationRepository.findAll();
     }
 
     /**
-     *Supprime une délégation
+     * Supprimer une délégation
+     *
      * @param IdDelegation
+     * @return une confirtmation de suppression
+     * @throws Exception
      */
     public String supprimerDelegation(Long IdDelegation) throws Exception {
         Optional<Delegation> optionalDelegation = delegationRepository.findById(IdDelegation);
-        if (optionalDelegation.isEmpty()){
+        if (optionalDelegation.isEmpty()) {
             throw new Exception("Délégation inexistante");
         }
         delegationRepository.delete(optionalDelegation.get());
-        return "Delegation :"+IdDelegation+" removed";
+        return "Delegation :" + IdDelegation + " removed";
     }
 }

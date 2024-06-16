@@ -5,12 +5,16 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
+/**
+ * DAO pour les participants
+ */
 public interface ParticipantRepository extends CrudRepository<Participant, Long> {
     /**
-     * Recherche des Utilisateurs par prénom et nom
+     * Recherche des participants par prénom et nom
+     *
      * @param prenom le prénom
-     * @param nom le nom
-     * @return la liste des clients qui correspondent
+     * @param nom    le nom
+     * @return la liste des participants qui correspondent
      */
     List<Participant> findByPrenomAndNom(String prenom, String nom);
 }

@@ -15,22 +15,29 @@ import java.util.Optional;
 @Service
 public class ServiceParticipant {
 
+    /**
+     * Bean repository qui sera injecté par le constructeur
+     */
     private final ParticipantRepository participantRepository;
-
     private final EpreuveRepository epreuveRepository;
 
+    /**
+     * Constructeur pour l'injection du bean repository
+     * @param participantRepository
+     * @param epreuveRepository
+     */
     public ServiceParticipant(ParticipantRepository participantRepository, EpreuveRepository epreuveRepository) {
         this.participantRepository = participantRepository;
         this.epreuveRepository = epreuveRepository;
     }
 
     /**
-     * Demande la création d'un nouveau Spectateur
+     * Créer un participant
      * @param prenom prénom du Participant
      * @param nom nom du Participant
      * @param email du Participant
      * @param delegation du Participant
-     * @return le nouveau Participant ou l'ancien Spectateur
+     * @return le nouveau participant ou l'ancien Spectateur
      */
     public Participant creerParticipant(String nom, String prenom, String email, Delegation delegation, List<Resultat> resultatList, List<Epreuve> epreuveList) {
         //Opération métier
@@ -59,9 +66,10 @@ public class ServiceParticipant {
     }
 
     /**
-     * Permet de récupérer les infos d'un Spectateur
-     * @param idParticipant du Spectateur
-     * @return infos du Spectateur
+     * Récuperer un participant
+     * @param idParticipant
+     * @return le participant qui correspond
+     * @throws Exception
      */
     public Participant recupererParticipant(long idParticipant) throws Exception {
         // on cherche le participant
@@ -74,8 +82,11 @@ public class ServiceParticipant {
     }
 
     /**
-     * Permet de récupérer les infos d'un Spectateur
-     * @return infos du Spectateur
+     * Récuperer un participant
+     * @param nom
+     * @param prenom
+     * @return le participant qui correspond
+     * @throws Exception
      */
     public Participant recupererParticipant(String nom, String prenom) throws Exception {
         // on cherche le participant
@@ -88,8 +99,9 @@ public class ServiceParticipant {
     }
 
     /**
-     * Permet de récupérer les toutes les infos des participants
-     * @return infos du participant
+     * Récupérer tous les participants
+     * @return la liste des participants
+     * @throws Exception
      */
     public Iterable<Participant> recupererAllParticipant() throws Exception {
         // on cherche le participant
@@ -97,8 +109,10 @@ public class ServiceParticipant {
     }
 
     /**
-     * Permet de récupérer les infos d'un Spectateur
-     * @param idParticipant id du Spectateur
+     * Supprimer un participant
+     * @param idParticipant
+     * @return la confirmation de suppression
+     * @throws Exception
      */
     public String supprimerParticipant(long idParticipant) throws Exception {
         // on cherche le client
@@ -115,19 +129,7 @@ public class ServiceParticipant {
      * ACTION POSSIBLE POUR LE PARTICIPANT
      */
 
-    /** PROCESSUS D'INSCRIPTION AUX EPREUVES **/
-
-    /**
-     * Consulter toutes les epreuves
-     * disponibles dans la base de données
-     * @return
-     * @throws Exception
-     */
-    public Iterable<Epreuve> consulterEpreuvesDisponible() throws Exception {
-        return epreuveRepository.findAll();
-    }
-
-    /**
+    /** PROCESSUS D'INSCRIPTION AUX EPREUVES
      * Participer a une epreuve
      * Et avoir une confirmation
      * @param nomParticipant
@@ -163,6 +165,14 @@ public class ServiceParticipant {
                 " : "+prenomParticipant+" inscrit à : "+nomEpreuve;
     }
 
+    /**
+     * Se désengager d'un épreuve
+     * @param nomParticipant
+     * @param prenomParticipant
+     * @param nomEpreuve
+     * @return la confirmation de désengagement de l'épreuve
+     * @throws Exception
+     */
     public String desengagerEpreuve(String nomParticipant,
                              String prenomParticipant,
                              String nomEpreuve) throws Exception {

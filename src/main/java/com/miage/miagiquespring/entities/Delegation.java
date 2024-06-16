@@ -15,14 +15,14 @@ import lombok.*;
 @ToString
 public class Delegation {
     /**
-     * Id de l'entité
+     * Id de la delegation
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idInfrastructureSportive;
 
     /**
-     * Nom de l'infrastructure sportive
+     * Nom de la delegation
      */
     private String nom;
 

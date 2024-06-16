@@ -17,7 +17,7 @@ import lombok.*;
 @ToString
 public class Resultat {
     /**
-     * Id de l'entité
+     * Id du resultat
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

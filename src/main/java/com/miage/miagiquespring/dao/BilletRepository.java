@@ -5,8 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 
 
 /**
- * DAO pour les entités l'Billet
+ * DAO pour les billets
  */
 public interface BilletRepository extends CrudRepository<Billet, Long> {
-
 }

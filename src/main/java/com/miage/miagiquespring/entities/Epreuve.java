@@ -1,13 +1,7 @@
 package com.miage.miagiquespring.entities;
 
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.Calendar;
 import java.util.List;
@@ -21,7 +15,7 @@ import java.util.List;
 @ToString
 public class Epreuve {
     /**
-     * Id de l'entité
+     * Id de l'epreuve
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,9 +27,12 @@ public class Epreuve {
     private String nomEpreuve;
 
     /**
-     * Date de dernière interrogation du compte
+     * Date de l'epreuve
      */
-   private String dateEpreuve;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar dateEpreuve;
+
 
     /**
      * Nombre de places mises en vente
@@ -43,7 +40,7 @@ public class Epreuve {
     private int nbPlacesDispo;
 
     /**
-     * Nombre de places initiales (pour
+     * Nombre de places initiales de l'epreuve
      */
     private int nbPlacesInit;
 

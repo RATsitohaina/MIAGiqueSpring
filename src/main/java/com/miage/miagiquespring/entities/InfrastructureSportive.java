@@ -12,7 +12,7 @@ import lombok.*;
 @ToString
 public class InfrastructureSportive {
     /**
-     * Id de l'entité
+     * Id de l'infrastructure sportive
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

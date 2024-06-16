@@ -12,14 +12,25 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Bean métier pour la gestion des spectateurs {
+ */
 @Service
 public class ServiceSpectateur {
-
+    /**
+     * Bean repository qui sera injecté par le constructeur
+     */
     private final SpectateurRepository spectateurRepository;
-
     private final EpreuveRepository epreuveRepository;
     private final BilletRepository billetRepository;
 
+    /**
+     * Constructeur pour l'injection du bean repository
+     *
+     * @param spectateurRepository
+     * @param epreuveRepository
+     * @param billetRepository
+     */
     public ServiceSpectateur(SpectateurRepository spectateurRepository, EpreuveRepository epreuveRepository, BilletRepository billetRepository) {
         this.spectateurRepository = spectateurRepository;
         this.billetRepository = billetRepository;
@@ -27,11 +38,14 @@ public class ServiceSpectateur {
     }
 
     /**
-     * Demande la création d'un nouveau Spectateur
+     * Créer un spectateur
      *
-     * @param prenom prénom du Spectateur
-     * @param nom    nom du Spectateur
-     * @return le nouveau Spectateur ou l'ancien Spectateur
+     * @param nom
+     * @param prenom
+     * @param email
+     * @param billetList
+     * @param resultatList
+     * @return
      */
     public Spectateur creerSpectateur(String nom, String prenom, String email, List<Billet> billetList, List<Resultat> resultatList) {
         //Opération métier
@@ -58,10 +72,11 @@ public class ServiceSpectateur {
     }
 
     /**
-     * Permet de récupérer les infos d'un Spectateur
+     * Récupérer un spectateur
      *
-     * @param idSpectateur du Spectateur
-     * @return infos du Spectateur
+     * @param idSpectateur
+     * @return le spectateur qui correspond
+     * @throws Exception
      */
     public Spectateur recupererSpectateur(long idSpectateur) throws Exception {
         // on cherche le client
@@ -74,9 +89,12 @@ public class ServiceSpectateur {
     }
 
     /**
-     * Permet de récupérer les infos d'un Spectateur
+     * Récupérer un spectateur
      *
-     * @return infos du Spectateur
+     * @param prenom
+     * @param nom
+     * @return le spectateur qui correspond
+     * @throws Exception
      */
     public Spectateur recupererSpectateur(String prenom, String nom) throws Exception {
         // on cherche le Spectateur
@@ -90,19 +108,21 @@ public class ServiceSpectateur {
 
 
     /**
-     * Permet de récupérer toutes les infos d'un Spectateur
+     * Récupérer tous les spectateurs
      *
-     * @return infos du Spectateur
+     * @return la liste des spéctateurs
+     * @throws Exception
      */
     public Iterable<Spectateur> recupererAllSpectateur() throws Exception {
-        // on cherche le Spectateur
         return spectateurRepository.findAll();
     }
 
     /**
-     * Permet de récupérer les infos d'un Spectateur
+     * Supprimer un spectateur
      *
-     * @param idSpectateur id du Spectateur
+     * @param idSpectateur
+     * @return confirmation de suppression
+     * @throws Exception
      */
     public String supprimerSpectateur(long idSpectateur) throws Exception {
         // on cherche le client
@@ -119,9 +139,9 @@ public class ServiceSpectateur {
      * ACTION POSSIBLE POUR LE SPECTATEUR
      */
 
-    /** PROCESSUS DE RESERVATION DES BILLETS **/
     /**
-     * Permet de reserver un billet
+     * PROCESSUS DE RESERVATION DES BILLETS
+     * Réserver un billet
      *
      * @param prenomSpectateur
      * @param nomSpectateur
@@ -194,12 +214,9 @@ public class ServiceSpectateur {
         return "Billet : Non disponible";
     }
 
-
     /**
      * PROCESSUS D'ANNULATION
-     **/
-
-    /** Permet a un spectateur d'annuler son billet sous 7 - 3 jours
+     * Permet a un spectateur d'annuler son billet sous 7 - 3 jours
      * avec remboursement
      *
      * @param prenomSpectateur
@@ -231,11 +248,11 @@ public class ServiceSpectateur {
         // Sinon Annulation impossible
 
 
-        if(spectateurBillet.contains(billet)){
+        if (spectateurBillet.contains(billet)) {
             spectateurBillet.remove(billet);
             spectateur.setBillets(spectateurBillet);
             spectateurRepository.save(spectateur);
-        }else{
+        } else {
             throw new Exception("Erreur : Le billet n'appartient pas au spectateur");
         }
 

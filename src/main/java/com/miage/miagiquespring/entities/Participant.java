@@ -14,14 +14,14 @@ import java.util.List;
 @ToString
 public class Participant {
     /**
-     * Id de l'entité
+     * Id du participant
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long idParticipant;
 
     /**
-     * Nom du participant participant
+     * Nom du participant
      */
     protected String nom;
 

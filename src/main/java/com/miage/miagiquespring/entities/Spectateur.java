@@ -12,31 +12,31 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class Spectateur{
+public class Spectateur {
     /**
-     * Id de l'entité
+     * Id du spectateur
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long idSpectateur;
 
     /**
-     * Nom de l'Utilisateur
+     * Nom du spectateur
      */
     protected String nom;
 
     /**
-     * Prenom de l'Utilisateur
+     * Prenom du spectateur
      */
     protected String prenom;
 
     /**
-     * email de l'Utilisateur
+     * email du spectateur
      */
     protected String email;
 
     /**
-     * Liste des billets du specatateur
+     * Liste des billets du spectateur
      */
     @OneToMany
     private List<Billet> billets;
