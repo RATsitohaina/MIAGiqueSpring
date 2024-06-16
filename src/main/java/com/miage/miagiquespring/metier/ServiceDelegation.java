@@ -57,6 +57,26 @@ public class ServiceDelegation {
     }
 
     /**
+     *  Récuperer une délégation
+     * @param nomDelegation
+     */
+    public Delegation recupererDelegation(String nomDelegation) throws Exception {
+        List<Delegation> optionalDelegation = delegationRepository.findByNom(nomDelegation);
+
+        if (optionalDelegation.isEmpty()){
+            throw new Exception("Délégation inexistante");
+        }
+        return optionalDelegation.get(0);
+    }
+
+    /**
+     *  Récuperer les délégations
+     */
+    public Iterable<Delegation> recupererAllDelegation() throws Exception {
+        return delegationRepository.findAll();
+    }
+
+    /**
      *Supprime une délégation
      * @param IdDelegation
      */

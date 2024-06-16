@@ -1,6 +1,7 @@
 package com.miage.miagiquespring.exposition;
 
 import com.miage.miagiquespring.entities.Billet;
+import com.miage.miagiquespring.entities.Participant;
 import com.miage.miagiquespring.metier.ServiceBillet;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,5 +44,13 @@ public class RestServiceBillet {
     @DeleteMapping("{id}")
     public String supprimerBillet(@PathVariable("id") long idBillet) throws Exception {
         return serviceBillet.supprimerBillet(idBillet);
+    }
+
+    /**
+     * Permet de récupérer tout les détails d'un Billet
+     */
+    @GetMapping()
+    public Iterable<Billet> getAllBillet() throws Exception {
+        return serviceBillet.recupererAllBillet();
     }
 }

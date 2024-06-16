@@ -5,8 +5,7 @@ Le but de ce projet est de concevoir et développer une application pour les Jeu
 
 # Configuration
 Ce TP utilise une base de données MySQL qu'on peut créer sous Docker avec la commande :
-###### docker run --name=BDMIAGique -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=BDMIAGique -p 3306:3306 mysql
-
+######   
 Pour relancer la base de données créée précédemment, il faut exécuter la commande suivante :
 ###### docker start BDMIAGique
 

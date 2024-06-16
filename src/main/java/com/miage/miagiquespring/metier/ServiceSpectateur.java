@@ -2,7 +2,6 @@ package com.miage.miagiquespring.metier;
 
 import com.miage.miagiquespring.dao.SpectateurRepository;
 import com.miage.miagiquespring.entities.Billet;
-import com.miage.miagiquespring.entities.Epreuve;
 import com.miage.miagiquespring.entities.Resultat;
 import com.miage.miagiquespring.entities.Spectateur;
 import org.springframework.stereotype.Service;
@@ -62,6 +61,30 @@ public class ServiceSpectateur {
             throw new Exception("Spectateur inexistant");
         // sinon, on renvoie les infos
         return optionalSpectateur.get();
+    }
+
+    /**
+     * Permet de récupérer les infos d'un Spectateur
+     * @return infos du Spectateur
+     */
+    public Spectateur recupererSpectateur(String prenom, String nom) throws Exception {
+        // on cherche le Spectateur
+        final List<Spectateur> optionalSpectateur = spectateurRepository.findByPrenomAndNom(prenom,nom);
+        // s'il n'existe pas on lance une exception
+        if(optionalSpectateur.isEmpty())
+            throw new Exception("Spectateur inexistant");
+        // sinon, on renvoie les infos
+        return optionalSpectateur.get(0);
+    }
+
+
+    /**
+     * Permet de récupérer toutes les infos d'un Spectateur
+     * @return infos du Spectateur
+     */
+    public Iterable<Spectateur> recupererAllSpectateur() throws Exception {
+        // on cherche le Spectateur
+        return spectateurRepository.findAll();
     }
 
     /**

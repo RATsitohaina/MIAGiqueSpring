@@ -41,6 +41,22 @@ public class RestServiceSpectateur {
 
     /**
      * Permet de récupérer les détails d'un Utilisateur
+     */
+    @GetMapping("{{prenom}/{nom}}")
+    public Spectateur getSpectateur(@PathVariable("nom") String nomSpectateur, @PathVariable("prenom") String prenomSpectateur) throws Exception {
+        return serviceSpectateur.recupererSpectateur(prenomSpectateur,nomSpectateur);
+    }
+
+    /**
+     * Permet de récupérer tous les détails d'un Utilisateur
+     */
+    @GetMapping()
+    public Iterable<Spectateur> getAllSpectateur() throws Exception {
+        return serviceSpectateur.recupererAllSpectateur();
+    }
+
+    /**
+     * Permet de récupérer les détails d'un Utilisateur
      * @param idSpectateur id d'un Utilisateur
      */
     @DeleteMapping("{id}")

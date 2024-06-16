@@ -21,7 +21,7 @@ public class RestServiceInfrastructureSportive {
     }
 
     /**
-     * Permet de créer un nouveau client
+     * Permet de créer un nouveau infrastructuresportive
      * @param infrastructureSportive les détails du client envoyés par le front
      */
     @PostMapping
@@ -36,6 +36,23 @@ public class RestServiceInfrastructureSportive {
     @GetMapping("{id}")
     public InfrastructureSportive getInfrastructureSportive(@PathVariable("id") Long idInfrastructureSportive) throws Exception {
         return serviceInfrastructureSportive.recupererInfrastructureSportive(idInfrastructureSportive);
+    }
+
+    /**
+     * Permet de récupérer les détails d'une InfrastructureSportive
+     * @param nomInfrastructureSportive d'une InfrastructureSportive
+     */
+    @GetMapping("{nom}")
+    public InfrastructureSportive getInfrastructureSportive(@PathVariable("nom") String nomInfrastructureSportive) throws Exception {
+        return serviceInfrastructureSportive.recupererInfrastructureSportive(nomInfrastructureSportive);
+    }
+
+    /**
+     * Permet de récupérer tout les détails d'une InfrastructureSportive
+     */
+    @GetMapping()
+    public Iterable<InfrastructureSportive> getAllInfrastructureSportive() throws Exception {
+        return serviceInfrastructureSportive.recupererAllInfrastructureSportive();
     }
 
     /**

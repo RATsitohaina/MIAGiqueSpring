@@ -1,5 +1,6 @@
 package com.miage.miagiquespring.exposition;
 
+import com.miage.miagiquespring.entities.Organisateur;
 import com.miage.miagiquespring.entities.Participant;
 import com.miage.miagiquespring.metier.ServiceParticipant;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,22 @@ public class RestServiceParticipant {
     @GetMapping("{id}")
     public Participant getParticipant(@PathVariable("id") long idParticipant) throws Exception {
         return serviceParticipant.recupererParticipant(idParticipant);
+    }
+
+    /**
+     * Permet de récupérer les détails d'un Utilisateur
+     */
+    @GetMapping("{prenom}/{nom}")
+    public Participant getParticipantNomPrenom(@PathVariable("nom") String nomParticipant, @PathVariable("prenom") String prenomParticipant) throws Exception {
+        return serviceParticipant.recupererParticipant(prenomParticipant, nomParticipant);
+    }
+
+    /**
+     * Permet de récupérer tout les détails d'un Utilisateur
+     */
+    @GetMapping()
+    public Iterable<Participant> getAllParticipant() throws Exception {
+        return serviceParticipant.recupererAllParticipant();
     }
 
     /**

@@ -36,7 +36,7 @@ public class ServiceEpreuve {
      * @return l'épreuve créée
      */
     public Epreuve creerEpreuve(String nomEpreuve, String dateEpreuve, InfrastructureSportive infrastructureAccueil , int nbPlacesDispo, List<Billet> billets) {
-        List<Epreuve> epreuveList = epreuveRepository.findByNomEpreuve(nomEpreuve);
+        List<Epreuve> epreuveList = epreuveRepository.findByNom(nomEpreuve);
         Epreuve epreuve;
         if(epreuveList.isEmpty()){
             epreuve = new Epreuve();
@@ -62,6 +62,20 @@ public class ServiceEpreuve {
             throw new Exception("Erreur epreuve inexistant");
         // sinon, on renvoie les infos
         return optionalEpreuve.get();
+    }
+
+    public Epreuve recupererEpreuve(String nomEpreuve) throws Exception {
+        // on cherche le client
+        final List<Epreuve> optionalEpreuve = epreuveRepository.findByNom(nomEpreuve);
+        // s'il n'existe pas on lance une exception
+        if(optionalEpreuve.isEmpty())
+            throw new Exception("Erreur epreuve inexistant");
+        // sinon, on renvoie les infos
+        return optionalEpreuve.get(0);
+    }
+
+    public Iterable<Epreuve> recupererAllEpreuve() throws Exception {
+        return epreuveRepository.findAll();
     }
 
     public String supprimerEpreuve(Long idEpreuve) throws Exception {

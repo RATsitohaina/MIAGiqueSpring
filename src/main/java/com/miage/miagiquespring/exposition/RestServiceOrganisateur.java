@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Contrôleur REST pour la ressource organisateur
  */
+//@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/organisateur")
 public class RestServiceOrganisateur {
@@ -41,6 +42,22 @@ public class RestServiceOrganisateur {
     @GetMapping("{id}")
     public Organisateur getOrganisateur(@PathVariable("id") long idOrganisateur) throws Exception {
         return serviceOrganisateur.recupererOrganisateur(idOrganisateur);
+    }
+
+    /**
+     * Permet de récupérer les détails d'un Utilisateur
+     */
+    @GetMapping("{prenom}/{nom}")
+    public Organisateur getOrganisateurNomPrenom(@PathVariable("nom") String nomOrganisateur, @PathVariable("prenom") String prenomOrganisateur) throws Exception {
+        return serviceOrganisateur.recupererOrganisateur(prenomOrganisateur, nomOrganisateur);
+    }
+
+    /**
+     * Permet de récupérer tout les détails d'un Utilisateur
+     */
+    @GetMapping()
+    public Iterable<Organisateur> getAllOrganisateur() throws Exception {
+        return serviceOrganisateur.recupererAllOrganisateur();
     }
 
     /**

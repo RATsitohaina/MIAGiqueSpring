@@ -40,6 +40,14 @@ public class RestServiceResultat {
     }
 
     /**
+     * Permet de récupérer les détails d'une Resultat
+     */
+    @GetMapping()
+    public Iterable<Resultat> getAllResultat() throws Exception {
+        return serviceResultat.recupererAllResultat();
+    }
+
+    /**
      * Permet de supprimer les détails d'une Resultat
      * @param idResultat d'une Resultat
      */

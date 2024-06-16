@@ -46,6 +46,23 @@ public class RestServiceEpreuve {
     }
 
     /**
+     * Permet de récupérer une epreuve pour une requête GET
+     * @param nomEpreuve
+     */
+    @GetMapping("{nom}")
+    public Epreuve getEpreuve(@PathVariable("nom") String nomEpreuve) throws Exception {
+        return serviceEpreuve.recupererEpreuve(nomEpreuve);
+    }
+
+    /**
+     * Permet de récupérer toute les epreuve pour une requête GET
+     */
+    @GetMapping()
+    public Iterable<Epreuve> getAllEpreuve() throws Exception {
+        return serviceEpreuve.recupererAllEpreuve();
+    }
+
+    /**
      * Permet de supprimer une epreuve pour une requête DELETE
      * @param idEpreuve
      */

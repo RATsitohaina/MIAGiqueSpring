@@ -71,6 +71,20 @@ public class ServiceOrganisateur {
     }
 
     /**
+     * Permet de récupérer les infos d'un Spectateur
+     * @return infos du Spectateur
+     */
+    public Organisateur recupererOrganisateur(String nom, String prenom) throws Exception {
+        // on cherche le organisateur
+        final List<Organisateur> optionalOrganisateur = organisateurRepository.findByPrenomAndNom(prenom,nom);
+        // s'il n'existe pas on lance une exception
+        if(optionalOrganisateur.isEmpty())
+            throw new Exception("Organisateur inexistant");
+        // sinon, on renvoie les infos
+        return optionalOrganisateur.get(0);
+    }
+
+    /**
      * Permet de récupérer les infos d'un organisateur
      * @param idOrganisateur
      */
@@ -83,5 +97,14 @@ public class ServiceOrganisateur {
         }
         organisateurRepository.delete(optionalOrganisateur.get());
         return "Organisateur :"+idOrganisateur+" removed";
+    }
+
+    /**
+     * Permet de récupérer les infos des organisateurs
+     * @return infos des organisateurs
+     */
+    public Iterable<Organisateur> recupererAllOrganisateur() throws Exception {
+        // on cherche le organisateur
+        return organisateurRepository.findAll();
     }
 }

@@ -3,9 +3,12 @@ package com.miage.miagiquespring.exposition;
 
 import com.miage.miagiquespring.entities.Delegation;
 import com.miage.miagiquespring.entities.InfrastructureSportive;
+import com.miage.miagiquespring.entities.Organisateur;
 import com.miage.miagiquespring.metier.ServiceDelegation;
 import com.miage.miagiquespring.metier.ServiceInfrastructureSportive;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Contrôleur REST pour la ressource Delegation
@@ -39,6 +42,22 @@ public class RestServiceDelegation {
     @GetMapping("{id}")
     public Delegation getDelegation(@PathVariable("id") Long idDelegation) throws Exception {
         return serviceDelegation.recupererDelegation(idDelegation);
+    }
+
+    /**
+     * Permet de récupérer les détails d'un Delegation
+     */
+    @GetMapping("{nom}")
+    public Delegation getDelegation(@PathVariable("nom") String nomDelegation) throws Exception {
+        return serviceDelegation.recupererDelegation(nomDelegation);
+    }
+
+    /**
+     * Permet de récupérer tout les détails d'un Delegation
+     */
+    @GetMapping()
+    public Iterable<Delegation> getAllDelegation() throws Exception {
+        return serviceDelegation.recupererAllDelegation();
     }
 
     /**

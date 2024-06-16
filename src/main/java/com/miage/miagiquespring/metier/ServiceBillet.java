@@ -52,6 +52,11 @@ public class ServiceBillet {
         return optionalBillet.get();
     }
 
+    public Iterable<Billet> recupererAllBillet() throws Exception {
+        // on cherche le Billet
+        return billetRepository.findAll();
+    }
+
     public String supprimerBillet(Long idBillet) throws Exception {
         // on cherche le Billet
         final Optional<Billet> optionalBillet = billetRepository.findById(idBillet);

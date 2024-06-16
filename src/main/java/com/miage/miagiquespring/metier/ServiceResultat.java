@@ -51,6 +51,16 @@ public class ServiceResultat {
     }
 
     /**
+     * Permet de récupérer les infos d'un Resultat
+     * @return infos du Resultat
+     */
+    public Iterable<Resultat> recupererAllResultat() throws Exception {
+        // on cherche le Resultat
+        return resultatRepository.findAll();
+    }
+
+
+    /**
      * Permet de récupérer les infos d'un Spectateur
      * @param idResultat
      */

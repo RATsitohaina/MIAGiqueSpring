@@ -71,6 +71,29 @@ public class ServiceParticipant {
 
     /**
      * Permet de récupérer les infos d'un Spectateur
+     * @return infos du Spectateur
+     */
+    public Participant recupererParticipant(String nom, String prenom) throws Exception {
+        // on cherche le participant
+        final List<Participant> optionalParticipant = participantRepository.findByPrenomAndNom(prenom,nom);
+        // s'il n'existe pas on lance une exception
+        if(optionalParticipant.isEmpty())
+            throw new Exception("Participant inexistant");
+        // sinon, on renvoie les infos
+        return optionalParticipant.get(0);
+    }
+
+    /**
+     * Permet de récupérer les toutes les infos des participants
+     * @return infos du participant
+     */
+    public Iterable<Participant> recupererAllParticipant() throws Exception {
+        // on cherche le participant
+        return participantRepository.findAll();
+    }
+
+    /**
+     * Permet de récupérer les infos d'un Spectateur
      * @param idParticipant id du Spectateur
      */
     public String supprimerParticipant(long idParticipant) throws Exception {
