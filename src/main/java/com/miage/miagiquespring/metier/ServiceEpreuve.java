@@ -18,7 +18,6 @@ import java.util.Optional;
 public class ServiceEpreuve {
 
     private final EpreuveRepository epreuveRepository;
-
     /**
      *
      * @param epreuveRepository : Repository sur laquelle on va travailler
@@ -36,7 +35,7 @@ public class ServiceEpreuve {
      * @return l'épreuve créée
      */
     public Epreuve creerEpreuve(String nomEpreuve, String dateEpreuve, InfrastructureSportive infrastructureAccueil , int nbPlacesDispo, List<Billet> billets) {
-        List<Epreuve> epreuveList = epreuveRepository.findByNom(nomEpreuve);
+        List<Epreuve> epreuveList = epreuveRepository.findByNomEpreuve(nomEpreuve);
         Epreuve epreuve;
         if(epreuveList.isEmpty()){
             epreuve = new Epreuve();
@@ -54,6 +53,28 @@ public class ServiceEpreuve {
         return epreuve;
     }
 
+    /**
+     * Crée une épreuve à la base de donnée
+     * @param nomEpreuve
+     * @param dateEpreuve
+     * @param nbPlacesDispo
+     * @return l'épreuve créée
+     */
+    public Epreuve modifierEpreuve(String nom, String nomEpreuve, String dateEpreuve, int nbPlacesDispo) throws Exception {
+        List<Epreuve> epreuveList = epreuveRepository.findByNomEpreuve(nom);
+        Epreuve epreuve;
+        if(epreuveList.isEmpty()){
+            throw new Exception("Epreuve inexistante");
+        }else {
+            epreuve = epreuveList.get(0);
+            epreuve.setNomEpreuve(nomEpreuve);
+            epreuve.setDateEpreuve(dateEpreuve);
+            epreuve.setNbPlacesDispo(nbPlacesDispo);
+            epreuve = epreuveRepository.save(epreuve);
+        }
+        return epreuve;
+    }
+
     public Epreuve recupererEpreuve(Long idEpreuve) throws Exception {
         // on cherche le client
         final Optional<Epreuve> optionalEpreuve = epreuveRepository.findById(idEpreuve);
@@ -66,7 +87,7 @@ public class ServiceEpreuve {
 
     public Epreuve recupererEpreuve(String nomEpreuve) throws Exception {
         // on cherche le client
-        final List<Epreuve> optionalEpreuve = epreuveRepository.findByNom(nomEpreuve);
+        final List<Epreuve> optionalEpreuve = epreuveRepository.findByNomEpreuve(nomEpreuve);
         // s'il n'existe pas on lance une exception
         if(optionalEpreuve.isEmpty())
             throw new Exception("Erreur epreuve inexistant");

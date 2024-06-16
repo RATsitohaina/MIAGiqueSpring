@@ -39,7 +39,7 @@ public class RestServiceDelegation {
      * Permet de récupérer les détails d'une Delegation
      * @param idDelegation id d'une Delegation
      */
-    @GetMapping("{id}")
+    @GetMapping("id/{id}")
     public Delegation getDelegation(@PathVariable("id") Long idDelegation) throws Exception {
         return serviceDelegation.recupererDelegation(idDelegation);
     }
@@ -47,7 +47,7 @@ public class RestServiceDelegation {
     /**
      * Permet de récupérer les détails d'un Delegation
      */
-    @GetMapping("{nom}")
+    @GetMapping("nom/{nom}")
     public Delegation getDelegation(@PathVariable("nom") String nomDelegation) throws Exception {
         return serviceDelegation.recupererDelegation(nomDelegation);
     }

@@ -42,7 +42,7 @@ public class RestServiceSpectateur {
     /**
      * Permet de récupérer les détails d'un Utilisateur
      */
-    @GetMapping("{{prenom}/{nom}}")
+    @GetMapping("{prenom}/{nom}")
     public Spectateur getSpectateur(@PathVariable("nom") String nomSpectateur, @PathVariable("prenom") String prenomSpectateur) throws Exception {
         return serviceSpectateur.recupererSpectateur(prenomSpectateur,nomSpectateur);
     }

@@ -13,8 +13,8 @@ import java.util.List;
 public interface EpreuveRepository  extends CrudRepository<Epreuve, Long> {
     /**
      * Recherche des epreuves nom
-     * @param nom le prénom
+     * @param nomEpreuve le prénom
      * @return la liste des clients qui correspondent
      */
-    List<Epreuve> findByNom(String nom);
+    List<Epreuve> findByNomEpreuve(String nomEpreuve);
 }

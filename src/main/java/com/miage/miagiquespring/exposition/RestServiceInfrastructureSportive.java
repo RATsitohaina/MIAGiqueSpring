@@ -33,7 +33,7 @@ public class RestServiceInfrastructureSportive {
      * Permet de récupérer les détails d'une InfrastructureSportive
      * @param idInfrastructureSportive id d'une InfrastructureSportive
      */
-    @GetMapping("{id}")
+    @GetMapping("id/{id}")
     public InfrastructureSportive getInfrastructureSportive(@PathVariable("id") Long idInfrastructureSportive) throws Exception {
         return serviceInfrastructureSportive.recupererInfrastructureSportive(idInfrastructureSportive);
     }
@@ -42,7 +42,7 @@ public class RestServiceInfrastructureSportive {
      * Permet de récupérer les détails d'une InfrastructureSportive
      * @param nomInfrastructureSportive d'une InfrastructureSportive
      */
-    @GetMapping("{nom}")
+    @GetMapping("nom/{nom}")
     public InfrastructureSportive getInfrastructureSportive(@PathVariable("nom") String nomInfrastructureSportive) throws Exception {
         return serviceInfrastructureSportive.recupererInfrastructureSportive(nomInfrastructureSportive);
     }

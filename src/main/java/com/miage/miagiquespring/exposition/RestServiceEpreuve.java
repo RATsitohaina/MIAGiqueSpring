@@ -37,10 +37,23 @@ public class RestServiceEpreuve {
     }
 
     /**
+     * Permet de modifier une épreuve
+     * @param epreuve L'épreuve à modifier
+     * @param nom Le nom de l'épreuve à modifier
+     * @return L'épreuve modifiée
+     * @throws Exception En cas d'erreur lors de la modification
+     */
+    @PutMapping("modifier/{nom}")
+    public Epreuve modifierEpreuve(@RequestBody Epreuve epreuve, @PathVariable("nom") String nom) throws Exception {
+        return serviceEpreuve.modifierEpreuve(nom, epreuve.getNomEpreuve(), epreuve.getDateEpreuve(), epreuve.getNbPlacesDispo());
+    }
+
+
+    /**
      * Permet de récupérer une epreuve pour une requête GET
      * @param idEpreuve
      */
-    @GetMapping("{id}")
+    @GetMapping("id/{id}")
     public Epreuve getEpreuve(@PathVariable("id") long idEpreuve) throws Exception {
         return serviceEpreuve.recupererEpreuve(idEpreuve);
     }
@@ -49,7 +62,7 @@ public class RestServiceEpreuve {
      * Permet de récupérer une epreuve pour une requête GET
      * @param nomEpreuve
      */
-    @GetMapping("{nom}")
+    @GetMapping("nom/{nom}")
     public Epreuve getEpreuve(@PathVariable("nom") String nomEpreuve) throws Exception {
         return serviceEpreuve.recupererEpreuve(nomEpreuve);
     }
