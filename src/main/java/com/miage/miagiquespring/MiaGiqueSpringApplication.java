@@ -110,6 +110,18 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
         b_2 = billetRepository.save(b_2);
         logger.info("Billet " + b_2);
 
+        Billet b_3 = new Billet();
+        /**
+         * Argument mis a null de base
+         * b_1.setIdEpreuve(null);
+         * b_1.setIdSpectateur(null);
+         */
+        b_3.setPrix(800);
+        b_3.setEtat(true);
+        b_3 = billetRepository.save(b_3);
+        logger.info("Billet " + b_3);
+
+
         /**
          * Listes des billets
          */
@@ -122,6 +134,9 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
         List<Billet> billets_3 = new ArrayList<>();
         billets_3.add(b_1);
         billets_3.add(b_2);
+
+        List<Billet> billets_4 = new ArrayList<>();
+        billets_4.add(b_3);
 
         /**
          * Epreuves
@@ -211,9 +226,9 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
         infra_sportives.add(infra_1);
         infra_sportives.add(infra_2);
 
-        List<Billet> billets = new ArrayList<>();
-        billets.add(b_1);
-        billets.add(b_2);
+        List<Billet> billets_orga = new ArrayList<>();
+        billets_orga.add(b_1);
+        billets_orga.add(b_2);
 
         /**
          * Organisateur
@@ -226,7 +241,7 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
         organisateur.setParticipantList(participants);
         organisateur.setResultatList(resultats);
         organisateur.setEpreuveList(epreuveList);
-        organisateur.setBilletList(billets);
+        organisateur.setBilletList(billets_orga);
         organisateur.setInfrastructureSportiveList(infra_sportives);
         organisateur.setRoleOrganisateur(true);
         organisateur = organisateurRepository.save(organisateur);
@@ -236,15 +251,9 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
          * Contrôlleur
          */
         Organisateur controlleur = new Organisateur();
-        controlleur.setNom("Goal");
-        controlleur.setPrenom("Kely");
-        controlleur.setEmail("@hotmail.com");
-        controlleur.setDelegationList(delegations);
-        controlleur.setParticipantList(participants);
-        controlleur.setResultatList(resultats);
-        controlleur.setEpreuveList(epreuveList);
-        controlleur.setBilletList(billets);
-        controlleur.setInfrastructureSportiveList(infra_sportives);
+        controlleur.setNom("Controller");
+        controlleur.setPrenom("deuxieme");
+        controlleur.setEmail("@gmail.com");
         controlleur.setRoleOrganisateur(false);
         controlleur = organisateurRepository.save(controlleur);
         logger.info("Controlleur " + controlleur);
