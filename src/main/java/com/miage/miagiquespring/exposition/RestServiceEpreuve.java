@@ -24,8 +24,13 @@ public class RestServiceEpreuve {
      * @return Epreuve
      */
     @PostMapping
-    public Epreuve creerEpreuve(@RequestBody Epreuve epreuve) {
-        return serviceEpreuve.creerEpreuve(epreuve.getNomEpreuve(), epreuve.getDateEpreuve(), epreuve.getInfrastructureAccueil(),epreuve.getNbPlacesDispo(), epreuve.getNbPlacesInit(), epreuve.getBillets());
+    public Epreuve creerEpreuve(@RequestBody Epreuve epreuve) throws Exception {
+        return serviceEpreuve.creerEpreuve(epreuve.getNomEpreuve(),
+                epreuve.getDateEpreuve(),
+                epreuve.getInfrastructureAccueil(),
+                epreuve.getNbPlacesDispo(),
+                epreuve.getNbPlacesInit(),
+                epreuve.getPrixBillet());
     }
 
     /**
@@ -82,7 +87,12 @@ public class RestServiceEpreuve {
      * @return Epreuve
      */
     @PostMapping("/null")
-    public Epreuve creerEpreuveNull(@RequestBody Epreuve epreuve) {
-        return serviceEpreuve.creerEpreuve(epreuve.getNomEpreuve(), epreuve.getDateEpreuve(), null,epreuve.getNbPlacesDispo(), epreuve.getNbPlacesInit(), null);
+    public Epreuve creerEpreuveNull(@RequestBody Epreuve epreuve) throws Exception {
+        return serviceEpreuve.creerEpreuve(epreuve.getNomEpreuve(),
+                epreuve.getDateEpreuve(),
+                null,
+                epreuve.getNbPlacesDispo(),
+                epreuve.getNbPlacesInit(),
+                epreuve.getPrixBillet());
     }
 }

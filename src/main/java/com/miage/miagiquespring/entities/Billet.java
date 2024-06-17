@@ -3,6 +3,9 @@ package com.miage.miagiquespring.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Calendar;
+import java.util.Date;
+
 
 @Entity
 @Data
@@ -37,7 +40,15 @@ public class Billet {
     private int prix;
 
     /**
-     * Etat du Billet
+     * Disponibiliter du billet
+     * True : disponible
+     * False : reserver
      */
-    private Boolean etat;
+    private Boolean disponible = true;
+
+    /**
+     * Date de réservation
+     */
+    private Date dateBillet;
+
 }

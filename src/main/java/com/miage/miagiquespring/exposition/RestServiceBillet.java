@@ -24,7 +24,10 @@ public class RestServiceBillet {
      */
     @PostMapping
     public Billet creerBillet(@RequestBody Billet billet) {
-        return serviceBillet.creerBillet(billet.getIdEpreuve(),billet.getIdSpectateur(),billet.getPrix(), billet.getEtat());
+        return serviceBillet.creerBillet(billet.getIdEpreuve()
+                ,billet.getIdSpectateur(),
+                billet.getPrix(),
+                billet.getDateBillet());
     }
 
     /**

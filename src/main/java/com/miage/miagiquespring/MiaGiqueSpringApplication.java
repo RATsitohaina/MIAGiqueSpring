@@ -10,10 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 @SpringBootApplication
 public class MiaGiqueSpringApplication implements CommandLineRunner {
@@ -22,6 +19,7 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
 
     /**
      * Main de l'application
+     *
      * @param args arguments pour Spring
      */
     public static void main(String[] args) {
@@ -61,11 +59,12 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
     /**
      * Méthode pour tester les répositories
      * On a besoin du Transactionnal pour que les listes de comptes remontent avec les clients
+     *
      * @param args arguments non utilisés
      * @throws Exception en cas de problème avec la BD
      */
     @Override
-    @Transactional(propagation= Propagation.REQUIRED, noRollbackFor=Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
     public void run(String... args) throws Exception {
 
         /**
@@ -95,7 +94,8 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
          * b_1.setIdSpectateur(null);
          */
         b_1.setPrix(300);
-        b_1.setEtat(true);
+        Date date_30 = new Date();
+        b_1.setDateBillet(date_30);
         b_1 = billetRepository.save(b_1);
         logger.info("Billet " + b_1);
 
@@ -106,7 +106,7 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
          * b_1.setIdSpectateur(null);
          */
         b_2.setPrix(500);
-        b_2.setEtat(true);
+        b_2.setDateBillet(date_30);
         b_2 = billetRepository.save(b_2);
         logger.info("Billet " + b_2);
 
@@ -117,7 +117,7 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
          * b_1.setIdSpectateur(null);
          */
         b_3.setPrix(800);
-        b_3.setEtat(true);
+        b_3.setDisponible(true);
         b_3 = billetRepository.save(b_3);
         logger.info("Billet " + b_3);
 
@@ -141,30 +141,34 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
         /**
          * Epreuves
          */
-        Epreuve e_1 = new Epreuve();
-        e_1.setNomEpreuve("Petanque");
-        e_1.setNbPlacesDispo(100);
-        e_1.setNbPlacesInit(100);
-        e_1.setDateEpreuve("Lundi");
-        e_1.setInfrastructureAccueil(infra_1);
-        e_1.setBillets(billets_1);
-        e_1 = epreuveRepository.save(e_1);
-        logger.info("Epreuve " + e_1);
+        Epreuve e = new Epreuve();
+        Date date_12 = new Date();
+        date_12.setTime(12);
+
+        e.setNomEpreuve("Course à pied");
+        e.setNbPlacesDispo(100);
+        e.setNbPlacesInit(100);
+        e.setDateEpreuve(date_12);
+        e.setInfrastructureAccueil(infra_1);
+        e.setBillets(billets_1);
+        e.setPrixBillet(20);
+        e = epreuveRepository.save(e);
+        logger.info("Epreuve " + e);
 
         Epreuve e_2 = new Epreuve();
-        e_2.setNomEpreuve("Course à pied");
-        e_2.setNbPlacesDispo(100);
-        e_2.setNbPlacesInit(100);
-        e_2.setDateEpreuve("Mardi");
-        e_2.setInfrastructureAccueil(infra_1);
+        e_2.setNomEpreuve("Petanque");
+        e_2.setNbPlacesDispo(50);
+        e_2.setNbPlacesInit(50);
+        e_2.setDateEpreuve(date_12);
+        e_2.setInfrastructureAccueil(infra_2);
         e_2.setBillets(billets_2);
+        e_2.setPrixBillet(60);
         e_2 = epreuveRepository.save(e_2);
         logger.info("Epreuve " + e_2);
 
         List<Epreuve> epreuveList = new ArrayList<>();
-        epreuveList.add(e_1);
         epreuveList.add(e_2);
-
+        epreuveList.add(e);
 
         /**
          * Delegation
@@ -226,23 +230,14 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
         infra_sportives.add(infra_1);
         infra_sportives.add(infra_2);
 
-        List<Billet> billets_orga = new ArrayList<>();
-        billets_orga.add(b_1);
-        billets_orga.add(b_2);
 
         /**
          * Organisateur
          */
         Organisateur organisateur = new Organisateur();
-        organisateur.setNom("Patron");
-        organisateur.setPrenom("Be");
+        organisateur.setNom("RAZANAJATOVO");
+        organisateur.setPrenom("Tsitohaina");
         organisateur.setEmail("@hotmail.com");
-        organisateur.setDelegationList(delegations);
-        organisateur.setParticipantList(participants);
-        organisateur.setResultatList(resultats);
-        organisateur.setEpreuveList(epreuveList);
-        organisateur.setBilletList(billets_orga);
-        organisateur.setInfrastructureSportiveList(infra_sportives);
         organisateur.setRoleOrganisateur(true);
         organisateur = organisateurRepository.save(organisateur);
         logger.info("Organisateur " + organisateur);
@@ -251,8 +246,8 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
          * Contrôlleur
          */
         Organisateur controlleur = new Organisateur();
-        controlleur.setNom("Controller");
-        controlleur.setPrenom("deuxieme");
+        controlleur.setNom("RAMBELO");
+        controlleur.setPrenom("Iaro");
         controlleur.setEmail("@gmail.com");
         controlleur.setRoleOrganisateur(false);
         controlleur = organisateurRepository.save(controlleur);

@@ -1,9 +1,12 @@
 package com.miage.miagiquespring.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -29,10 +32,7 @@ public class Epreuve {
     /**
      * Date de l'epreuve
      */
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Calendar dateEpreuve;
-
+    private Date dateEpreuve;
 
     /**
      * Nombre de places mises en vente
@@ -43,6 +43,11 @@ public class Epreuve {
      * Nombre de places initiales de l'epreuve
      */
     private int nbPlacesInit;
+
+    /**
+     * Prix des billets de l'épreuve
+     */
+    private int prixBillet;
 
     /**
      * Liste des billets disponibles pour l'epreuve

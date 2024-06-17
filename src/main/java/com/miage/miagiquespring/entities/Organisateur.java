@@ -36,42 +36,6 @@ public class Organisateur {
     protected String email;
 
     /**
-     * Liste délégation
-     */
-    @OneToMany
-    private List<Delegation> delegationList;
-
-    /**
-     * Liste des participants
-     */
-    @OneToMany
-    private List<Participant> participantList;
-
-    /**
-     * Liste des resultats
-     */
-    @OneToMany
-    private List<Resultat> resultatList;
-
-    /**
-     * Liste des épreuves
-     */
-    @OneToMany
-    private List<Epreuve> epreuveList;
-
-    /**
-     * Liste des billets
-     */
-    @OneToMany
-    private List<Billet> billetList;
-
-    /**
-     * Liste des infrastructure sportives
-     */
-    @OneToMany
-    private List<InfrastructureSportive> infrastructureSportiveList;
-
-    /**
      * Rôle de l'organisateur
      * True si organisateur, false si controlleur
      */

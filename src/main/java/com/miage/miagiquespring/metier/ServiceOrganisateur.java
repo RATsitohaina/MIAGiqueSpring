@@ -49,20 +49,11 @@ public class ServiceOrganisateur {
      * @param nom
      * @param prenom
      * @param email
-     * @param delegationList
-     * @param participantList
-     * @param resultatList
-     * @param epreuveList
-     * @param billetList
-     * @param infrastructureSportiveList
      * @param roleOrganisateur
      * @return
      */
-    public Organisateur creerOrganisateur(String nom, String prenom, String email,
-                                          List<Delegation> delegationList, List<Participant> participantList,
-                                          List<Resultat> resultatList, List<Epreuve> epreuveList,
-                                          List<Billet> billetList, List<InfrastructureSportive> infrastructureSportiveList,
-                                          boolean roleOrganisateur) {
+    public Organisateur creerOrganisateur(String nom, String prenom,
+                                          String email, boolean roleOrganisateur) {
         //Opération métier
         //On cherche si le client est déjà présent
         List<Organisateur> organisateurs = organisateurRepository.findByPrenomAndNom(prenom, nom);
@@ -74,12 +65,6 @@ public class ServiceOrganisateur {
             organisateur.setPrenom(prenom);
             organisateur.setNom(nom);
             organisateur.setEmail(email);
-            organisateur.setDelegationList(delegationList);
-            organisateur.setParticipantList(participantList);
-            organisateur.setResultatList(resultatList);
-            organisateur.setEpreuveList(epreuveList);
-            organisateur.setBilletList(billetList);
-            organisateur.setInfrastructureSportiveList(infrastructureSportiveList);
             organisateur.setRoleOrganisateur(roleOrganisateur);
 
             // on l'ajoute à la BD
@@ -153,86 +138,6 @@ public class ServiceOrganisateur {
      */
     public Iterable<Organisateur> recupererAllOrganisateur() throws Exception {
         return organisateurRepository.findAll();
-    }
-
-    /**
-     * ACTION POSSIBLE POUR L'ORGANISATEUR
-     */
-
-
-    /**
-     * PROCESSUS DE GESTION DES DELEGATIONS
-     * Ajout de la delegation dans participant
-     *
-     * @param nomDelegation
-     * @param prenomParticipant
-     * @param nomParticipant
-     * @return
-     * @throws Exception
-     */
-    public String ajouterParticipant(String nomDelegation, String prenomParticipant, String nomParticipant) throws Exception {
-        //Vérification existance et recupreation delegation
-        List<Delegation> optionalDelegation = delegationRepository.findByNom(nomDelegation);
-        if (optionalDelegation.isEmpty()) {
-            throw new Exception("Délégation inexistante");
-        }
-        Delegation delegation = optionalDelegation.get(0);
-
-        //Vérification existance et recuperation participant
-        List<Participant> optionalParticipant = participantRepository.findByPrenomAndNom(prenomParticipant, nomParticipant);
-        if (optionalDelegation.isEmpty()) {
-            throw new Exception("Participant inexistante");
-        }
-        Participant participant = optionalParticipant.get(0);
-
-        //Ajout du participant dans la delegation
-        participant.setDelegation(delegation);
-        participantRepository.save(participant);
-
-        return "Delegation :" + nomDelegation + " added in " + nomParticipant;
-    }
-
-    /**
-     * PROCESSUS DE VALIDATION
-     * Vérifie la validité d'un billet, verifie le role de l'organisateur concerné
-     *
-     * @param nomOrganisateur
-     * @param prenomOrganisateur
-     * @param idBillet
-     * @param idSpectateur
-     * @return Billet validé
-     * @throws Exception
-     */
-    public String validerBillet(String nomOrganisateur, String prenomOrganisateur, Long idBillet, Long idSpectateur) throws Exception {
-        //verification des roles de l'organisateur
-        Organisateur organisateur = recupererOrganisateur(nomOrganisateur, prenomOrganisateur);
-        if (organisateur.getRoleOrganisateur()) {
-            throw new Exception("Cet organisateur n'est pas un controlleur!");
-        }
-
-        //Verification billet
-        Optional<Billet> optionalBillet = billetRepository.findById(idBillet);
-        if (optionalBillet.isEmpty()) {
-            throw new Exception("Billet inexistant");
-        }
-        Billet billet = optionalBillet.get();
-
-        //Verification existance billet et spactateur dans la base
-        //Verification spectateur
-        Optional<Spectateur> optionalSpectateur = spectateurRepository.findById(idSpectateur);
-        if (optionalSpectateur.isEmpty()) {
-            throw new Exception("Spectateur inexistant");
-        }
-        Spectateur spectateur = optionalSpectateur.get();
-
-
-        //Verification correspondance spectateur-billet
-        if (billet.getIdBillet() != spectateur.getIdSpectateur()) {
-            throw new Exception("Le billet ne correspond pas au spectateur.");
-        }
-
-        //Billet valide ou non
-        return "Billet validé";
     }
 
     /**

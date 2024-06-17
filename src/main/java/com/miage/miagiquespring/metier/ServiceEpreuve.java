@@ -5,11 +5,11 @@ import com.miage.miagiquespring.dao.EpreuveRepository;
 import com.miage.miagiquespring.entities.Billet;
 import com.miage.miagiquespring.entities.Epreuve;
 import com.miage.miagiquespring.entities.InfrastructureSportive;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 /**
@@ -18,6 +18,7 @@ import java.util.Optional;
 @Service
 public class ServiceEpreuve {
 
+    private static final Logger log = LoggerFactory.getLogger(ServiceEpreuve.class);
     /**
      * Bean repository qui sera injecté par le constructeur
      */
@@ -43,13 +44,12 @@ public class ServiceEpreuve {
      * @param infrastructureAccueil
      * @param nbPlacesDispo
      * @param nbPlacesInit
-     * @param billets
+     * @param prixBillet
      * @return l'épreuve créée
      */
-    public Epreuve creerEpreuve(String nomEpreuve, Calendar dateEpreuve,
+    public Epreuve creerEpreuve(String nomEpreuve, Date dateEpreuve,
                                 InfrastructureSportive infrastructureAccueil,
-                                int nbPlacesDispo, int nbPlacesInit,
-                                List<Billet> billets) {
+                                int nbPlacesDispo, int nbPlacesInit, int prixBillet) throws Exception {
         List<Epreuve> epreuveList = epreuveRepository.findByNomEpreuve(nomEpreuve);
         Epreuve epreuve;
         if (epreuveList.isEmpty()) {
@@ -59,10 +59,16 @@ public class ServiceEpreuve {
             epreuve.setInfrastructureAccueil(infrastructureAccueil);
             epreuve.setNbPlacesDispo(nbPlacesDispo);
             epreuve.setNbPlacesInit(nbPlacesInit);
-            epreuve.setBillets(billets);
+            epreuve.setPrixBillet(prixBillet);
 
             // Ajout à la base de donnée
             epreuve = epreuveRepository.save(epreuve);
+
+            //Génération des billets
+            List<Epreuve> epreuves = epreuveRepository.findByNomEpreuve(nomEpreuve);
+            Long idEpreuve = epreuves.get(0).getIdEpreuve();
+            genererBilletEpreuve(idEpreuve, prixBillet);
+
         } else {
             epreuve = epreuveList.get(0);
         }
@@ -79,7 +85,7 @@ public class ServiceEpreuve {
      * @return l'épreuve modifier
      * @throws Exception
      */
-    public Epreuve modifierEpreuve(String nom, String nomEpreuve, Calendar dateEpreuve, int nbPlacesDispo) throws Exception {
+    public Epreuve modifierEpreuve(String nom, String nomEpreuve, Date dateEpreuve, int nbPlacesDispo) throws Exception {
         List<Epreuve> epreuveList = epreuveRepository.findByNomEpreuve(nom);
         Epreuve epreuve;
         if (epreuveList.isEmpty()) {
@@ -161,32 +167,32 @@ public class ServiceEpreuve {
      *
      * @param idEpreuve
      * @param prix
-     * @return
      * @throws Exception
      */
-    public List<Billet> genererBilletEpreuve(Long idEpreuve, int prix) throws Exception {
+    public void genererBilletEpreuve(Long idEpreuve, int prix) throws Exception {
         //Vérificaton et récupération epreuve
         Epreuve epreuve = recupererEpreuve(idEpreuve);
-        List<Billet> epreuveBillets = epreuve.getBillets();
+        List<Billet> epreuveBillets = new ArrayList<>();
+
         //Mise en place de la jauge des ventes, gestion des erreurs
         if (!(epreuve.getNbPlacesInit() <= epreuve.getInfrastructureAccueil().getCapacite())) {
-            throw new Exception("Nombre de places initiales de l'epreuve supérieure à la capacité de l'infrastructure");
+            throw new Exception("Capacité d'acceuil rempli");
         }
 
         //pour ne pas générer plus de places que l'infra ne puisse contenir
-
         for (int i = 0; i < epreuve.getNbPlacesInit(); i++) {
             Billet billet = new Billet();
             billet.setIdEpreuve(epreuve.getIdEpreuve());
-            billet.setEtat(false);
+            billet.setDisponible(true);
             billet.setPrix(prix);
             billetRepository.save(billet);
 
             epreuveBillets.add(billet);
+            log.info(billet.toString());
         }
 
+        //Ajout à la base de donnée
         epreuve.setBillets(epreuveBillets);
         epreuveRepository.save(epreuve);
-        return epreuve.getBillets();
     }
 }

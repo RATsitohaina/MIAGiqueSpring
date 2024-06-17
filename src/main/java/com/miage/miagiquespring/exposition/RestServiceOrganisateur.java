@@ -32,11 +32,7 @@ public class RestServiceOrganisateur {
     @PostMapping
     public Organisateur creerOrganisateur(@RequestBody Organisateur organisateur) {
         return serviceOrganisateur.creerOrganisateur(organisateur.getNom(), organisateur.getPrenom(),
-                organisateur.getEmail(),organisateur.getDelegationList(),
-                organisateur.getParticipantList(),organisateur.getResultatList(),
-                organisateur.getEpreuveList(), organisateur.getBilletList(),
-                organisateur.getInfrastructureSportiveList(),
-                organisateur.getRoleOrganisateur());
+                organisateur.getEmail(), organisateur.getRoleOrganisateur());
     }
 
     /**
@@ -80,11 +76,7 @@ public class RestServiceOrganisateur {
     @PostMapping("/null")
     public Organisateur creerOrganisateurNull(@RequestBody Organisateur organisateur) {
         return serviceOrganisateur.creerOrganisateur(organisateur.getNom(), organisateur.getPrenom()
-                , organisateur.getEmail(), null
-                , null, null
-                , null, null
-                , null
-                ,true);
+                , organisateur.getEmail(),true);
     }
 
     /**

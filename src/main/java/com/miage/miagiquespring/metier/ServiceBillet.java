@@ -1,9 +1,18 @@
 package com.miage.miagiquespring.metier;
 
 import com.miage.miagiquespring.dao.BilletRepository;
+import com.miage.miagiquespring.dao.EpreuveRepository;
+import com.miage.miagiquespring.dao.OrganisateurRepository;
+import com.miage.miagiquespring.dao.SpectateurRepository;
 import com.miage.miagiquespring.entities.Billet;
+import com.miage.miagiquespring.entities.Epreuve;
+import com.miage.miagiquespring.entities.Organisateur;
+import com.miage.miagiquespring.entities.Spectateur;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -16,31 +25,40 @@ public class ServiceBillet {
      * Bean repository qui sera injecté par le constructeur
      */
     private final BilletRepository billetRepository;
+    private final OrganisateurRepository organisateurRepository;
+    private final SpectateurRepository spectateurRepository;
+    private final EpreuveRepository epreuveRepository;
 
     /**
      * Constructeur pour l'injection du bean repository
      *
      * @param billetRepository
+     * @param organisateurRepository
+     * @param spectateurRepository
+     * @param epreuveRepository
      */
-    public ServiceBillet(BilletRepository billetRepository) {
+    public ServiceBillet(BilletRepository billetRepository, OrganisateurRepository organisateurRepository, SpectateurRepository spectateurRepository, EpreuveRepository epreuveRepository) {
         this.billetRepository = billetRepository;
+        this.organisateurRepository = organisateurRepository;
+        this.spectateurRepository = spectateurRepository;
+        this.epreuveRepository = epreuveRepository;
     }
 
     /**
      * Créer un billet
      *
+     * @param idEpreuve
      * @param prix
-     * @param etat
      * @param idSpectateur
-     * @param idSpectateur
+     * @param dateBillet
      * @return le billet créée
      */
-    public Billet creerBillet(Long idEpreuve, Long idSpectateur, int prix, Boolean etat) {
+    public Billet creerBillet(Long idEpreuve, Long idSpectateur, int prix, Date dateBillet) {
         Billet billet = new Billet();
         billet.setIdSpectateur(idSpectateur);
         billet.setIdEpreuve(idEpreuve);
         billet.setPrix(prix);
-        billet.setEtat(etat);
+        billet.setDateBillet(dateBillet);
 
         // Ajout à la base de donnée
         billet = billetRepository.save(billet);
@@ -90,5 +108,181 @@ public class ServiceBillet {
         // sinon, on renvoie les infos
         billetRepository.delete(optionalBillet.get());
         return "Billet :" + idBillet + " removed";
+    }
+
+    /**
+     * PROCESSUS DE VALIDATION
+     * Vérifie la validité d'un billet, verifie le role de l'organisateur concerné
+     *
+     * @param nomOrganisateur
+     * @param prenomOrganisateur
+     * @param idBillet
+     * @param idSpectateur
+     * @return Billet validé
+     * @throws Exception
+     */
+    public String validerBillet(String nomOrganisateur, String prenomOrganisateur, Long idBillet, Long idSpectateur) throws Exception {
+        //verification des roles de l'organisateur
+        List<Organisateur> optionalOrganisateur = organisateurRepository.findByPrenomAndNom(prenomOrganisateur, nomOrganisateur);
+        if (optionalOrganisateur.isEmpty()) {
+            throw new Exception("Organisateur inexistante");
+        }
+        Organisateur organisateur = optionalOrganisateur.get(0);
+
+        if (organisateur.getRoleOrganisateur()) {
+            throw new Exception("Cet organisateur n'est pas un controlleur");
+        }
+
+        //Verification billet
+        Optional<Billet> optionalBillet = billetRepository.findById(idBillet);
+        if (optionalBillet.isEmpty()) {
+            throw new Exception("Billet inexistant");
+        }
+        Billet billet = optionalBillet.get();
+
+        //Verification existance billet et spactateur dans la base
+        //Verification spectateur
+        Optional<Spectateur> optionalSpectateur = spectateurRepository.findById(idSpectateur);
+        if (optionalSpectateur.isEmpty()) {
+            throw new Exception("Spectateur inexistant");
+        }
+        Spectateur spectateur = optionalSpectateur.get();
+
+
+        //Verification correspondance spectateur-billet
+        if (billet.getIdBillet() != spectateur.getIdSpectateur()) {
+            throw new Exception("Billet :" + idBillet + " déjà utilisé");
+        }
+
+        //Billet valide ou non
+        return "Billet : " + idBillet + " valide";
+    }
+
+    /**
+     * PROCESSUS D'ANNULATION
+     * Permet a un spectateur d'annuler son billet sous 7 - 3 jours
+     * avec remboursement
+     *
+     * @param prenomSpectateur
+     * @param nomSpectateur
+     * @param idBillet
+     * @return
+     * @throws Exception
+     */
+    public String annulationBillet(String prenomSpectateur, String nomSpectateur, Long idBillet) throws Exception {
+        //Verification et récuperation si le spectateur existe
+        List<Spectateur> optionalSpectateur = spectateurRepository.findByPrenomAndNom(prenomSpectateur, nomSpectateur);
+        if (optionalSpectateur.isEmpty()) {
+            throw new Exception("Spectateur inexistante");
+        }
+        Spectateur spectateur = optionalSpectateur.get(0);
+
+        //Verifcation et recuperer si le billet existe
+
+        // Vérifier et récuperer l'billet
+        Optional<Billet> optionalBillet = billetRepository.findById(idBillet);
+
+        // s'il n'existe pas on lance une exception
+        if (optionalBillet.isEmpty()) {
+            throw new Exception("Billet inexistant");
+        }
+
+        Billet billet = optionalBillet.get();
+
+        //Annuler le billet
+        List<Billet> spectateurBillet = spectateur.getBillets();
+
+        //Verifier si 7-3 Jours avant pour le remboursement
+        // Sinon Annulation impossible
+
+
+        if (spectateurBillet.contains(billet)) {
+            spectateurBillet.remove(billet);
+            spectateur.setBillets(spectateurBillet);
+            spectateurRepository.save(spectateur);
+        } else {
+            throw new Exception("Erreur : Le billet n'appartient pas au spectateur");
+        }
+
+        return " Billet rembourser : " + billet.getIdBillet() + " annuler par " + nomSpectateur;
+    }
+
+    /**
+     * PROCESSUS DE RESERVATION DES BILLETS
+     * Réserver un billet
+     *
+     * @param prenomSpectateur
+     * @param nomSpectateur
+     * @param nomEpreuve
+     * @return
+     * @throws Exception
+     */
+    public String reservationBillet(String prenomSpectateur, String nomSpectateur, String nomEpreuve) throws Exception {
+
+        // Vérifier et récuperer le spectateur
+        List<Spectateur> optionalSpectateur = spectateurRepository.findByPrenomAndNom(prenomSpectateur, nomSpectateur);
+        if (optionalSpectateur.isEmpty()) {
+            throw new Exception("Spectateur inexistante");
+        }
+        Spectateur spectateur = optionalSpectateur.get(0);
+
+
+        // Vérifier et récuperer l'epreuve
+        final List<Epreuve> optionalEpreuve = epreuveRepository.findByNomEpreuve(nomEpreuve);
+
+        // s'il n'existe pas on lance une exception
+        if (optionalEpreuve.isEmpty()) {
+            throw new Exception("Epreuve inexistant");
+        }
+
+        Epreuve epreuve = optionalEpreuve.get(0);
+
+        // Compter le nombre de billet pour cette epreuve appartenant au spectateur
+        int nb_billet = 0;
+        for (Billet billet : spectateur.getBillets()) {
+            if ((billet.getIdSpectateur() == spectateur.getIdSpectateur())
+                    && (billet.getIdEpreuve() == epreuve.getIdEpreuve())) {
+                nb_billet += 1;
+            }
+        }
+
+        // Limiter a 4 billet par spectateur
+        if (nb_billet == 4) {
+            throw new Exception("Spectateur possède déjà 4 billets pour cette epreuve");
+        }
+
+        // Vérification si place encore disponible
+        if (epreuve.getNbPlacesDispo() == 0) {
+            throw new Exception("Epreuve complete : Billet non disponible");
+        }
+
+        // Prendre un billet dans epreuve
+        List<Billet> billetList = epreuve.getBillets();
+        for (Billet billet : billetList) {
+
+            //récuperer un billet disponible
+            if (billet.getDisponible()) {
+                List<Billet> billetsSpectateur = spectateur.getBillets();
+
+                //reservation du billet
+                billet.setDisponible(false);
+                billet.setIdSpectateur(spectateur.getIdSpectateur());
+                billetRepository.save(billet);
+
+                billetsSpectateur.add(billet);
+                spectateur.setBillets(billetsSpectateur);
+                spectateurRepository.save(spectateur);
+                return nomEpreuve + "| Billet : " + billet.getIdBillet() + " reserver par " + nomSpectateur;
+            }
+        }
+        //Modifier nombre de place
+        int nbPlace = epreuve.getNbPlacesDispo();
+        if (nbPlace <= 0) {
+            throw new Exception("Erreur nombre de place : nombre de place négatif");
+        }
+        epreuve.setNbPlacesDispo(nbPlace - 1);
+        epreuveRepository.save(epreuve);
+
+        return "Billet : Non disponible";
     }
 }
