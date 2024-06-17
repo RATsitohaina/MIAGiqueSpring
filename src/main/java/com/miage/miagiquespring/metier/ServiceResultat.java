@@ -5,6 +5,9 @@ import com.miage.miagiquespring.dao.EpreuveRepository;
 import com.miage.miagiquespring.dao.ParticipantRepository;
 import com.miage.miagiquespring.dao.ResultatRepository;
 import com.miage.miagiquespring.entities.*;
+import com.miage.miagiquespring.utilities.EpreuveInexistant;
+import com.miage.miagiquespring.utilities.ParticipantInexistant;
+import com.miage.miagiquespring.utilities.ResultatInexistant;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -69,14 +72,13 @@ public class ServiceResultat {
      *
      * @param idResultat
      * @return le résultat qui correspond
-     * @throws Exception
      */
-    public Resultat recupererResultat(long idResultat) throws Exception {
+    public Resultat recupererResultat(long idResultat) {
         // on cherche le client
         final Optional<Resultat> optionalResultat = resultatRepository.findById(idResultat);
         // s'il n'existe pas on lance une exception
         if (optionalResultat.isEmpty())
-            throw new Exception("Resultat inexistant");
+            throw new ResultatInexistant("Resultat inexistant");
         // sinon, on renvoie les infos
         return optionalResultat.get();
     }
@@ -85,9 +87,8 @@ public class ServiceResultat {
      * Récuperer tous les résultats
      *
      * @return
-     * @throws Exception
      */
-    public Iterable<Resultat> recupererAllResultat() throws Exception {
+    public Iterable<Resultat> recupererAllResultat() {
         // on cherche le Resultat
         return resultatRepository.findAll();
     }
@@ -97,14 +98,13 @@ public class ServiceResultat {
      *
      * @param idResultat
      * @return confirmation de suppression
-     * @throws Exception
      */
-    public String supprimerResultat(long idResultat) throws Exception {
+    public String supprimerResultat(long idResultat) {
         // on cherche le client
         final Optional<Resultat> optionalResultat = resultatRepository.findById(idResultat);
         // s'il n'existe pas on lance une exception
         if (optionalResultat.isEmpty()) {
-            throw new Exception("idResultat inexistant");
+            throw new ResultatInexistant("Resultat inexistant");
         }
         resultatRepository.delete(optionalResultat.get());
         return "Resultat :" + idResultat + " removed";
@@ -115,7 +115,7 @@ public class ServiceResultat {
      * Permet d'afficher un classement des résultats
      * <nomDelegation, nomEpreuve, nomParticipant, nbMedaille>
      */
-    public Map<String, Map<String, Map<String, Integer>>> afficherClassement() throws Exception {
+    public Map<String, Map<String, Map<String, Integer>>> afficherClassement() {
 
         // Récupération de tous les résultats
         Iterable<Resultat> resultats = resultatRepository.findAll();
@@ -128,7 +128,7 @@ public class ServiceResultat {
             Long idEpreuve = resultat.getIdEpreuve();
             Optional<Epreuve> optionalEpreuve = epreuveRepository.findById(idEpreuve);
             if (optionalEpreuve.isEmpty()) {
-                throw new Exception("Epreuve inexistant");
+                throw new EpreuveInexistant("Epreuve inexistant");
             }
             Epreuve epreuve = optionalEpreuve.get();
 
@@ -136,7 +136,7 @@ public class ServiceResultat {
             Long idParticipant = resultat.getIdParticipant();
             Optional<Participant> optionalParticipant = participantRepository.findById(idParticipant);
             if (optionalParticipant.isEmpty()) {
-                throw new Exception("Participant inexistant");
+                throw new ParticipantInexistant("Participant inexistant");
             }
             Participant participant = optionalParticipant.get();
 
@@ -166,20 +166,12 @@ public class ServiceResultat {
      * @return
      * @throws Exception
      */
-    public String MajNbMedaille(Resultat resultat) throws Exception {
-        // Récupération de l'épreuve
-        Long idEpreuve = resultat.getIdEpreuve();
-        Optional<Epreuve> optionalEpreuve = epreuveRepository.findById(idEpreuve);
-        if (optionalEpreuve.isEmpty()) {
-            throw new Exception("Epreuve inexistant");
-        }
-        Epreuve epreuve = optionalEpreuve.get();
-
+    public String MajNbMedaille(Resultat resultat) {
         // Récupération participant
         Long idParticipant = resultat.getIdParticipant();
         Optional<Participant> optionalParticipant = participantRepository.findById(idParticipant);
         if (optionalParticipant.isEmpty()) {
-            throw new Exception("Participant inexistant");
+            throw new ParticipantInexistant("Participant inexistant");
         }
         Participant participant = optionalParticipant.get();
 
@@ -200,7 +192,8 @@ public class ServiceResultat {
                 participantDelegation.setNbMedailleBronze(participantDelegation.getNbMedailleBronze() + 1);
                 break;
             }
-            default: return participantDelegation.getNom() + " Pas de MAJ des medailles";
+            default:
+                return participantDelegation.getNom() + " Pas de MAJ des medailles";
         }
 
         delegationRepository.save(participantDelegation);

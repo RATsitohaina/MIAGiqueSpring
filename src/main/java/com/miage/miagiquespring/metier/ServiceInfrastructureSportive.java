@@ -3,6 +3,7 @@ package com.miage.miagiquespring.metier;
 
 import com.miage.miagiquespring.dao.InfrastructureSportiveRepository;
 import com.miage.miagiquespring.entities.InfrastructureSportive;
+import com.miage.miagiquespring.utilities.InfrastructureSportiveInexistante;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,14 +64,13 @@ public class ServiceInfrastructureSportive {
      *
      * @param infraId
      * @return l'infrastructure qui correspond
-     * @throws Exception
      */
-    public InfrastructureSportive recupererInfrastructureSportive(Long infraId) throws Exception {
+    public InfrastructureSportive recupererInfrastructureSportive(Long infraId) {
         // on cherche le infrastucture
         final Optional<InfrastructureSportive> optionalInfrastructureSportive = sportiveRepository.findById(infraId);
         // s'il n'existe pas on lance une exception
         if (optionalInfrastructureSportive.isEmpty())
-            throw new Exception("Erreur infrastucture inexistant");
+            throw new InfrastructureSportiveInexistante("Erreur infrastucture inexistant");
         // sinon, on renvoie les infos
         return optionalInfrastructureSportive.get();
     }
@@ -80,14 +80,13 @@ public class ServiceInfrastructureSportive {
      *
      * @param nom
      * @return l'infrastructure qui correspond
-     * @throws Exception
      */
-    public InfrastructureSportive recupererInfrastructureSportive(String nom) throws Exception {
+    public InfrastructureSportive recupererInfrastructureSportive(String nom) {
         // on cherche le infrastucture
         final List<InfrastructureSportive> optionalInfrastructureSportive = sportiveRepository.findByNom(nom);
         // s'il n'existe pas on lance une exception
         if (optionalInfrastructureSportive.isEmpty())
-            throw new Exception("Erreur infrastucture inexistant");
+            throw new InfrastructureSportiveInexistante("Erreur infrastucture inexistant");
         // sinon, on renvoie les infos
         return optionalInfrastructureSportive.get(0);
     }
@@ -96,9 +95,8 @@ public class ServiceInfrastructureSportive {
      * Récupérer toutes les infrastructures sportives
      *
      * @return la liste des infrastructures sportives
-     * @throws Exception
      */
-    public Iterable<InfrastructureSportive> recupererAllInfrastructureSportive() throws Exception {
+    public Iterable<InfrastructureSportive> recupererAllInfrastructureSportive() {
         return infrastructureSportiveRepository.findAll();
     }
 
@@ -107,14 +105,13 @@ public class ServiceInfrastructureSportive {
      *
      * @param idInfrastructureSportive
      * @return la confirmation de suppression
-     * @throws Exception
      */
-    public String supprimerInfrastructureSportive(Long idInfrastructureSportive) throws Exception {
+    public String supprimerInfrastructureSportive(Long idInfrastructureSportive) {
         // on cherche le infrastucture
         final Optional<InfrastructureSportive> optionalInfrastructureSportive = sportiveRepository.findById(idInfrastructureSportive);
         // s'il n'existe pas on lance une exception
         if (optionalInfrastructureSportive.isEmpty())
-            throw new Exception("Erreur infrastucture inexistant");
+            throw new InfrastructureSportiveInexistante("Erreur infrastucture inexistant");
         // sinon, on renvoie les infos
         sportiveRepository.delete(optionalInfrastructureSportive.get());
         return "InfrastructureSportive :" + idInfrastructureSportive + " removed";

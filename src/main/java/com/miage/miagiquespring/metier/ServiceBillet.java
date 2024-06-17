@@ -8,6 +8,7 @@ import com.miage.miagiquespring.entities.Billet;
 import com.miage.miagiquespring.entities.Epreuve;
 import com.miage.miagiquespring.entities.Organisateur;
 import com.miage.miagiquespring.entities.Spectateur;
+import com.miage.miagiquespring.utilities.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -77,7 +78,7 @@ public class ServiceBillet {
         final Optional<Billet> optionalBillet = billetRepository.findById(idBillet);
         // s'il n'existe pas on lance une exception
         if (optionalBillet.isEmpty())
-            throw new Exception("Erreur epreuve inexistant");
+            throw new EpreuveInexistant("Erreur epreuve inexistant");
         // sinon, on renvoie les infos
         return optionalBillet.get();
     }
@@ -104,7 +105,7 @@ public class ServiceBillet {
         final Optional<Billet> optionalBillet = billetRepository.findById(idBillet);
         // s'il n'existe pas on lance une exception
         if (optionalBillet.isEmpty())
-            throw new Exception("Erreur epreuve inexistant");
+            throw new EpreuveInexistant("Erreur epreuve inexistant");
         // sinon, on renvoie les infos
         billetRepository.delete(optionalBillet.get());
         return "Billet :" + idBillet + " removed";
@@ -119,24 +120,23 @@ public class ServiceBillet {
      * @param idBillet
      * @param idSpectateur
      * @return Billet validé
-     * @throws Exception
      */
-    public String validerBillet(String nomOrganisateur, String prenomOrganisateur, Long idBillet, Long idSpectateur) throws Exception {
+    public String validerBillet(String nomOrganisateur, String prenomOrganisateur, Long idBillet, Long idSpectateur) {
         //verification des roles de l'organisateur
         List<Organisateur> optionalOrganisateur = organisateurRepository.findByPrenomAndNom(prenomOrganisateur, nomOrganisateur);
         if (optionalOrganisateur.isEmpty()) {
-            throw new Exception("Organisateur inexistante");
+            throw new OrganisateurInexistant("Organisateur inexistante");
         }
         Organisateur organisateur = optionalOrganisateur.get(0);
 
         if (organisateur.getRoleOrganisateur()) {
-            throw new Exception("Cet organisateur n'est pas un controlleur");
+            throw new RoleOrganisateurNonConforme("Cet organisateur n'est pas un controlleur");
         }
 
         //Verification billet
         Optional<Billet> optionalBillet = billetRepository.findById(idBillet);
         if (optionalBillet.isEmpty()) {
-            throw new Exception("Billet inexistant");
+            throw new BilletInexistant("Billet inexistant");
         }
         Billet billet = optionalBillet.get();
 
@@ -144,14 +144,14 @@ public class ServiceBillet {
         //Verification spectateur
         Optional<Spectateur> optionalSpectateur = spectateurRepository.findById(idSpectateur);
         if (optionalSpectateur.isEmpty()) {
-            throw new Exception("Spectateur inexistant");
+            throw new SpectateurInexistant("Spectateur inexistant");
         }
         Spectateur spectateur = optionalSpectateur.get();
 
 
         //Verification correspondance spectateur-billet
         if (billet.getIdSpectateur() != spectateur.getIdSpectateur()) {
-            throw new Exception("Billet :" + idBillet + " déjà utilisé");
+            throw new BilletNonDisponible("Billet :" + idBillet + " déjà utilisé");
         }
 
         //Billet valide ou non
@@ -167,13 +167,12 @@ public class ServiceBillet {
      * @param nomSpectateur
      * @param idBillet
      * @return
-     * @throws Exception
      */
-    public String annulationBillet(String prenomSpectateur, String nomSpectateur, Long idBillet) throws Exception {
+    public String annulationBillet(String prenomSpectateur, String nomSpectateur, Long idBillet) {
         //Verification et récuperation si le spectateur existe
         List<Spectateur> optionalSpectateur = spectateurRepository.findByPrenomAndNom(prenomSpectateur, nomSpectateur);
         if (optionalSpectateur.isEmpty()) {
-            throw new Exception("Spectateur inexistante");
+            throw new SpectateurInexistant("Spectateur inexistante");
         }
         Spectateur spectateur = optionalSpectateur.get(0);
 
@@ -184,7 +183,7 @@ public class ServiceBillet {
 
         // s'il n'existe pas on lance une exception
         if (optionalBillet.isEmpty()) {
-            throw new Exception("Billet inexistant");
+            throw new BilletInexistant("Billet inexistant");
         }
 
         Billet billet = optionalBillet.get();
@@ -192,7 +191,7 @@ public class ServiceBillet {
         // Vérification si le billet appartient au spectateur
         List<Billet> spectateurBillets = spectateur.getBillets();
         if (!spectateurBillets.contains(billet)) {
-            throw new Exception("Erreur : Le billet n'appartient pas au spectateur");
+            throw new BilletNonDisponible("Erreur : Le billet n'appartient pas au spectateur");
         }
 
         // Récupération de l'épreuve
@@ -201,7 +200,7 @@ public class ServiceBillet {
 
         // s'il n'existe pas on lance une exception
         if (optionalEpreuve.isEmpty()) {
-            throw new Exception("Epreuve inexistant");
+            throw new EpreuveInexistant("Epreuve inexistant");
         }
 
         Epreuve epreuve = optionalEpreuve.get();
@@ -228,7 +227,7 @@ public class ServiceBillet {
             remboursement = billet.getPrix() * 0.5;
         } else {
             // Annulation impossible
-            throw new Exception("Annulation impossible : Les annulations doivent être faites au moins 3 jours avant l'épreuve.");
+            throw new AnnulationImpossible("Annulation impossible : Les annulations doivent être faites au moins 3 jours avant l'épreuve.");
         }
 
         // Annuler le billet
@@ -248,14 +247,13 @@ public class ServiceBillet {
      * @param nomSpectateur
      * @param nomEpreuve
      * @return
-     * @throws Exception
      */
-    public String reservationBillet(String prenomSpectateur, String nomSpectateur, String nomEpreuve) throws Exception {
+    public String reservationBillet(String prenomSpectateur, String nomSpectateur, String nomEpreuve) {
 
         // Vérifier et récuperer le spectateur
         List<Spectateur> optionalSpectateur = spectateurRepository.findByPrenomAndNom(prenomSpectateur, nomSpectateur);
         if (optionalSpectateur.isEmpty()) {
-            throw new Exception("Spectateur inexistante");
+            throw new SpectateurInexistant("Spectateur inexistante");
         }
         Spectateur spectateur = optionalSpectateur.get(0);
 
@@ -265,7 +263,7 @@ public class ServiceBillet {
 
         // s'il n'existe pas on lance une exception
         if (optionalEpreuve.isEmpty()) {
-            throw new Exception("Epreuve inexistant");
+            throw new EpreuveInexistant("Epreuve inexistant");
         }
 
         Epreuve epreuve = optionalEpreuve.get(0);
@@ -281,12 +279,12 @@ public class ServiceBillet {
 
         // Limiter a 4 billet par spectateur
         if (nb_billet >= 4) {
-            throw new Exception("Spectateur possède déjà 4 billets pour cette epreuve");
+            throw new NombreBilletSpectateurNonConforme("Spectateur possède déjà 4 billets pour cette epreuve");
         }
 
         // Vérification si place encore disponible
         if (epreuve.getNbPlacesDispo() == 0) {
-            throw new Exception("Epreuve complete : Billet non disponible");
+            throw new CapaciteDacceuilRempli("Epreuve complete : Billet non disponible");
         }
 
         // Prendre un billet dans epreuve
@@ -305,17 +303,19 @@ public class ServiceBillet {
                 billetsSpectateur.add(billet);
                 spectateur.setBillets(billetsSpectateur);
                 spectateurRepository.save(spectateur);
-                return "Payé : "+ billet.getPrix()+" | "+ nomEpreuve + "| Billet : " + billet.getIdBillet() + " reserver par " + nomSpectateur;
+
+                //Modifier nombre de place
+                int nbPlace = epreuve.getNbPlacesDispo();
+                if (nbPlace <= 0) {
+                    throw new NombreBilletSpectateurNonConforme("Erreur nombre de place : nombre de place négatif");
+                }
+
+                epreuve.setNbPlacesDispo(nbPlace - 1);
+                epreuveRepository.save(epreuve);
+
+                return "Payé : " + billet.getPrix() + " | " + nomEpreuve + "| Billet : " + billet.getIdBillet() + " reserver par " + nomSpectateur;
             }
         }
-        //Modifier nombre de place
-        int nbPlace = epreuve.getNbPlacesDispo();
-        if (nbPlace <= 0) {
-            throw new Exception("Erreur nombre de place : nombre de place négatif");
-        }
-        epreuve.setNbPlacesDispo(nbPlace - 1);
-        epreuveRepository.save(epreuve);
-
         return "Billet : Non disponible";
     }
 }

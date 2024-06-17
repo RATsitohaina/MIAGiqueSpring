@@ -5,6 +5,8 @@ import com.miage.miagiquespring.dao.EpreuveRepository;
 import com.miage.miagiquespring.entities.Billet;
 import com.miage.miagiquespring.entities.Epreuve;
 import com.miage.miagiquespring.entities.InfrastructureSportive;
+import com.miage.miagiquespring.utilities.CapaciteDacceuilRempli;
+import com.miage.miagiquespring.utilities.EpreuveInexistant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -83,13 +85,12 @@ public class ServiceEpreuve {
      * @param dateEpreuve
      * @param nbPlacesDispo
      * @return l'épreuve modifier
-     * @throws Exception
      */
-    public Epreuve modifierEpreuve(String nom, String nomEpreuve, Date dateEpreuve, int nbPlacesDispo) throws Exception {
+    public Epreuve modifierEpreuve(String nom, String nomEpreuve, Date dateEpreuve, int nbPlacesDispo) {
         List<Epreuve> epreuveList = epreuveRepository.findByNomEpreuve(nom);
         Epreuve epreuve;
         if (epreuveList.isEmpty()) {
-            throw new Exception("Epreuve inexistante");
+            throw new EpreuveInexistant("Epreuve inexistante");
         } else {
             epreuve = epreuveList.get(0);
             epreuve.setNomEpreuve(nomEpreuve);
@@ -105,14 +106,13 @@ public class ServiceEpreuve {
      *
      * @param idEpreuve
      * @return l'épreuve qui correspond
-     * @throws Exception
      */
-    public Epreuve recupererEpreuve(Long idEpreuve) throws Exception {
+    public Epreuve recupererEpreuve(Long idEpreuve) {
         // on cherche le client
         final Optional<Epreuve> optionalEpreuve = epreuveRepository.findById(idEpreuve);
         // s'il n'existe pas on lance une exception
         if (optionalEpreuve.isEmpty())
-            throw new Exception("Erreur epreuve inexistant");
+            throw new EpreuveInexistant("Erreur epreuve inexistant");
         // sinon, on renvoie les infos
         return optionalEpreuve.get();
     }
@@ -122,14 +122,13 @@ public class ServiceEpreuve {
      *
      * @param nomEpreuve
      * @return l'épreuve qui correspond
-     * @throws Exception
      */
-    public Epreuve recupererEpreuve(String nomEpreuve) throws Exception {
+    public Epreuve recupererEpreuve(String nomEpreuve) {
         // on cherche le client
         final List<Epreuve> optionalEpreuve = epreuveRepository.findByNomEpreuve(nomEpreuve);
         // s'il n'existe pas on lance une exception
         if (optionalEpreuve.isEmpty())
-            throw new Exception("Erreur epreuve inexistant");
+            throw new EpreuveInexistant("Erreur epreuve inexistant");
         // sinon, on renvoie les infos
         return optionalEpreuve.get(0);
     }
@@ -138,9 +137,8 @@ public class ServiceEpreuve {
      * Récupérer toutes les épreuves
      *
      * @return liste de toutes les épreuves
-     * @throws Exception
      */
-    public Iterable<Epreuve> recupererAllEpreuve() throws Exception {
+    public Iterable<Epreuve> recupererAllEpreuve() {
         return epreuveRepository.findAll();
     }
 
@@ -149,14 +147,13 @@ public class ServiceEpreuve {
      *
      * @param idEpreuve
      * @return la confirmation de suppression
-     * @throws Exception
      */
-    public String supprimerEpreuve(Long idEpreuve) throws Exception {
+    public String supprimerEpreuve(Long idEpreuve) {
         // on cherche le client
         final Optional<Epreuve> optionalEpreuve = epreuveRepository.findById(idEpreuve);
         // s'il n'existe pas on lance une exception
         if (optionalEpreuve.isEmpty())
-            throw new Exception("Erreur epreuve inexistant");
+            throw new EpreuveInexistant("Erreur epreuve inexistant");
         // sinon, on renvoie les infos
         epreuveRepository.delete(optionalEpreuve.get());
         return "Epreuve :" + idEpreuve + " removed";
@@ -167,16 +164,15 @@ public class ServiceEpreuve {
      *
      * @param idEpreuve
      * @param prix
-     * @throws Exception
      */
-    public void genererBilletEpreuve(Long idEpreuve, int prix) throws Exception {
+    public void genererBilletEpreuve(Long idEpreuve, int prix) {
         //Vérificaton et récupération epreuve
         Epreuve epreuve = recupererEpreuve(idEpreuve);
         List<Billet> epreuveBillets = new ArrayList<>();
 
         //Mise en place de la jauge des ventes, gestion des erreurs
         if (!(epreuve.getNbPlacesInit() <= epreuve.getInfrastructureAccueil().getCapacite())) {
-            throw new Exception("Capacité d'acceuil rempli");
+            throw new CapaciteDacceuilRempli("Capacité d'acceuil rempli");
         }
 
         //pour ne pas générer plus de places que l'infra ne puisse contenir

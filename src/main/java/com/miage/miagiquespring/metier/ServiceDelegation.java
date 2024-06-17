@@ -2,6 +2,7 @@ package com.miage.miagiquespring.metier;
 
 import com.miage.miagiquespring.dao.DelegationRepository;
 import com.miage.miagiquespring.entities.Delegation;
+import com.miage.miagiquespring.utilities.DelegationInexistante;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -61,13 +62,12 @@ public class ServiceDelegation {
      *
      * @param IdDelegation
      * @return la délégation qui correspond
-     * @throws Exception
      */
-    public Delegation recupererDelegation(Long IdDelegation) throws Exception {
+    public Delegation recupererDelegation(Long IdDelegation) {
         Optional<Delegation> optionalDelegation = delegationRepository.findById(IdDelegation);
 
         if (optionalDelegation.isEmpty()) {
-            throw new Exception("Délégation inexistante");
+            throw new DelegationInexistante("Délégation inexistante");
         }
         return optionalDelegation.get();
     }
@@ -77,13 +77,12 @@ public class ServiceDelegation {
      *
      * @param nomDelegation
      * @return la délégation qui correspond
-     * @throws Exception
      */
-    public Delegation recupererDelegation(String nomDelegation) throws Exception {
+    public Delegation recupererDelegation(String nomDelegation) {
         List<Delegation> optionalDelegation = delegationRepository.findByNom(nomDelegation);
 
         if (optionalDelegation.isEmpty()) {
-            throw new Exception("Délégation inexistante");
+            throw new DelegationInexistante("Délégation inexistante");
         }
         return optionalDelegation.get(0);
     }
@@ -92,9 +91,8 @@ public class ServiceDelegation {
      * Récupérer toutes les délégations
      *
      * @return la liste des délégations
-     * @throws Exception
      */
-    public Iterable<Delegation> recupererAllDelegation() throws Exception {
+    public Iterable<Delegation> recupererAllDelegation() {
         return delegationRepository.findAll();
     }
 
@@ -108,7 +106,7 @@ public class ServiceDelegation {
     public String supprimerDelegation(Long IdDelegation) throws Exception {
         Optional<Delegation> optionalDelegation = delegationRepository.findById(IdDelegation);
         if (optionalDelegation.isEmpty()) {
-            throw new Exception("Délégation inexistante");
+            throw new DelegationInexistante("Délégation inexistante");
         }
         delegationRepository.delete(optionalDelegation.get());
         return "Delegation :" + IdDelegation + " removed";

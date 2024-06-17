@@ -2,6 +2,8 @@ package com.miage.miagiquespring.metier;
 
 import com.miage.miagiquespring.dao.*;
 import com.miage.miagiquespring.entities.*;
+import com.miage.miagiquespring.utilities.OrganisateurInexistant;
+import com.miage.miagiquespring.utilities.RoleOrganisateurNonConforme;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -18,28 +20,16 @@ public class ServiceOrganisateur {
      * Bean repository qui sera injecté par le constructeur
      */
     private final OrganisateurRepository organisateurRepository;
-    private final ParticipantRepository participantRepository;
-    private final DelegationRepository delegationRepository;
-    private final BilletRepository billetRepository;
-    private final SpectateurRepository spectateurRepository;
     private final EpreuveRepository epreuveRepository;
 
     /**
      * Constructeur pour l'injection du bean repository
      *
      * @param organisateurRepository
-     * @param participantRepository
-     * @param delegationRepository
-     * @param billetRepository
-     * @param spectateurRepository
      * @param epreuveRepository
      */
-    public ServiceOrganisateur(OrganisateurRepository organisateurRepository, ParticipantRepository participantRepository, DelegationRepository delegationRepository, BilletRepository billetRepository, SpectateurRepository spectateurRepository, EpreuveRepository epreuveRepository) {
+    public ServiceOrganisateur(OrganisateurRepository organisateurRepository, EpreuveRepository epreuveRepository) {
         this.organisateurRepository = organisateurRepository;
-        this.participantRepository = participantRepository;
-        this.delegationRepository = delegationRepository;
-        this.billetRepository = billetRepository;
-        this.spectateurRepository = spectateurRepository;
         this.epreuveRepository = epreuveRepository;
     }
 
@@ -82,14 +72,13 @@ public class ServiceOrganisateur {
      *
      * @param idOrganisateur
      * @return l'organisateur qui correspond
-     * @throws Exception
      */
-    public Organisateur recupererOrganisateur(long idOrganisateur) throws Exception {
+    public Organisateur recupererOrganisateur(long idOrganisateur) {
         // on cherche le organisateur
         final Optional<Organisateur> optionalOrganisateur = organisateurRepository.findById(idOrganisateur);
         // s'il n'existe pas on lance une exception
         if (optionalOrganisateur.isEmpty())
-            throw new Exception("Organisateur inexistant");
+            throw new OrganisateurInexistant("Organisateur inexistant");
         // sinon, on renvoie les infos
         return optionalOrganisateur.get();
     }
@@ -100,14 +89,13 @@ public class ServiceOrganisateur {
      * @param nom
      * @param prenom
      * @return l'organisateur qui correspond
-     * @throws Exception
      */
-    public Organisateur recupererOrganisateur(String nom, String prenom) throws Exception {
+    public Organisateur recupererOrganisateur(String nom, String prenom) {
         // on cherche le organisateur
         final List<Organisateur> optionalOrganisateur = organisateurRepository.findByPrenomAndNom(prenom, nom);
         // s'il n'existe pas on lance une exception
         if (optionalOrganisateur.isEmpty())
-            throw new Exception("Organisateur inexistant");
+            throw new OrganisateurInexistant("Organisateur inexistant");
         // sinon, on renvoie les infos
         return optionalOrganisateur.get(0);
     }
@@ -117,14 +105,13 @@ public class ServiceOrganisateur {
      *
      * @param idOrganisateur
      * @return la confirmation de suppression
-     * @throws Exception
      */
-    public String supprimerOrganisateur(long idOrganisateur) throws Exception {
+    public String supprimerOrganisateur(long idOrganisateur) {
         // on cherche le client
         final Optional<Organisateur> optionalOrganisateur = organisateurRepository.findById(idOrganisateur);
         // s'il n'existe pas on lance une exception
         if (optionalOrganisateur.isEmpty()) {
-            throw new Exception("Organisateur inexistant");
+            throw new OrganisateurInexistant("Organisateur inexistant");
         }
         organisateurRepository.delete(optionalOrganisateur.get());
         return "Organisateur :" + idOrganisateur + " removed";
@@ -134,9 +121,8 @@ public class ServiceOrganisateur {
      * Récuperer tous les organisateurs
      *
      * @return liste des organisateurs
-     * @throws Exception
      */
-    public Iterable<Organisateur> recupererAllOrganisateur() throws Exception {
+    public Iterable<Organisateur> recupererAllOrganisateur() {
         return organisateurRepository.findAll();
     }
 
@@ -147,13 +133,12 @@ public class ServiceOrganisateur {
      * @param nomOrganisateur
      * @param prenomOrganisateur
      * @return une hashmap avec comme clé le nom de l'épreuve et comme valeur la statistique des ventes
-     * @throws Exception
      */
     //Processus supervision epreuve
-    public HashMap<String, Float> calculerStatDeVentes(String nomOrganisateur, String prenomOrganisateur) throws Exception {
+    public HashMap<String, Float> calculerStatDeVentes(String nomOrganisateur, String prenomOrganisateur) {
         Organisateur organisateur = recupererOrganisateur(nomOrganisateur, prenomOrganisateur);
         if (!organisateur.getRoleOrganisateur()) {
-            throw new Exception("Cet organisateur est un controlleur!");
+            throw new RoleOrganisateurNonConforme("Cet organisateur est un controlleur!");
         }
         //calcul des res
         Iterable<Epreuve> epreuves = epreuveRepository.findAll();

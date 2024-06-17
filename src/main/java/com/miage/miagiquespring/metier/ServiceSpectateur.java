@@ -1,11 +1,9 @@
 package com.miage.miagiquespring.metier;
 
-import com.miage.miagiquespring.dao.BilletRepository;
-import com.miage.miagiquespring.dao.EpreuveRepository;
 import com.miage.miagiquespring.dao.SpectateurRepository;
 import com.miage.miagiquespring.entities.Billet;
-import com.miage.miagiquespring.entities.Resultat;
 import com.miage.miagiquespring.entities.Spectateur;
+import com.miage.miagiquespring.utilities.SpectateurInexistant;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -70,14 +68,13 @@ public class ServiceSpectateur {
      *
      * @param idSpectateur
      * @return le spectateur qui correspond
-     * @throws Exception
      */
-    public Spectateur recupererSpectateur(long idSpectateur) throws Exception {
+    public Spectateur recupererSpectateur(long idSpectateur) {
         // on cherche le client
         final Optional<Spectateur> optionalSpectateur = spectateurRepository.findById(idSpectateur);
         // s'il n'existe pas on lance une exception
         if (optionalSpectateur.isEmpty())
-            throw new Exception("Spectateur inexistant");
+            throw new SpectateurInexistant("Spectateur inexistant");
         // sinon, on renvoie les infos
         return optionalSpectateur.get();
     }
@@ -88,14 +85,13 @@ public class ServiceSpectateur {
      * @param prenom
      * @param nom
      * @return le spectateur qui correspond
-     * @throws Exception
      */
-    public Spectateur recupererSpectateur(String prenom, String nom) throws Exception {
+    public Spectateur recupererSpectateur(String prenom, String nom) {
         // on cherche le Spectateur
         final List<Spectateur> optionalSpectateur = spectateurRepository.findByPrenomAndNom(prenom, nom);
         // s'il n'existe pas on lance une exception
         if (optionalSpectateur.isEmpty())
-            throw new Exception("Spectateur inexistant");
+            throw new SpectateurInexistant("Spectateur inexistant");
         // sinon, on renvoie les infos
         return optionalSpectateur.get(0);
     }
@@ -105,9 +101,8 @@ public class ServiceSpectateur {
      * Récupérer tous les spectateurs
      *
      * @return la liste des spéctateurs
-     * @throws Exception
      */
-    public Iterable<Spectateur> recupererAllSpectateur() throws Exception {
+    public Iterable<Spectateur> recupererAllSpectateur() {
         return spectateurRepository.findAll();
     }
 
@@ -116,14 +111,13 @@ public class ServiceSpectateur {
      *
      * @param idSpectateur
      * @return confirmation de suppression
-     * @throws Exception
      */
-    public String supprimerSpectateur(long idSpectateur) throws Exception {
+    public String supprimerSpectateur(long idSpectateur) {
         // on cherche le client
         final Optional<Spectateur> optionalSpectateur = spectateurRepository.findById(idSpectateur);
         // s'il n'existe pas on lance une exception
         if (optionalSpectateur.isEmpty()) {
-            throw new Exception("Spectateur inexistant");
+            throw new SpectateurInexistant("Spectateur inexistant");
         }
         spectateurRepository.delete(optionalSpectateur.get());
         return "Spectateur :" + idSpectateur + " removed";
@@ -131,16 +125,16 @@ public class ServiceSpectateur {
 
     /**
      * Consulter liste de billets du spectateur
+     *
      * @param idSpectateur
      * @return la liste des billets
-     * @throws Exception
      */
-    public List<Billet> consulterBilletSpectateur(long idSpectateur) throws Exception{
+    public List<Billet> consulterBilletSpectateur(long idSpectateur) {
         // on cherche le client
         final Optional<Spectateur> optionalSpectateur = spectateurRepository.findById(idSpectateur);
         // s'il n'existe pas on lance une exception
         if (optionalSpectateur.isEmpty()) {
-            throw new Exception("Spectateur inexistant");
+            throw new SpectateurInexistant("Spectateur inexistant");
         }
 
         Spectateur spectateur = optionalSpectateur.get();

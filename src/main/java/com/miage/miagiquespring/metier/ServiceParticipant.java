@@ -5,6 +5,7 @@ import com.miage.miagiquespring.dao.EpreuveRepository;
 import com.miage.miagiquespring.dao.OrganisateurRepository;
 import com.miage.miagiquespring.dao.ParticipantRepository;
 import com.miage.miagiquespring.entities.*;
+import com.miage.miagiquespring.utilities.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -80,14 +81,13 @@ public class ServiceParticipant {
      *
      * @param idParticipant
      * @return le participant qui correspond
-     * @throws Exception
      */
-    public Participant recupererParticipant(long idParticipant) throws Exception {
+    public Participant recupererParticipant(long idParticipant) {
         // on cherche le participant
         final Optional<Participant> optionalParticipant = participantRepository.findById(idParticipant);
         // s'il n'existe pas on lance une exception
         if (optionalParticipant.isEmpty())
-            throw new Exception("Participant inexistant");
+            throw new ParticipantInexistant("Participant inexistant");
         // sinon, on renvoie les infos
         return optionalParticipant.get();
     }
@@ -98,14 +98,13 @@ public class ServiceParticipant {
      * @param nom
      * @param prenom
      * @return le participant qui correspond
-     * @throws Exception
      */
-    public Participant recupererParticipant(String nom, String prenom) throws Exception {
+    public Participant recupererParticipant(String nom, String prenom) {
         // on cherche le participant
         final List<Participant> optionalParticipant = participantRepository.findByPrenomAndNom(prenom, nom);
         // s'il n'existe pas on lance une exception
         if (optionalParticipant.isEmpty())
-            throw new Exception("Participant inexistant");
+            throw new ParticipantInexistant("Participant inexistant");
         // sinon, on renvoie les infos
         return optionalParticipant.get(0);
     }
@@ -114,9 +113,8 @@ public class ServiceParticipant {
      * Récupérer tous les participants
      *
      * @return la liste des participants
-     * @throws Exception
      */
-    public Iterable<Participant> recupererAllParticipant() throws Exception {
+    public Iterable<Participant> recupererAllParticipant() {
         // on cherche le participant
         return participantRepository.findAll();
     }
@@ -126,14 +124,13 @@ public class ServiceParticipant {
      *
      * @param idParticipant
      * @return la confirmation de suppression
-     * @throws Exception
      */
-    public String supprimerParticipant(long idParticipant) throws Exception {
+    public String supprimerParticipant(long idParticipant) {
         // on cherche le client
         final Optional<Participant> optionalParticipant = participantRepository.findById(idParticipant);
         // s'il n'existe pas on lance une exception
         if (optionalParticipant.isEmpty()) {
-            throw new Exception("Participant inexistant");
+            throw new ParticipantInexistant("Participant inexistant");
         }
         participantRepository.delete(optionalParticipant.get());
         return "Participant :" + idParticipant + " removed";
@@ -156,7 +153,7 @@ public class ServiceParticipant {
      */
     public String participerEpreuve(String nomParticipant,
                                     String prenomParticipant,
-                                    String nomEpreuve) throws Exception {
+                                    String nomEpreuve) {
 
         //Vérification existance et recupreation participant
         Participant participant = recupererParticipant(prenomParticipant, nomParticipant);
@@ -164,13 +161,13 @@ public class ServiceParticipant {
         //Vérification existance et recuperation epreuve
         List<Epreuve> optionalEpreuve = epreuveRepository.findByNomEpreuve(nomEpreuve);
         if (optionalEpreuve.isEmpty()) {
-            throw new Exception("Epreuve inexistante");
+            throw new EpreuveInexistant("Epreuve inexistante");
         }
         Epreuve epreuve = optionalEpreuve.get(0);
 
         //Vérification si déjà inscrit
-        if(participant.getEpreuveList().contains(epreuve)){
-            throw new Exception("Participant déjà inscrit");
+        if (participant.getEpreuveList().contains(epreuve)) {
+            throw new InscriptionImpossible("Participant déjà inscrit");
         }
 
         //Verification si 10 Jours ou plus SINON EXCEPTION
@@ -181,7 +178,7 @@ public class ServiceParticipant {
         Date dateFinInscription = recuperateurDeDate.getTime();
 
         if (dateCourante.after(dateFinInscription)) {
-            throw new Exception("Inscription cloturé : 10 jours avant la date prévue.");
+            throw new InscriptionImpossible("Inscription cloturé : 10 jours avant la date prévue.");
         }
         //Ajout du l'epreuve chez le participant
         List<Epreuve> epreuveList = participant.getEpreuveList();
@@ -206,7 +203,7 @@ public class ServiceParticipant {
      */
     public String desengagerEpreuve(String nomParticipant,
                                     String prenomParticipant,
-                                    String nomEpreuve) throws Exception {
+                                    String nomEpreuve) {
 
         //Vérification existance et recupreation participant
         Participant participant = recupererParticipant(prenomParticipant, nomParticipant);
@@ -214,7 +211,7 @@ public class ServiceParticipant {
         //Vérification existance et recuperation epreuve
         List<Epreuve> optionalEpreuve = epreuveRepository.findByNomEpreuve(nomEpreuve);
         if (optionalEpreuve.isEmpty()) {
-            throw new Exception("Epreuve inexistante");
+            throw new EpreuveInexistant("Epreuve inexistante");
         }
         Epreuve epreuve = optionalEpreuve.get(0);
 
@@ -225,7 +222,7 @@ public class ServiceParticipant {
             participant.setEpreuveList(epreuveList);
             participantRepository.save(participant);
         } else {
-            throw new Exception("Participant non inscrit");
+            throw new ParticipantNonInscrit("Participant non inscrit");
         }
 
         //Verification si 10 Jours avant l'épreuve
@@ -254,29 +251,33 @@ public class ServiceParticipant {
      * @return
      * @throws Exception
      */
-    public String ajouterParticipant(String nomOrganisateur, String prenomOrganisateur, String nomDelegation, String prenomParticipant, String nomParticipant) throws Exception {
+    public String ajouterParticipant(String nomOrganisateur,
+                                     String prenomOrganisateur,
+                                     String nomDelegation,
+                                     String prenomParticipant,
+                                     String nomParticipant) {
         //verification des roles de l'organisateur
         List<Organisateur> optionalOrganisateur = organisateurRepository.findByPrenomAndNom(prenomOrganisateur, nomOrganisateur);
         if (optionalOrganisateur.isEmpty()) {
-            throw new Exception("Organisateur inexistante");
+            throw new OrganisateurInexistant("Organisateur inexistante");
         }
         Organisateur organisateur = optionalOrganisateur.get(0);
 
         if (!organisateur.getRoleOrganisateur()) {
-            throw new Exception("Cet organisateur est un controlleur");
+            throw new RoleOrganisateurNonConforme("Cet organisateur est un controlleur");
         }
 
         //Vérification existance et récupération delegation
         List<Delegation> optionalDelegation = delegationRepository.findByNom(nomDelegation);
         if (optionalDelegation.isEmpty()) {
-            throw new Exception("Délégation inexistante");
+            throw new DelegationInexistante("Délégation inexistante");
         }
         Delegation delegation = optionalDelegation.get(0);
 
         //Vérification existance et recuperation participant
         List<Participant> optionalParticipant = participantRepository.findByPrenomAndNom(prenomParticipant, nomParticipant);
         if (optionalDelegation.isEmpty()) {
-            throw new Exception("Participant inexistante");
+            throw new ParticipantInexistant("Participant inexistante");
         }
         Participant participant = optionalParticipant.get(0);
 
