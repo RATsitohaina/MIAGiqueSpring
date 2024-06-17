@@ -3,7 +3,6 @@ package com.miage.miagiquespring.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Calendar;
 import java.util.Date;
 
 
