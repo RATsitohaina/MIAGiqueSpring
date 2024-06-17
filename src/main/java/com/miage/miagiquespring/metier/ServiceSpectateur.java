@@ -37,10 +37,12 @@ public class ServiceSpectateur {
      * @param prenom
      * @param email
      * @param billetList
-     * @param resultatList
      * @return
      */
-    public Spectateur creerSpectateur(String nom, String prenom, String email, List<Billet> billetList, List<Resultat> resultatList) {
+    public Spectateur creerSpectateur(String nom,
+                                      String prenom,
+                                      String email,
+                                      List<Billet> billetList) {
         //Opération métier
         //On cherche si le client est déjà présent
         List<Spectateur> spectateurs = spectateurRepository.findByPrenomAndNom(prenom, nom);
@@ -53,7 +55,6 @@ public class ServiceSpectateur {
             spectateur.setNom(nom);
             spectateur.setEmail(email);
             spectateur.setBillets(billetList);
-            spectateur.setResultats(resultatList);
             // on l'ajoute à la BD
             spectateur = spectateurRepository.save(spectateur);
         } else {

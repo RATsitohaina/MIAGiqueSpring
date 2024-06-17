@@ -19,7 +19,7 @@ public class Delegation {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idInfrastructureSportive;
+    private Long idDelegation;
 
     /**
      * Nom de la delegation

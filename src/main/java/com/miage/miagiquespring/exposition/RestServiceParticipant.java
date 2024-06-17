@@ -1,12 +1,13 @@
 package com.miage.miagiquespring.exposition;
 
 import com.miage.miagiquespring.entities.Epreuve;
-import com.miage.miagiquespring.entities.Participant;
 import com.miage.miagiquespring.entities.Resultat;
 import com.miage.miagiquespring.metier.ServiceEpreuve;
 import com.miage.miagiquespring.metier.ServiceParticipant;
 import com.miage.miagiquespring.metier.ServiceResultat;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * Contrôleur REST pour la ressource participant
@@ -37,7 +38,7 @@ public class RestServiceParticipant {
      * CONSULTER LES EPREUVES DISPONIBLES
      * Permet de récupérer toute les epreuve pour une requête GET
      */
-    @GetMapping("epreuves")
+    @GetMapping("epreuve/all")
     public Iterable<Epreuve> getAllEpreuve() throws Exception {
         return serviceEpreuve.recupererAllEpreuve();
     }
@@ -45,7 +46,7 @@ public class RestServiceParticipant {
     /** INSCRIPTION EPREUVE
      * Permet de s'inscrire a une epreuve
      */
-    @PostMapping("inscrire/{prenom}/{nom}/{epreuve}")
+    @GetMapping("inscrire/prenomNomNomEpreuve/{prenom}/{nom}/{epreuve}")
     public String inscrireEpreuve(@PathVariable("nom") String nomParticipant,
                                     @PathVariable("prenom") String prenomParticipant,
                                     @PathVariable("epreuve") String nomEpreuve) throws Exception {
@@ -55,7 +56,7 @@ public class RestServiceParticipant {
     /** DESENGAGER EPREUVE
      * Permet de se désengager d'une epreuve
      */
-    @PostMapping("desengager/{prenom}/{nom}/{epreuve}")
+    @GetMapping("desengager/prenomNomNomEpreuve/{prenom}/{nom}/{epreuve}")
     public String desengagerEpreuve(@PathVariable("nom") String nomParticipant,
                                   @PathVariable("prenom") String prenomParticipant,
                                   @PathVariable("epreuve") String nomEpreuve) throws Exception {
@@ -74,9 +75,20 @@ public class RestServiceParticipant {
      * CONSULTER LES RESULTATS
      * Permet de récupérer tous les resultats
      */
-    @GetMapping("resultats")
+    @GetMapping("resultat/all")
     public Iterable<Resultat> getAllResultat() throws Exception {
         return serviceResultat.recupererAllResultat();
+    }
+
+    /**
+     * CONSULTER LE CLASSEMENT
+     *
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("classement")
+    public Map<String, Map<String, Map<String, Integer>>> getClassement() throws Exception {
+        return serviceResultat.afficherClassement();
     }
 
     /**

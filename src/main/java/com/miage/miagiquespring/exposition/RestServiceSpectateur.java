@@ -5,10 +5,12 @@ import com.miage.miagiquespring.entities.Epreuve;
 import com.miage.miagiquespring.entities.Spectateur;
 import com.miage.miagiquespring.metier.ServiceBillet;
 import com.miage.miagiquespring.metier.ServiceEpreuve;
+import com.miage.miagiquespring.metier.ServiceResultat;
 import com.miage.miagiquespring.metier.ServiceSpectateur;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Contrôleur REST pour la ressource utilisateur
@@ -20,15 +22,17 @@ public class RestServiceSpectateur {
     private final ServiceSpectateur serviceSpectateur;
     private final ServiceEpreuve serviceEpreuve;
     private final ServiceBillet serviceBillet;
+    private final ServiceResultat serviceResultat;
 
     /**
      * Constructeur pour l'injection (remplace les @Autowired)
      * @param serviceSpectateur le bean métier client injecté
      */
-    public RestServiceSpectateur(ServiceSpectateur serviceSpectateur, ServiceEpreuve serviceEpreuve, ServiceBillet serviceBillet) {
+    public RestServiceSpectateur(ServiceSpectateur serviceSpectateur, ServiceEpreuve serviceEpreuve, ServiceBillet serviceBillet, ServiceResultat serviceResultat) {
         this.serviceSpectateur = serviceSpectateur;
         this.serviceEpreuve = serviceEpreuve;
         this.serviceBillet = serviceBillet;
+        this.serviceResultat = serviceResultat;
     }
 
     /**
@@ -37,14 +41,14 @@ public class RestServiceSpectateur {
      */
     @PostMapping
     public Spectateur creerSpectateur(@RequestBody Spectateur spectateur) {
-        return serviceSpectateur.creerSpectateur(spectateur.getNom(), spectateur.getPrenom(), spectateur.getEmail(), spectateur.getBillets(), spectateur.getResultats());
+        return serviceSpectateur.creerSpectateur(spectateur.getNom(), spectateur.getPrenom(), spectateur.getEmail(), spectateur.getBillets());
     }
 
     /**
      * Permet de récupérer les détails d'un Utilisateur
      * @param idSpectateur id d'un Utilisateur
      */
-    @GetMapping("{id}")
+    @GetMapping("id/{id}")
     public Spectateur getSpectateur(@PathVariable("id") long idSpectateur) throws Exception {
         return serviceSpectateur.recupererSpectateur(idSpectateur);
     }
@@ -52,7 +56,7 @@ public class RestServiceSpectateur {
     /**
      * Permet de récupérer les détails d'un Utilisateur
      */
-    @GetMapping("{prenom}/{nom}")
+    @GetMapping("prenomNomNom/{prenom}/{nom}")
     public Spectateur getSpectateur(@PathVariable("nom") String nomSpectateur, @PathVariable("prenom") String prenomSpectateur) throws Exception {
         return serviceSpectateur.recupererSpectateur(prenomSpectateur,nomSpectateur);
     }
@@ -69,7 +73,7 @@ public class RestServiceSpectateur {
      * Permet de récupérer les détails d'un Utilisateur
      * @param idSpectateur id d'un Utilisateur
      */
-    @DeleteMapping("{id}")
+    @DeleteMapping("delete/{id}")
     public String supprimerSpectateur(@PathVariable("id") long idSpectateur) throws Exception {
         return serviceSpectateur.supprimerSpectateur(idSpectateur);
     }
@@ -80,7 +84,7 @@ public class RestServiceSpectateur {
      */
     @PostMapping("/null")
     public Spectateur creerSpectateurNull(@RequestBody Spectateur spectateur) {
-        return serviceSpectateur.creerSpectateur(spectateur.getNom(), spectateur.getPrenom(), spectateur.getEmail(), null, null);
+        return serviceSpectateur.creerSpectateur(spectateur.getNom(), spectateur.getPrenom(), spectateur.getEmail(), null);
     }
 
     /**
@@ -91,7 +95,7 @@ public class RestServiceSpectateur {
      * CONSULTER LES EPREUVES DISPONIBLES
      * Permet de récupérer toute les epreuve pour une requête GET
      */
-    @GetMapping("epreuves")
+    @GetMapping("epreuve/all")
     public Iterable<Epreuve> getAllEpreuve() throws Exception {
         return serviceEpreuve.recupererAllEpreuve();
     }
@@ -107,7 +111,7 @@ public class RestServiceSpectateur {
     /** RESRERVER BILLET
      * Permet de reserver un billet
      */
-    @PostMapping("reservation/{prenom}/{nom}/{epreuve}")
+    @GetMapping("reservationBillet/prenomNomNomEpreuve/{prenom}/{nom}/{epreuve}")
     public String reservationBillet(@PathVariable("nom") String nomSpectateur,
                                         @PathVariable("prenom") String prenomSpectateur,
                                         @PathVariable("epreuve") String nomEpreuve) throws Exception {
@@ -117,7 +121,7 @@ public class RestServiceSpectateur {
     /** ANNULER RESERVATION
      * Permet d'annuler la reservation un billet
      */
-    @PostMapping("annulation/{prenom}/{nom}/{idBillet}")
+    @GetMapping("annulationBillet/prenomNomNomIdBillet/{prenom}/{nom}/{idBillet}")
     public String annulerBillet(@PathVariable("nom") String nomSpectateur,
                                     @PathVariable("prenom") String prenomSpectateur,
                                     @PathVariable("idBillet") Long idBillet) throws Exception {
@@ -127,9 +131,28 @@ public class RestServiceSpectateur {
     /** CONSULTER SES BILLET
      * Permet de consulter les billets
      */
-    @PostMapping("billet/{id}")
+    @GetMapping("billet/id/{id}")
     public List<Billet> consulterBillet(@PathVariable("id") Long idSpectateur) throws Exception {
         return serviceSpectateur.consulterBilletSpectateur(idSpectateur);
+    }
+
+    /**
+     *    *******************************************************************************************
+     */
+
+    /**
+     *    ********* RESULTAT **********************************************************************
+     */
+
+    /**
+     * CONSULTER LE CLASSEMENT
+     *
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("classement")
+    public Map<String, Map<String, Map<String, Integer>>> getClassement() throws Exception {
+        return serviceResultat.afficherClassement();
     }
 
     /**

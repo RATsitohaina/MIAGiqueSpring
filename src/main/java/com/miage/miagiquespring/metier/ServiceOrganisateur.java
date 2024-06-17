@@ -160,7 +160,8 @@ public class ServiceOrganisateur {
         HashMap<String, Float> statistiques = new HashMap<String, Float>();
         //boucler sur les epreuves (ratio: pourcentage des ventes)
         for (Epreuve epreuve : epreuves) {
-            statistiques.put(epreuve.getNomEpreuve(), (float) ((epreuve.getNbPlacesInit() - epreuve.getNbPlacesDispo()) / epreuve.getNbPlacesInit()) * 100);
+            statistiques.put(epreuve.getNomEpreuve(),
+                    (float) ((epreuve.getNbPlacesInit() - epreuve.getNbPlacesDispo()) / epreuve.getNbPlacesInit()) * 100);
         }
         return statistiques;
     }

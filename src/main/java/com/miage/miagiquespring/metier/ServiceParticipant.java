@@ -50,7 +50,7 @@ public class ServiceParticipant {
      * @param delegation du Participant
      * @return le nouveau participant ou l'ancien Spectateur
      */
-    public Participant creerParticipant(String nom, String prenom, String email, Delegation delegation, List<Resultat> resultatList, List<Epreuve> epreuveList) {
+    public Participant creerParticipant(String nom, String prenom, String email, Delegation delegation, List<Epreuve> epreuveList) {
         //Opération métier
         //On cherche si le client est déjà présent
         List<Participant> participants = participantRepository.findByPrenomAndNom(prenom, nom);
@@ -63,7 +63,6 @@ public class ServiceParticipant {
             participant.setNom(nom);
             participant.setEmail(email);
             participant.setDelegation(delegation);
-            participant.setResultatList(resultatList);
             participant.setEpreuveList(epreuveList);
 
             // on l'ajoute à la BD

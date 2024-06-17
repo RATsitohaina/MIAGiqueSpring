@@ -41,11 +41,6 @@ public class Participant {
     @ManyToOne
     private Delegation delegation;
 
-    /**
-     * Resultat du participant
-     */
-    @OneToMany
-    private List<Resultat> resultatList;
 
     /**
      * Epreuve du participant

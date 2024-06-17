@@ -40,10 +40,4 @@ public class Spectateur {
      */
     @OneToMany
     private List<Billet> billets;
-
-    /**
-     * Liste de résultats
-     */
-    @OneToMany
-    private List<Resultat> resultats;
 }

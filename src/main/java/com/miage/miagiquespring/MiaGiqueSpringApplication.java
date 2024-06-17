@@ -71,186 +71,235 @@ public class MiaGiqueSpringApplication implements CommandLineRunner {
          * InfrastructureSportive
          */
         InfrastructureSportive infra_1 = new InfrastructureSportive();
-        infra_1.setNom("Complexe Mahamasina");
-        infra_1.setAdresse("Analakely");
-        infra_1.setCapacite(200);
+        infra_1.setNom("Infrastructure 1");
+        infra_1.setAdresse("Adresse infrastructure 1");
+        infra_1.setCapacite(2);
         infra_1 = infrastructureSportiveRepository.save(infra_1);
-        logger.info("InfrastructureSportive " + infra_1);
+        logger.info("Infrastructure Sportive " + infra_1);
 
         InfrastructureSportive infra_2 = new InfrastructureSportive();
-        infra_2.setNom("Palais des sports");
-        infra_2.setAdresse("Ankorondrano");
-        infra_2.setCapacite(400);
+        infra_2.setNom("Infrastructure 2");
+        infra_2.setAdresse("Adresse infrastructure 2");
+        infra_2.setCapacite(2);
         infra_2 = infrastructureSportiveRepository.save(infra_2);
-        logger.info("InfrastructureSportive " + infra_2);
-
-        /**
-         * Billets
-         */
-        Billet b_1 = new Billet();
-        /**
-         * Argument mis a null de base
-         * b_1.setIdEpreuve(null);
-         * b_1.setIdSpectateur(null);
-         */
-        b_1.setPrix(300);
-        Date date_30 = new Date();
-        b_1.setDateBillet(date_30);
-        b_1 = billetRepository.save(b_1);
-        logger.info("Billet " + b_1);
-
-        Billet b_2 = new Billet();
-        /**
-         * Argument mis a null de base
-         * b_1.setIdEpreuve(null);
-         * b_1.setIdSpectateur(null);
-         */
-        b_2.setPrix(500);
-        b_2.setDateBillet(date_30);
-        b_2 = billetRepository.save(b_2);
-        logger.info("Billet " + b_2);
-
-        Billet b_3 = new Billet();
-        /**
-         * Argument mis a null de base
-         * b_1.setIdEpreuve(null);
-         * b_1.setIdSpectateur(null);
-         */
-        b_3.setPrix(800);
-        b_3.setDisponible(true);
-        b_3 = billetRepository.save(b_3);
-        logger.info("Billet " + b_3);
-
-
-        /**
-         * Listes des billets
-         */
-        List<Billet> billets_1 = new ArrayList<>();
-        billets_1.add(b_1);
-
-        List<Billet> billets_2 = new ArrayList<>();
-        billets_2.add(b_2);
-
-        List<Billet> billets_3 = new ArrayList<>();
-        billets_3.add(b_1);
-        billets_3.add(b_2);
-
-        List<Billet> billets_4 = new ArrayList<>();
-        billets_4.add(b_3);
+        logger.info("Infrastructure Sportive " + infra_2);
 
         /**
          * Epreuves
          */
-        Epreuve e = new Epreuve();
-        Date date_12 = new Date();
-        date_12.setTime(12);
+        Epreuve e_1 = new Epreuve();
+        Date date_e_1 = new Date();
+        date_e_1.setTime(12);
 
-        e.setNomEpreuve("Course à pied");
-        e.setNbPlacesDispo(100);
-        e.setNbPlacesInit(100);
-        e.setDateEpreuve(date_12);
-        e.setInfrastructureAccueil(infra_1);
-        e.setBillets(billets_1);
-        e.setPrixBillet(20);
-        e = epreuveRepository.save(e);
-        logger.info("Epreuve " + e);
+        e_1.setNomEpreuve("Epreuve 1");
+        e_1.setNbPlacesDispo(2);
+        e_1.setNbPlacesInit(2);
+        e_1.setDateEpreuve(date_e_1);
+        e_1.setInfrastructureAccueil(infra_1);
+        e_1.setBillets(null);
+        e_1.setPrixBillet(50);
+        e_1 = epreuveRepository.save(e_1);
+        logger.info("Epreuve " + e_1);
 
         Epreuve e_2 = new Epreuve();
-        e_2.setNomEpreuve("Petanque");
-        e_2.setNbPlacesDispo(50);
-        e_2.setNbPlacesInit(50);
-        e_2.setDateEpreuve(date_12);
+        Date date_e_2 = new Date();
+        date_e_2.setTime(11);
+
+        e_2.setNomEpreuve("Epreuve 2");
+        e_2.setNbPlacesDispo(2);
+        e_2.setNbPlacesInit(2);
+        e_2.setDateEpreuve(date_e_2);
         e_2.setInfrastructureAccueil(infra_2);
-        e_2.setBillets(billets_2);
-        e_2.setPrixBillet(60);
+        e_2.setBillets(null);
+        e_2.setPrixBillet(20);
         e_2 = epreuveRepository.save(e_2);
         logger.info("Epreuve " + e_2);
 
-        List<Epreuve> epreuveList = new ArrayList<>();
-        epreuveList.add(e_2);
-        epreuveList.add(e);
+        List<Epreuve> epreuveList_1 = new ArrayList<>();
+        epreuveList_1.add(e_1);
+
+        List<Epreuve> epreuveList_2 = new ArrayList<>();
+        epreuveList_2.add(e_2);
+
+        /**
+         * Billets EPREUVE 1 : nbBillet 2
+         */
+
+        Date date_b_1 = new Date();
+        date_b_1.setTime(10);
+
+        Billet b_1_1 = new Billet();
+        b_1_1.setIdEpreuve(e_1.getIdEpreuve());
+        b_1_1.setPrix(50);
+        b_1_1.setDateBillet(date_b_1);
+        b_1_1 = billetRepository.save(b_1_1);
+        logger.info("Billet " + b_1_1);
+
+        Billet b_1_2 = new Billet();
+        b_1_2.setIdEpreuve(e_1.getIdEpreuve());
+        b_1_2.setPrix(50);
+        b_1_2.setDateBillet(date_b_1);
+        b_1_2 = billetRepository.save(b_1_2);
+        logger.info("Billet " + b_1_2);
+
+        /**
+         * Listes des billets EPREUVE 1
+         */
+        List<Billet> listBillet = new ArrayList<>();
+        listBillet.add(b_1_1);
+        listBillet.add(b_1_2);
+
+        e_1.setBillets(listBillet);
+        epreuveRepository.save(e_1);
+
+        /**
+         * Billets EPREUVE 2 : nbBillet 2
+         */
+
+        Date date_b_2 = new Date();
+        date_b_2.setTime(9);
+
+        Billet b_2_1 = new Billet();
+        b_2_1.setIdEpreuve(e_2.getIdEpreuve());
+        b_2_1.setPrix(20);
+        b_2_1.setDateBillet(date_b_1);
+        b_2_1 = billetRepository.save(b_2_1);
+        logger.info("Billet " + b_2_1);
+
+        Billet b_2_2 = new Billet();
+        b_2_2.setIdEpreuve(e_2.getIdEpreuve());
+        b_2_2.setPrix(20);
+        b_2_2.setDateBillet(date_b_2);
+        b_2_2 = billetRepository.save(b_2_2);
+        logger.info("Billet " + b_2_2);
+
+        /**
+         * Listes des billets EPREUVE 2
+         */
+        List<Billet> listBillet_2 = new ArrayList<>();
+        listBillet.add(b_2_1);
+        listBillet.add(b_2_2);
+
+        e_2.setBillets(listBillet_2);
+        epreuveRepository.save(e_2);
 
         /**
          * Delegation
          */
-        Delegation delegation = new Delegation();
-        delegation.setNom("Gaspaname");
-        delegation.setNbMedailleOr(0);
-        delegation.setNbMedailleArgent(0);
-        delegation.setNbMedailleBronze(0);
-        delegation = delegationRepository.save(delegation);
-        logger.info("Delegation " + delegation);
+        Delegation delegation_1 = new Delegation();
+        delegation_1.setNom("Delegation 1");
+        delegation_1.setNbMedailleOr(1);
+        delegation_1.setNbMedailleArgent(0);
+        delegation_1.setNbMedailleBronze(0);
+        delegation_1 = delegationRepository.save(delegation_1);
+        logger.info("Delegation " + delegation_1);
 
-        /**
-         * Resultat
-         */
-        Resultat resultat = new Resultat();
-        resultat.setIdEpreuve(null);
-        resultat.setIdParticipant(null);
-        resultat.setTemps(0);
-        resultat.setPosition(0);
-        resultat = resultatRepository.save(resultat);
-        logger.info("Resultat " + resultat);
-
-        List<Resultat> resultats = new ArrayList<>();
-        resultats.add(resultat);
+        Delegation delegation_2 = new Delegation();
+        delegation_2.setNom("Delegation 2");
+        delegation_2.setNbMedailleOr(0);
+        delegation_2.setNbMedailleArgent(1);
+        delegation_2.setNbMedailleBronze(0);
+        delegation_2 = delegationRepository.save(delegation_2);
+        logger.info("Delegation " + delegation_2);
 
         /**
          * Spectateur
          */
-        Spectateur sp = new Spectateur();
-        sp.setNom("Razanajatovo");
-        sp.setPrenom("Andrianaivo Tsitohaina");
-        sp.setEmail("@hotmail.com");
-        sp.setBillets(billets_3);
-        sp.setResultats(resultats);
-        sp = spectateurRepository.save(sp);
-        logger.info("Spectateur " + sp);
+        Spectateur sp_1 = new Spectateur();
+        sp_1.setNom("Spectateur_1");
+        sp_1.setPrenom("Spectateur_1");
+        sp_1.setEmail("Spectateur_1@mail.com");
+        sp_1.setBillets(listBillet);
+        sp_1 = spectateurRepository.save(sp_1);
+        logger.info("Spectateur " + sp_1);
+
+        Spectateur sp_2 = new Spectateur();
+        sp_2.setNom("Spectateur_2");
+        sp_2.setPrenom("Spectateur_2");
+        sp_2.setEmail("Spectateur_2@mail.com");
+        sp_2.setBillets(listBillet_2);
+        sp_2 = spectateurRepository.save(sp_2);
+        logger.info("Spectateur " + sp_2);
+
 
         /**
          * Participant
          */
-        Participant participant = new Participant();
-        participant.setNom("Zandry");
-        participant.setPrenom("kely");
-        participant.setEmail("@hotmail.com");
-        participant.setDelegation(delegation);
-        participant.setResultatList(resultats);
-        participant.setEpreuveList(epreuveList);
-        participant = participantRepository.save(participant);
-        logger.info("Participant " + participant);
+        Participant participant_1 = new Participant();
+        participant_1.setNom("Participant_1");
+        participant_1.setPrenom("Participant_1");
+        participant_1.setEmail("Participant_1@mail.com");
+        participant_1.setDelegation(delegation_1);
+        participant_1.setEpreuveList(epreuveList_1);
+        participant_1 = participantRepository.save(participant_1);
+        logger.info("Participant " + participant_1);
 
-        List<Delegation> delegations = new ArrayList<>();
-        delegations.add(delegation);
+        Participant participant_2 = new Participant();
+        participant_2.setNom("Participant_2");
+        participant_2.setPrenom("Participant_2");
+        participant_2.setEmail("Participant_2@mail.com");
+        participant_2.setDelegation(delegation_2);
+        participant_2.setEpreuveList(epreuveList_2);
+        participant_2 = participantRepository.save(participant_2);
+        logger.info("Participant " + participant_2);
 
-        List<Participant> participants = new ArrayList<>();
-        participants.add(participant);
+        /**
+         * Resultat
+         */
+        Resultat resultat_1 = new Resultat();
+        resultat_1.setIdEpreuve(e_1.getIdEpreuve());
+        resultat_1.setIdParticipant(participant_1.getIdParticipant());
+        resultat_1.setTemps(0);
+        resultat_1.setPosition(1);
+        resultat_1 = resultatRepository.save(resultat_1);
+        logger.info("Resultat " + resultat_1);
 
-        List<InfrastructureSportive> infra_sportives = new ArrayList<>();
-        infra_sportives.add(infra_1);
-        infra_sportives.add(infra_2);
 
+        Resultat resultat_2 = new Resultat();
+        resultat_2.setIdEpreuve(e_2.getIdEpreuve());
+        resultat_2.setIdParticipant(participant_2.getIdParticipant());
+        resultat_2.setTemps(0);
+        resultat_2.setPosition(2);
+        resultat_2 = resultatRepository.save(resultat_2);
+        logger.info("Resultat " + resultat_2);
 
         /**
          * Organisateur
          */
-        Organisateur organisateur = new Organisateur();
-        organisateur.setNom("RAZANAJATOVO");
-        organisateur.setPrenom("Tsitohaina");
-        organisateur.setEmail("@hotmail.com");
-        organisateur.setRoleOrganisateur(true);
-        organisateur = organisateurRepository.save(organisateur);
-        logger.info("Organisateur " + organisateur);
+        Organisateur organisateur_1 = new Organisateur();
+        organisateur_1.setNom("Organisateur_1");
+        organisateur_1.setPrenom("Organisateur_1");
+        organisateur_1.setEmail("Organisateur_1@mail.com");
+        organisateur_1.setRoleOrganisateur(true);
+        organisateur_1 = organisateurRepository.save(organisateur_1);
+        logger.info("Organisateur " + organisateur_1);
+
+        Organisateur organisateur_2 = new Organisateur();
+        organisateur_2.setNom("Organisateur_2");
+        organisateur_2.setPrenom("Organisateur_2");
+        organisateur_2.setEmail("Organisateur_2@mail.com");
+        organisateur_2.setRoleOrganisateur(true);
+        organisateur_2 = organisateurRepository.save(organisateur_2);
+        logger.info("Organisateur " + organisateur_2);
+
 
         /**
          * Contrôlleur
          */
-        Organisateur controlleur = new Organisateur();
-        controlleur.setNom("RAMBELO");
-        controlleur.setPrenom("Iaro");
-        controlleur.setEmail("@gmail.com");
-        controlleur.setRoleOrganisateur(false);
-        controlleur = organisateurRepository.save(controlleur);
-        logger.info("Controlleur " + controlleur);
+        Organisateur controlleur_1 = new Organisateur();
+        controlleur_1.setNom("Controlleur_1");
+        controlleur_1.setPrenom("Controlleur_1");
+        controlleur_1.setEmail("Controlleur_1@mail.com");
+        controlleur_1.setRoleOrganisateur(false);
+        controlleur_1 = organisateurRepository.save(controlleur_1);
+        logger.info("Organisateur " + controlleur_1);
+
+        Organisateur controlleur_2 = new Organisateur();
+        controlleur_2.setNom("Controlleur_2");
+        controlleur_2.setPrenom("Controlleur_2");
+        controlleur_2.setEmail("Controlleur_2@mail.com");
+        controlleur_2.setRoleOrganisateur(false);
+        controlleur_2 = organisateurRepository.save(controlleur_2);
+        logger.info("Organisateur " + controlleur_2);
     }
 }

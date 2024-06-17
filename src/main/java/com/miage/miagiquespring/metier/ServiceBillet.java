@@ -150,7 +150,7 @@ public class ServiceBillet {
 
 
         //Verification correspondance spectateur-billet
-        if (billet.getIdBillet() != spectateur.getIdSpectateur()) {
+        if (billet.getIdSpectateur() != spectateur.getIdSpectateur()) {
             throw new Exception("Billet :" + idBillet + " déjà utilisé");
         }
 
