@@ -4,7 +4,6 @@ import com.miage.miagiquespring.dao.BilletRepository;
 import com.miage.miagiquespring.dao.EpreuveRepository;
 import com.miage.miagiquespring.dao.SpectateurRepository;
 import com.miage.miagiquespring.entities.Billet;
-import com.miage.miagiquespring.entities.Epreuve;
 import com.miage.miagiquespring.entities.Resultat;
 import com.miage.miagiquespring.entities.Spectateur;
 import org.springframework.stereotype.Service;
@@ -21,20 +20,14 @@ public class ServiceSpectateur {
      * Bean repository qui sera injecté par le constructeur
      */
     private final SpectateurRepository spectateurRepository;
-    private final EpreuveRepository epreuveRepository;
-    private final BilletRepository billetRepository;
 
     /**
      * Constructeur pour l'injection du bean repository
      *
      * @param spectateurRepository
-     * @param epreuveRepository
-     * @param billetRepository
      */
-    public ServiceSpectateur(SpectateurRepository spectateurRepository, EpreuveRepository epreuveRepository, BilletRepository billetRepository) {
+    public ServiceSpectateur(SpectateurRepository spectateurRepository) {
         this.spectateurRepository = spectateurRepository;
-        this.billetRepository = billetRepository;
-        this.epreuveRepository = epreuveRepository;
     }
 
     /**
@@ -133,5 +126,23 @@ public class ServiceSpectateur {
         }
         spectateurRepository.delete(optionalSpectateur.get());
         return "Spectateur :" + idSpectateur + " removed";
+    }
+
+    /**
+     * Consulter liste de billets du spectateur
+     * @param idSpectateur
+     * @return la liste des billets
+     * @throws Exception
+     */
+    public List<Billet> consulterBilletSpectateur(long idSpectateur) throws Exception{
+        // on cherche le client
+        final Optional<Spectateur> optionalSpectateur = spectateurRepository.findById(idSpectateur);
+        // s'il n'existe pas on lance une exception
+        if (optionalSpectateur.isEmpty()) {
+            throw new Exception("Spectateur inexistant");
+        }
+
+        Spectateur spectateur = optionalSpectateur.get();
+        return spectateur.getBillets();
     }
 }

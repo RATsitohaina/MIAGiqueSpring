@@ -1,11 +1,14 @@
 package com.miage.miagiquespring.exposition;
 
+import com.miage.miagiquespring.entities.Billet;
 import com.miage.miagiquespring.entities.Epreuve;
 import com.miage.miagiquespring.entities.Spectateur;
 import com.miage.miagiquespring.metier.ServiceBillet;
 import com.miage.miagiquespring.metier.ServiceEpreuve;
 import com.miage.miagiquespring.metier.ServiceSpectateur;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Contrôleur REST pour la ressource utilisateur
@@ -80,6 +83,9 @@ public class RestServiceSpectateur {
         return serviceSpectateur.creerSpectateur(spectateur.getNom(), spectateur.getPrenom(), spectateur.getEmail(), null, null);
     }
 
+    /**
+     *    ********* EPREUVE **********************************************************************
+     */
 
     /**
      * CONSULTER LES EPREUVES DISPONIBLES
@@ -89,6 +95,14 @@ public class RestServiceSpectateur {
     public Iterable<Epreuve> getAllEpreuve() throws Exception {
         return serviceEpreuve.recupererAllEpreuve();
     }
+
+    /**
+     *    *******************************************************************************************
+     */
+
+    /**
+     *    ********* BILLET **********************************************************************
+     */
 
     /** RESRERVER BILLET
      * Permet de reserver un billet
@@ -109,4 +123,16 @@ public class RestServiceSpectateur {
                                     @PathVariable("idBillet") Long idBillet) throws Exception {
         return serviceBillet.annulationBillet(prenomSpectateur,nomSpectateur,idBillet);
     }
+
+    /** CONSULTER SES BILLET
+     * Permet de consulter les billets
+     */
+    @PostMapping("billet/{id}")
+    public List<Billet> consulterBillet(@PathVariable("id") Long idSpectateur) throws Exception {
+        return serviceSpectateur.consulterBilletSpectateur(idSpectateur);
+    }
+
+    /**
+     *    *******************************************************************************************
+     */
 }

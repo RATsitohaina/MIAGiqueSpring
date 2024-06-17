@@ -1,7 +1,11 @@
 package com.miage.miagiquespring.exposition;
 
+import com.miage.miagiquespring.entities.Epreuve;
 import com.miage.miagiquespring.entities.Participant;
+import com.miage.miagiquespring.entities.Resultat;
+import com.miage.miagiquespring.metier.ServiceEpreuve;
 import com.miage.miagiquespring.metier.ServiceParticipant;
+import com.miage.miagiquespring.metier.ServiceResultat;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -12,65 +16,70 @@ import org.springframework.web.bind.annotation.*;
 public class RestServiceParticipant {
 
     private final ServiceParticipant serviceParticipant;
-
+    private final ServiceEpreuve serviceEpreuve;
+    private final ServiceResultat serviceResultat;
 
     /**
      * Constructeur pour l'injection (remplace les @Autowired)
      * @param serviceParticipant le bean métier client injecté
      */
-    public RestServiceParticipant(ServiceParticipant serviceParticipant) {
+    public RestServiceParticipant(ServiceParticipant serviceParticipant, ServiceEpreuve serviceEpreuve, ServiceResultat serviceResultat) {
         this.serviceParticipant = serviceParticipant;
+        this.serviceEpreuve = serviceEpreuve;
+        this.serviceResultat = serviceResultat;
     }
 
     /**
-     * Permet de créer un nouveau spectateur
-     * @param participant les détails du client envoyés par le front
+     *    ********* EPREUVE **********************************************************************
      */
-    @PostMapping
-    public Participant creerParticipant(@RequestBody Participant participant) {
-        return serviceParticipant.creerParticipant(participant.getNom(), participant.getPrenom(), participant.getEmail(), participant.getDelegation(), participant.getResultatList(), participant.getEpreuveList());
+
+    /**
+     * CONSULTER LES EPREUVES DISPONIBLES
+     * Permet de récupérer toute les epreuve pour une requête GET
+     */
+    @GetMapping("epreuves")
+    public Iterable<Epreuve> getAllEpreuve() throws Exception {
+        return serviceEpreuve.recupererAllEpreuve();
+    }
+
+    /** INSCRIPTION EPREUVE
+     * Permet de s'inscrire a une epreuve
+     */
+    @PostMapping("inscrire/{prenom}/{nom}/{epreuve}")
+    public String inscrireEpreuve(@PathVariable("nom") String nomParticipant,
+                                    @PathVariable("prenom") String prenomParticipant,
+                                    @PathVariable("epreuve") String nomEpreuve) throws Exception {
+        return serviceParticipant.participerEpreuve(nomParticipant,prenomParticipant,nomEpreuve);
+    }
+
+    /** DESENGAGER EPREUVE
+     * Permet de se désengager d'une epreuve
+     */
+    @PostMapping("desengager/{prenom}/{nom}/{epreuve}")
+    public String desengagerEpreuve(@PathVariable("nom") String nomParticipant,
+                                  @PathVariable("prenom") String prenomParticipant,
+                                  @PathVariable("epreuve") String nomEpreuve) throws Exception {
+        return serviceParticipant.desengagerEpreuve(nomParticipant,prenomParticipant,nomEpreuve);
     }
 
     /**
-     * Permet de récupérer les détails d'un Utilisateur
-     * @param idParticipant id d'un Utilisateur
+     *    *******************************************************************************************
      */
-    @GetMapping("{id}")
-    public Participant getParticipant(@PathVariable("id") long idParticipant) throws Exception {
-        return serviceParticipant.recupererParticipant(idParticipant);
+
+    /**
+     *    ********* RESULTAT **********************************************************************
+     */
+
+    /**
+     * CONSULTER LES RESULTATS
+     * Permet de récupérer tous les resultats
+     */
+    @GetMapping("resultats")
+    public Iterable<Resultat> getAllResultat() throws Exception {
+        return serviceResultat.recupererAllResultat();
     }
 
     /**
-     * Permet de récupérer les détails d'un Utilisateur
+     *    *******************************************************************************************
      */
-    @GetMapping("{prenom}/{nom}")
-    public Participant getParticipantNomPrenom(@PathVariable("nom") String nomParticipant, @PathVariable("prenom") String prenomParticipant) throws Exception {
-        return serviceParticipant.recupererParticipant(prenomParticipant, nomParticipant);
-    }
-
-    /**
-     * Permet de récupérer tout les détails d'un Utilisateur
-     */
-    @GetMapping("all")
-    public Iterable<Participant> getAllParticipant() throws Exception {
-        return serviceParticipant.recupererAllParticipant();
-    }
-
-    /**
-     * Permet de récupérer les détails d'un Utilisateur
-     * @param idParticipant id d'un Utilisateur
-     */
-    @DeleteMapping("{id}")
-    public String supprimerParticipant(@PathVariable("id") long idParticipant) throws Exception {
-        return serviceParticipant.supprimerParticipant(idParticipant);
-    }
-
-    /**
-     * Permet de créer un nouveau spectateur
-     * @param participant les détails du client envoyés par le front
-     */
-    @PostMapping("/null")
-    public Participant creerParticipantNull(@RequestBody Participant participant) {
-        return serviceParticipant.creerParticipant(participant.getNom(), participant.getPrenom(), participant.getEmail(), null, null, null);
-    }
 }
