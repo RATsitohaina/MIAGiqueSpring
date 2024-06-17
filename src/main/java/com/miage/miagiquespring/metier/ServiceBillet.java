@@ -189,22 +189,53 @@ public class ServiceBillet {
 
         Billet billet = optionalBillet.get();
 
-        //Annuler le billet
-        List<Billet> spectateurBillet = spectateur.getBillets();
-
-        //Verifier si 7-3 Jours avant pour le remboursement
-        // Sinon Annulation impossible
-
-
-        if (spectateurBillet.contains(billet)) {
-            spectateurBillet.remove(billet);
-            spectateur.setBillets(spectateurBillet);
-            spectateurRepository.save(spectateur);
-        } else {
+        // Vérification si le billet appartient au spectateur
+        List<Billet> spectateurBillets = spectateur.getBillets();
+        if (!spectateurBillets.contains(billet)) {
             throw new Exception("Erreur : Le billet n'appartient pas au spectateur");
         }
 
-        return " Billet rembourser : " + billet.getIdBillet() + " annuler par " + nomSpectateur;
+        // Récupération de la date de l'épreuve
+        Long idEpreuve = billet.getIdEpreuve();
+        Optional<Epreuve> optionalEpreuve = epreuveRepository.findById(idEpreuve);
+
+        // s'il n'existe pas on lance une exception
+        if (optionalEpreuve.isEmpty()) {
+            throw new Exception("Epreuve inexistant");
+        }
+
+        Epreuve epreuve = optionalEpreuve.get();
+
+        Calendar recuperateurDeDate = Calendar.getInstance();
+        Date dateCourante = recuperateurDeDate.getTime();
+
+        recuperateurDeDate.setTime(epreuve.getDateEpreuve());
+        Date dateEpreuve = recuperateurDeDate.getTime();
+
+        // Calcul du nombre de jours restants avant l'épreuve
+        long diffInMillies = dateEpreuve.getTime() - dateCourante.getTime();
+        long diffInDays = diffInMillies / (1000 * 60 * 60 * 24);
+
+        // Appliquer les règles de remboursement
+        double remboursement = 0;
+        if (diffInDays >= 7) {
+            // Annulation sans frais jusqu'à 7 jours avant l'épreuve
+            remboursement = billet.getPrix();
+        } else if (diffInDays >= 3) {
+            // Remboursement de 50% de 7 à 3 jours avant l'épreuve
+            remboursement = billet.getPrix() * 0.5;
+        } else {
+            // Annulation impossible
+            throw new Exception("Annulation impossible : Les annulations doivent être faites au moins 3 jours avant l'épreuve.");
+        }
+
+        // Annuler le billet
+        spectateurBillets.remove(billet);
+        spectateur.setBillets(spectateurBillets);
+        spectateurRepository.save(spectateur);
+        billetRepository.delete(billet);
+
+        return "Billet remboursé : " + billet.getIdBillet() + " annulé par " + nomSpectateur + ". Montant remboursé : " + remboursement + " euros.";
     }
 
     /**

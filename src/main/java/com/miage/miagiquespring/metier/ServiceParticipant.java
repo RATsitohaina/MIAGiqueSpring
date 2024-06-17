@@ -7,6 +7,8 @@ import com.miage.miagiquespring.dao.ParticipantRepository;
 import com.miage.miagiquespring.entities.*;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -167,11 +169,20 @@ public class ServiceParticipant {
         }
         Epreuve epreuve = optionalEpreuve.get(0);
 
+        //Verification si 10 Jours ou plus SINON EXCEPTION
+        Calendar recuperateurDeDate = Calendar.getInstance();
+        Date dateCourante = recuperateurDeDate.getTime();
+        recuperateurDeDate.setTime(epreuve.getDateEpreuve());
+        recuperateurDeDate.add(Calendar.DAY_OF_YEAR, -10);
+        Date dateFinInscription = recuperateurDeDate.getTime();
+
+        if (dateCourante.after(dateFinInscription)) {
+            throw new Exception("Inscription cloturé : 10 jours avant la date prévue.");
+        }
         //Ajout du l'epreuve chez le participant
         List<Epreuve> epreuveList = participant.getEpreuveList();
         epreuveList.add(epreuve);
 
-        //Verification si 10 Jours
 
         participant.setEpreuveList(epreuveList);
         participantRepository.save(participant);
@@ -213,7 +224,19 @@ public class ServiceParticipant {
             throw new Exception("Participant non inscrit");
         }
 
-        return "/** FORFAIT **/ Participant :" + nomParticipant +
+        //Verification si 10 Jours avant l'épreuve
+        Calendar recuperateurDeDate = Calendar.getInstance();
+        Date dateCourante = recuperateurDeDate.getTime();
+        recuperateurDeDate.setTime(epreuve.getDateEpreuve());
+        recuperateurDeDate.add(Calendar.DAY_OF_YEAR, -10);
+        Date dateFinInscription = recuperateurDeDate.getTime();
+
+        if (dateCourante.after(dateFinInscription)) {
+            return "/** FORFAIT **/ Participant :" + nomParticipant +
+                    " : " + prenomParticipant + " déinscrit à : " + nomEpreuve;
+        }
+
+        return "/** DESENGAGEMENT - réinscription possible **/ Participant :" + nomParticipant +
                 " : " + prenomParticipant + " déinscrit à : " + nomEpreuve;
     }
 
