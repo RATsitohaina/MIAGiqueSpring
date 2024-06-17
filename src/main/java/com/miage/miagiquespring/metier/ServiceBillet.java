@@ -195,7 +195,7 @@ public class ServiceBillet {
             throw new Exception("Erreur : Le billet n'appartient pas au spectateur");
         }
 
-        // Récupération de la date de l'épreuve
+        // Récupération de l'épreuve
         Long idEpreuve = billet.getIdEpreuve();
         Optional<Epreuve> optionalEpreuve = epreuveRepository.findById(idEpreuve);
 
@@ -206,6 +206,8 @@ public class ServiceBillet {
 
         Epreuve epreuve = optionalEpreuve.get();
 
+
+        //Récupération date de l'épreuve et date courante
         Calendar recuperateurDeDate = Calendar.getInstance();
         Date dateCourante = recuperateurDeDate.getTime();
 
@@ -259,7 +261,7 @@ public class ServiceBillet {
 
 
         // Vérifier et récuperer l'epreuve
-        final List<Epreuve> optionalEpreuve = epreuveRepository.findByNomEpreuve(nomEpreuve);
+        List<Epreuve> optionalEpreuve = epreuveRepository.findByNomEpreuve(nomEpreuve);
 
         // s'il n'existe pas on lance une exception
         if (optionalEpreuve.isEmpty()) {
@@ -278,7 +280,7 @@ public class ServiceBillet {
         }
 
         // Limiter a 4 billet par spectateur
-        if (nb_billet == 4) {
+        if (nb_billet >= 4) {
             throw new Exception("Spectateur possède déjà 4 billets pour cette epreuve");
         }
 

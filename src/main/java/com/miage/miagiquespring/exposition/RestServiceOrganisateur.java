@@ -26,7 +26,13 @@ public class RestServiceOrganisateur {
     /**
      * Constructeur pour l'injection (remplace les @Autowired)
      *
-     * @param serviceOrganisateur le bean métier client injecté
+     * @param serviceOrganisateur
+     * @param serviceResultat
+     * @param serviceBillet
+     * @param serviceDelegation
+     * @param serviceParticipant
+     * @param serviceEpreuve
+     * @param serviceInfrastructureSportive
      */
     public RestServiceOrganisateur(ServiceOrganisateur serviceOrganisateur, ServiceResultat serviceResultat, ServiceBillet serviceBillet, ServiceDelegation serviceDelegation, ServiceParticipant serviceParticipant, ServiceEpreuve serviceEpreuve, ServiceInfrastructureSportive serviceInfrastructureSportive) {
         this.serviceOrganisateur = serviceOrganisateur;
@@ -39,9 +45,10 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de créer un nouveau spectateur
+     * Permet de créer un nouveau organisateur
      *
-     * @param organisateur les détails du client envoyés par le front
+     * @param organisateur
+     * @return
      */
     @PostMapping
     public Organisateur creerOrganisateur(@RequestBody Organisateur organisateur) {
@@ -50,9 +57,11 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer les détails d'un Utilisateur
+     * Permet de récupérer les détails d'un organisateur
      *
-     * @param idOrganisateur id d'un Utilisateur
+     * @param idOrganisateur
+     * @return
+     * @throws Exception
      */
     @GetMapping("id/{id}")
     public Organisateur getOrganisateur(@PathVariable("id") long idOrganisateur) throws Exception {
@@ -60,7 +69,12 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer les détails d'un Utilisateur
+     * Permet de récupérer les détails d'un organisateur
+     *
+     * @param nomOrganisateur
+     * @param prenomOrganisateur
+     * @return
+     * @throws Exception
      */
     @GetMapping("prenomNom/{prenom}/{nom}")
     public Organisateur getOrganisateurNomPrenom(@PathVariable("nom") String nomOrganisateur, @PathVariable("prenom") String prenomOrganisateur) throws Exception {
@@ -68,7 +82,10 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer tout les détails d'un Utilisateur
+     * Permet de récupérer tous les organisteurs
+     *
+     * @return
+     * @throws Exception
      */
     @GetMapping("all")
     public Iterable<Organisateur> getAllOrganisateur() throws Exception {
@@ -76,9 +93,11 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer les détails d'un Utilisateur
+     * Supprimer un organisateur
      *
-     * @param idOrganisateur id d'un Utilisateur
+     * @param idOrganisateur
+     * @return
+     * @throws Exception
      */
     @DeleteMapping("delete/id/{id}")
     public String supprimerOrganisateur(@PathVariable("id") long idOrganisateur) throws Exception {
@@ -86,9 +105,10 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de créer un nouveau spectateur
+     * Permet de créer un organisateur
      *
-     * @param organisateur les détails du client envoyés par le front
+     * @param organisateur
+     * @return
      */
     @PostMapping("/null")
     public Organisateur creerOrganisateurNull(@RequestBody Organisateur organisateur) {
@@ -96,9 +116,16 @@ public class RestServiceOrganisateur {
                 , organisateur.getEmail(), true);
     }
 
+
     /**
      * STATISTIQUE DE VENTE
+     * <p>
      * Permet de récupérer les statistiques de vente
+     *
+     * @param prenomOrganisateur
+     * @param nomOrganisateur
+     * @return
+     * @throws Exception
      */
     @GetMapping("statistique/{prenom}/{nom}")
     public HashMap<String, Float> getStatistique(@PathVariable("prenom") String prenomOrganisateur,
@@ -122,7 +149,11 @@ public class RestServiceOrganisateur {
 
     /**
      * CONSULTER LES RESULTATS
+     * <p>
      * Permet de récupérer tous les resultats
+     *
+     * @return
+     * @throws Exception
      */
     @GetMapping("resultat/all")
     public Iterable<Resultat> getAllResultat() throws Exception {
@@ -130,9 +161,11 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de supprimer les détails d'une Resultat
+     * Permet de supprimer les détails d'une résultat
      *
-     * @param idResultat d'une Resultat
+     * @param idResultat
+     * @return
+     * @throws Exception
      */
     @DeleteMapping("resultat/delete/{id}")
     public String supprimerResultat(@PathVariable("id") Long idResultat) throws Exception {
@@ -140,9 +173,11 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer les détails d'une Resultat
+     * Permet de récupérer les détails d'un résultat
      *
-     * @param idResultat id d'une Resultat
+     * @param idResultat
+     * @return
+     * @throws Exception
      */
     @GetMapping("resultat/id/{id}")
     public Resultat getResultat(@PathVariable("id") Long idResultat) throws Exception {
@@ -165,15 +200,15 @@ public class RestServiceOrganisateur {
      *    *******************************************************************************************
      */
 
-
     /**
      *    ********* DELEGATION **********************************************************************
      */
 
     /**
-     * Permet de créer un nouveau client
+     * Permet de créer une nouvelle délégation
      *
-     * @param delegation les détails du client envoyés par le front
+     * @param delegation
+     * @return
      */
     @PostMapping("delegation")
     public Delegation creerDelegation(@RequestBody Delegation delegation) {
@@ -183,7 +218,9 @@ public class RestServiceOrganisateur {
     /**
      * Permet de récupérer les détails d'une Delegation
      *
-     * @param idDelegation id d'une Delegation
+     * @param idDelegation
+     * @return
+     * @throws Exception
      */
     @GetMapping("delegation/id/{id}")
     public Delegation getDelegation(@PathVariable("id") Long idDelegation) throws Exception {
@@ -191,7 +228,11 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer les détails d'un Delegation
+     * Permet de récupérer les détails d'une délégation
+     *
+     * @param nomDelegation
+     * @return
+     * @throws Exception
      */
     @GetMapping("delegation/nom/{nom}")
     public Delegation getDelegation(@PathVariable("nom") String nomDelegation) throws Exception {
@@ -199,7 +240,10 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer tout les détails d'un Delegation
+     * Récupérer toutes les délégations
+     *
+     * @return
+     * @throws Exception
      */
     @GetMapping("delegation/all")
     public Iterable<Delegation> getAllDelegation() throws Exception {
@@ -207,9 +251,11 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de supprimer les détails d'une InfrastructureSportive
+     * Supprimer une délégation
      *
-     * @param idDelegation id d'une InfrastructureSportive
+     * @param idDelegation
+     * @return
+     * @throws Exception
      */
     @DeleteMapping("delegation/delete/{id}")
     public String supprimerDelegation(@PathVariable("id") Long idDelegation) throws Exception {
@@ -225,9 +271,10 @@ public class RestServiceOrganisateur {
      */
 
     /**
-     * Permet de créer un nouveau spectateur
+     * Créer un participant
      *
-     * @param participant les détails du client envoyés par le front
+     * @param participant
+     * @return
      */
     @PostMapping("participant")
     public Participant creerParticipant(@RequestBody Participant participant) {
@@ -239,9 +286,11 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer les détails d'un Utilisateur
+     * Récupérer les détails d'un participant
      *
-     * @param idParticipant id d'un Utilisateur
+     * @param idParticipant
+     * @return
+     * @throws Exception
      */
     @GetMapping("participant/id/{id}")
     public Participant getParticipant(@PathVariable("id") long idParticipant) throws Exception {
@@ -249,7 +298,12 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer les détails d'un Utilisateur
+     * Récupérer les détails d'un participant
+     *
+     * @param nomParticipant
+     * @param prenomParticipant
+     * @return
+     * @throws Exception
      */
     @GetMapping("participant/prenomNom/{prenom}/{nom}")
     public Participant getParticipantNomPrenom(@PathVariable("nom") String nomParticipant, @PathVariable("prenom") String prenomParticipant) throws Exception {
@@ -257,7 +311,10 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer tout les détails d'un Utilisateur
+     * Récupérer la liste de tous les participants
+     *
+     * @return
+     * @throws Exception
      */
     @GetMapping("participant/all")
     public Iterable<Participant> getAllParticipant() throws Exception {
@@ -265,9 +322,11 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer les détails d'un Utilisateur
+     * Supprimer un participant
      *
-     * @param idParticipant id d'un Utilisateur
+     * @param idParticipant
+     * @return
+     * @throws Exception
      */
     @DeleteMapping("participant/delete/{id}")
     public String supprimerParticipant(@PathVariable("id") long idParticipant) throws Exception {
@@ -275,9 +334,10 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de créer un nouveau spectateur
+     * Créer un participant
      *
-     * @param participant les détails du client envoyés par le front
+     * @param participant
+     * @return
      */
     @PostMapping("participant/null")
     public Participant creerParticipantNull(@RequestBody Participant participant) {
@@ -326,9 +386,11 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de supprimer une epreuve pour une requête DELETE
+     * Supprimer une épreuve
      *
      * @param idEpreuve
+     * @return
+     * @throws Exception
      */
     @DeleteMapping("epreuve/delete/{id}")
     public String supprimerEpreuve(@PathVariable("id") long idEpreuve) throws Exception {
@@ -336,9 +398,11 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer une epreuve pour une requête GET
+     * Récupérer les détails d'une épreuve
      *
      * @param idEpreuve
+     * @return
+     * @throws Exception
      */
     @GetMapping("epreuve/id/{id}")
     public Epreuve getEpreuve(@PathVariable("id") long idEpreuve) throws Exception {
@@ -346,9 +410,11 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer une epreuve pour une requête GET
+     * Récupérer les détails d'une épreuve
      *
      * @param nomEpreuve
+     * @return
+     * @throws Exception
      */
     @GetMapping("epreuve/nom/{nom}")
     public Epreuve getEpreuve(@PathVariable("nom") String nomEpreuve) throws Exception {
@@ -380,9 +446,10 @@ public class RestServiceOrganisateur {
      */
 
     /**
-     * Permet de créer un nouveau infrastructuresportive
+     * Créer une infrastructure sportive
      *
-     * @param infrastructureSportive les détails du client envoyés par le front
+     * @param infrastructureSportive
+     * @return
      */
     @PostMapping("infrastructure")
     public InfrastructureSportive creerInfrastructureSportive(@RequestBody InfrastructureSportive infrastructureSportive) {
@@ -390,9 +457,11 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer les détails d'une InfrastructureSportive
+     * Récupérer les détails d'une infrastructure sportive
      *
-     * @param idInfrastructureSportive id d'une InfrastructureSportive
+     * @param idInfrastructureSportive
+     * @return
+     * @throws Exception
      */
     @GetMapping("infrastructure/id/{id}")
     public InfrastructureSportive getInfrastructureSportive(@PathVariable("id") Long idInfrastructureSportive) throws Exception {
@@ -400,9 +469,11 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer les détails d'une InfrastructureSportive
+     * Récupérer les détails d'une infrastructure sportive
      *
-     * @param nomInfrastructureSportive d'une InfrastructureSportive
+     * @param nomInfrastructureSportive
+     * @return
+     * @throws Exception
      */
     @GetMapping("infrastructure/nom/{nom}")
     public InfrastructureSportive getInfrastructureSportive(@PathVariable("nom") String nomInfrastructureSportive) throws Exception {
@@ -410,7 +481,10 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer tout les détails d'une InfrastructureSportive
+     * Récupérer toutes les infrastructures sportives
+     *
+     * @return
+     * @throws Exception
      */
     @GetMapping("infrastructure/all")
     public Iterable<InfrastructureSportive> getAllInfrastructureSportive() throws Exception {
@@ -418,9 +492,11 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de supprimer les détails d'une InfrastructureSportive
+     * Supprimer une infrastructure sportive
      *
-     * @param idInfrastructureSportive id d'une InfrastructureSportive
+     * @param idInfrastructureSportive
+     * @return
+     * @throws Exception
      */
     @DeleteMapping("infrastructure/delete/{id}")
     public String supprimerInfrastructureSportive(@PathVariable("id") Long idInfrastructureSportive) throws Exception {
@@ -436,10 +512,10 @@ public class RestServiceOrganisateur {
      */
 
     /**
-     * Permet d'ajouter une épreuve
+     * Créer un billet
      *
      * @param billet
-     * @return billet
+     * @return
      */
     @PostMapping("billet")
     public Billet creerBillet(@RequestBody Billet billet) {
@@ -450,9 +526,11 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer une epreuve pour une requête GET
+     * Récupérer un billet
      *
      * @param idBillet
+     * @return
+     * @throws Exception
      */
     @GetMapping("billet/id/{id}")
     public Billet getBillet(@PathVariable("id") long idBillet) throws Exception {
@@ -460,9 +538,11 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de supprimer une epreuve pour une requête DELETE
+     * Supprimer un billet
      *
      * @param idBillet
+     * @return
+     * @throws Exception
      */
     @DeleteMapping("billet/delete/{id}")
     public String supprimerBillet(@PathVariable("id") long idBillet) throws Exception {
@@ -470,7 +550,10 @@ public class RestServiceOrganisateur {
     }
 
     /**
-     * Permet de récupérer tout les détails d'un Billet
+     * Récupérer tous les billets
+     *
+     * @return
+     * @throws Exception
      */
     @GetMapping("billet/all")
     public Iterable<Billet> getAllBillet() throws Exception {
@@ -480,6 +563,13 @@ public class RestServiceOrganisateur {
     /**
      * SCANNER BILLET
      * Permet au controller de scanner un billet
+     *
+     * @param nomOrganisateur
+     * @param prenomOrganisateur
+     * @param idBillet
+     * @param idSpectateur
+     * @return
+     * @throws Exception
      */
     @GetMapping("scanner/{prenom}/{nom}/{idBillet}/{idSpectateur}")
     public String scannerBillet(@PathVariable("nom") String nomOrganisateur,

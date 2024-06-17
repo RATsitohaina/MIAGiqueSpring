@@ -1,9 +1,12 @@
+
 ###
 GET http://localhost:9000/api/participant/epreuve/all
 
 <> 2024-06-17T145903.200.json
 
-### ERREUR PARTICIPER EPREUVE
+### ATTENTION 
+### erreur si Date < 10 jours
+### participant déjà inscrit
 GET http://localhost:9000/api/participant/inscrire/prenomNomNomEpreuve/Participant_1/Participant_1/Epreuve 1
 
 <> 2024-06-17T151033.500.json

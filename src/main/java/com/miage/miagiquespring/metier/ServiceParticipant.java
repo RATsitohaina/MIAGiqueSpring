@@ -168,6 +168,11 @@ public class ServiceParticipant {
         }
         Epreuve epreuve = optionalEpreuve.get(0);
 
+        //Vérification si déjà inscrit
+        if(participant.getEpreuveList().contains(epreuve)){
+            throw new Exception("Participant déjà inscrit");
+        }
+
         //Verification si 10 Jours ou plus SINON EXCEPTION
         Calendar recuperateurDeDate = Calendar.getInstance();
         Date dateCourante = recuperateurDeDate.getTime();

@@ -22,6 +22,7 @@ public class RestServiceParticipant {
 
     /**
      * Constructeur pour l'injection (remplace les @Autowired)
+     *
      * @param serviceParticipant le bean métier client injecté
      */
     public RestServiceParticipant(ServiceParticipant serviceParticipant, ServiceEpreuve serviceEpreuve, ServiceResultat serviceResultat) {
@@ -36,31 +37,49 @@ public class RestServiceParticipant {
 
     /**
      * CONSULTER LES EPREUVES DISPONIBLES
-     * Permet de récupérer toute les epreuve pour une requête GET
+     * Récupérer la liste de toutes les épreuves
+     *
+     * @return
+     * @throws Exception
      */
     @GetMapping("epreuve/all")
     public Iterable<Epreuve> getAllEpreuve() throws Exception {
         return serviceEpreuve.recupererAllEpreuve();
     }
 
-    /** INSCRIPTION EPREUVE
-     * Permet de s'inscrire a une epreuve
+    /**
+     * INSCRIPTION EPREUVE
+     * Inscrire à une épreuve
+     *
+     * @param nomParticipant
+     * @param prenomParticipant
+     * @param nomEpreuve
+     * @return
+     * @throws Exception
      */
     @GetMapping("inscrire/prenomNomNomEpreuve/{prenom}/{nom}/{epreuve}")
     public String inscrireEpreuve(@PathVariable("nom") String nomParticipant,
-                                    @PathVariable("prenom") String prenomParticipant,
-                                    @PathVariable("epreuve") String nomEpreuve) throws Exception {
-        return serviceParticipant.participerEpreuve(nomParticipant,prenomParticipant,nomEpreuve);
+                                  @PathVariable("prenom") String prenomParticipant,
+                                  @PathVariable("epreuve") String nomEpreuve) throws Exception {
+        return serviceParticipant.participerEpreuve(nomParticipant, prenomParticipant, nomEpreuve);
     }
 
-    /** DESENGAGER EPREUVE
-     * Permet de se désengager d'une epreuve
+
+    /**
+     * DESENGAGER EPREUVE
+     * Se désengager d'un épreuve
+     *
+     * @param nomParticipant
+     * @param prenomParticipant
+     * @param nomEpreuve
+     * @return
+     * @throws Exception
      */
     @GetMapping("desengager/prenomNomNomEpreuve/{prenom}/{nom}/{epreuve}")
     public String desengagerEpreuve(@PathVariable("nom") String nomParticipant,
-                                  @PathVariable("prenom") String prenomParticipant,
-                                  @PathVariable("epreuve") String nomEpreuve) throws Exception {
-        return serviceParticipant.desengagerEpreuve(nomParticipant,prenomParticipant,nomEpreuve);
+                                    @PathVariable("prenom") String prenomParticipant,
+                                    @PathVariable("epreuve") String nomEpreuve) throws Exception {
+        return serviceParticipant.desengagerEpreuve(nomParticipant, prenomParticipant, nomEpreuve);
     }
 
     /**
@@ -72,8 +91,11 @@ public class RestServiceParticipant {
      */
 
     /**
-     * CONSULTER LES RESULTATS
-     * Permet de récupérer tous les resultats
+     * CONSULTER RESULTATS
+     * Récupérer tous les résultats
+     *
+     * @return
+     * @throws Exception
      */
     @GetMapping("resultat/all")
     public Iterable<Resultat> getAllResultat() throws Exception {
