@@ -13,6 +13,7 @@ public class RestServiceParticipant {
 
     private final ServiceParticipant serviceParticipant;
 
+
     /**
      * Constructeur pour l'injection (remplace les @Autowired)
      * @param serviceParticipant le bean métier client injecté

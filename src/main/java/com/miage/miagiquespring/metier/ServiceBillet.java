@@ -303,7 +303,7 @@ public class ServiceBillet {
                 billetsSpectateur.add(billet);
                 spectateur.setBillets(billetsSpectateur);
                 spectateurRepository.save(spectateur);
-                return nomEpreuve + "| Billet : " + billet.getIdBillet() + " reserver par " + nomSpectateur;
+                return "Payé : "+ billet.getPrix()+" | "+ nomEpreuve + "| Billet : " + billet.getIdBillet() + " reserver par " + nomSpectateur;
             }
         }
         //Modifier nombre de place

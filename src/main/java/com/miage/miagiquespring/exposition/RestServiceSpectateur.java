@@ -1,6 +1,9 @@
 package com.miage.miagiquespring.exposition;
 
+import com.miage.miagiquespring.entities.Epreuve;
 import com.miage.miagiquespring.entities.Spectateur;
+import com.miage.miagiquespring.metier.ServiceBillet;
+import com.miage.miagiquespring.metier.ServiceEpreuve;
 import com.miage.miagiquespring.metier.ServiceSpectateur;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,13 +15,17 @@ import org.springframework.web.bind.annotation.*;
 public class RestServiceSpectateur {
 
     private final ServiceSpectateur serviceSpectateur;
+    private final ServiceEpreuve serviceEpreuve;
+    private final ServiceBillet serviceBillet;
 
     /**
      * Constructeur pour l'injection (remplace les @Autowired)
      * @param serviceSpectateur le bean métier client injecté
      */
-    public RestServiceSpectateur(ServiceSpectateur serviceSpectateur) {
+    public RestServiceSpectateur(ServiceSpectateur serviceSpectateur, ServiceEpreuve serviceEpreuve, ServiceBillet serviceBillet) {
         this.serviceSpectateur = serviceSpectateur;
+        this.serviceEpreuve = serviceEpreuve;
+        this.serviceBillet = serviceBillet;
     }
 
     /**
@@ -71,5 +78,35 @@ public class RestServiceSpectateur {
     @PostMapping("/null")
     public Spectateur creerSpectateurNull(@RequestBody Spectateur spectateur) {
         return serviceSpectateur.creerSpectateur(spectateur.getNom(), spectateur.getPrenom(), spectateur.getEmail(), null, null);
+    }
+
+
+    /**
+     * CONSULTER LES EPREUVES DISPONIBLES
+     * Permet de récupérer toute les epreuve pour une requête GET
+     */
+    @GetMapping("epreuves")
+    public Iterable<Epreuve> getAllEpreuve() throws Exception {
+        return serviceEpreuve.recupererAllEpreuve();
+    }
+
+    /** RESRERVER BILLET
+     * Permet de reserver un billet
+     */
+    @PostMapping("reservation/{prenom}/{nom}/{epreuve}")
+    public String reservationBillet(@PathVariable("nom") String nomSpectateur,
+                                        @PathVariable("prenom") String prenomSpectateur,
+                                        @PathVariable("epreuve") String nomEpreuve) throws Exception {
+        return serviceBillet.reservationBillet(prenomSpectateur,nomSpectateur,nomEpreuve);
+    }
+
+    /** ANNULER RESERVATION
+     * Permet d'annuler la reservation un billet
+     */
+    @PostMapping("annulation/{prenom}/{nom}/{idBillet}")
+    public String annulerBillet(@PathVariable("nom") String nomSpectateur,
+                                    @PathVariable("prenom") String prenomSpectateur,
+                                    @PathVariable("idBillet") Long idBillet) throws Exception {
+        return serviceBillet.annulationBillet(prenomSpectateur,nomSpectateur,idBillet);
     }
 }
