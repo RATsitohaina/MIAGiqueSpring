@@ -22,12 +22,12 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+        import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+        import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class MiaGiqueSpringApplicationTests {
+class MiaGiqueSpringApplicationSpectateurTests {
 
     /**
      * logger
@@ -348,93 +348,57 @@ class MiaGiqueSpringApplicationTests {
 
     /** REQUETES SERVICE ORGANISATEUR **/
     @Test
-    public void testCreerOrganisateurControleur() throws Exception {
-        mvc.perform(post("/api/organisateur")
+    public void testCreerSpectateur() throws Exception {
+        mvc.perform(post("/api/spectateur")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"nom\": \"RAZANAJATOVO\", " +
-                                "\"prenom\": \"Tsitohaina\", " +
-                                "\"email\": \"exemple@exemple.com\", " +
-                                "\"roleOrganisateur\": true}"))
+                        .content("{\"nom\": \"Spectateur\", " +
+                                "\"prenom\": \"Spectateur\", " +
+                                "\"email\": \"Spectateur\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nom", is("RAZANAJATOVO")))
-                .andExpect(jsonPath("$.prenom", is("Tsitohaina")))
-                .andExpect(jsonPath("$.email", is("exemple@exemple.com")))
-                .andExpect(jsonPath("$.roleOrganisateur", is(true)));
-
-        mvc.perform(post("/api/organisateur")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"nom\": \"RAMBELO\", " +
-                                "\"prenom\": \"Iaro\", " +
-                                "\"email\": \"exemple@exemple.com\", " +
-                                "\"roleOrganisateur\": false}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nom", is("RAMBELO")))
-                .andExpect(jsonPath("$.prenom", is("Iaro")))
-                .andExpect(jsonPath("$.email", is("exemple@exemple.com")))
-                .andExpect(jsonPath("$.roleOrganisateur", is(false)));
+                .andExpect(jsonPath("$.nom", is("Spectateur")))
+                .andExpect(jsonPath("$.prenom", is("Spectateur")))
+                .andExpect(jsonPath("$.email", is("Spectateur")));
     }
 
 
     @Test
-    void testGetOrganisateurControleur() throws Exception {
-        mvc.perform(get("/api/organisateur/id/{id}", organisateur_1.getIdOrganisateur())
+    void testGetSpectateur() throws Exception {
+        mvc.perform(get("/api/spectateur/id/{id}", sp_1.getIdSpectateur())
                         .contentType("application/json;charset=UTF-8"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nom", is(organisateur_1.getNom())))
-                .andExpect(jsonPath("$.roleOrganisateur", is(true)));
+                .andExpect(status().isOk());
 
-        mvc.perform(get("/api/organisateur/id/{id}", controleur_1.getIdOrganisateur())
+        mvc.perform(get("/api/spectateur/prenomNomNom/{prenom}/{nom}", sp_1.getPrenom(),sp_1.getNom())
                         .contentType("application/json;charset=UTF-8"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nom", is(controleur_1.getNom())))
-                .andExpect(jsonPath("$.roleOrganisateur", is(false)));
+                .andExpect(status().isOk());
 
-        mvc.perform(get("/api/organisateur/prenomNom/{prenom}/{nom}",organisateur_1.getPrenom(),organisateur_1.getNom()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nom", is(organisateur_1.getNom())))
-                .andExpect(jsonPath("$.prenom", is(organisateur_1.getPrenom())))
-                .andExpect(jsonPath("$.email", is(organisateur_1.getEmail())))
-                .andExpect(jsonPath("$.roleOrganisateur", is(organisateur_1.getRoleOrganisateur())));
-
-        mvc.perform(get("/api/organisateur/all"))
+        mvc.perform(get("/api/spectateur/all"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void testSupprimerOrganisateur() throws Exception {
-        mvc.perform(delete("/api/organisateur/delete/id/{id}",organisateur_1.getIdOrganisateur()))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Organisateur :"+ organisateur_1.getIdOrganisateur() +" removed"));
+    public void testSupprimerSpectateur() throws Exception {
+        mvc.perform(delete("/api/spectateur/delete/{id}",sp_1.getIdSpectateur()))
+                .andExpect(status().isOk());
 
     }
 
     @Test
-    public void testGetStatistique() throws Exception {
-        mvc.perform(get("/api/organisateur/statistique/{prenom}/{nom}",organisateur_1.getPrenom(),organisateur_1.getNom()))
+    public void testGetAllEpreuve() throws Exception {
+        mvc.perform(get("/api/spectateur/epreuve/all"))
                 .andExpect(status().isOk());
     }
 
 
-    /**
-     * MODIFIER CREATION POUR AVOIR NULL SUR LES OBJETS
-     * @throws Exception
-     */
     @Test
-    public void testCreerResultat() throws Exception {
-        mvc.perform(post("/api/organisateur/resultat")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\n" +
-                                "\"idEpreuve\": 1,\n" +
-                                "\"idParticipant\": 1,\n" +
-                                "\"temps\": 0,\n" +
-                                "\"position\": 3\n" +
-                                "}"))
+    public void testReservationBillet() throws Exception {
+        mvc.perform(get("/api/spectateur/reservationBillet/prenomNomNomEpreuve/{prenom}/{nom}/{epreuve}", sp_1.getPrenom(),sp_1.getNom(),e_2.getNomEpreuve())
+                        .contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isOk());
     }
 
-    @Test
-    void testGetResultat() throws Exception {
-        mvc.perform(get("/api/organisateur/resultat/id/{id}", resultat_1.getIdResultat())
+    /** BILLET b_1_2 n'est pas le billet du spectateur donc EXCEPTION BILLETNONDISPONIBLE **/
+    void testAnnulationBillet() throws Exception {
+        mvc.perform(get("/api/spectateur/annulationBillet/prenomNomNomIdBillet/{prenom}/{nom}/{idBillet}", sp_1.getPrenom(),sp_1.getNom(),b_1_2.getIdBillet())
                         .contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isOk());
 
@@ -444,195 +408,17 @@ class MiaGiqueSpringApplicationTests {
 
 
     @Test
-    public void testSupprimerResultat() throws Exception {
+    public void testConsulterBillet() throws Exception {
 
-        mvc.perform(delete("/api/organisateur/resultat/delete/{id}",resultat_1.getIdResultat()))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Resultat :"+ resultat_1.getIdResultat() +" removed"));
+        mvc.perform(get("/api/spectateur/billet/id/{id}",sp_1.getIdSpectateur()))
+                .andExpect(status().isOk());
 
     }
 
     @Test
     public void testGetClassement() throws Exception {
-        mvc.perform(get("/api/organisateur/classement"))
+        mvc.perform(get("/api/spectateur/classement"))
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testCreerDelegation() throws Exception {
-        mvc.perform(post("/api/organisateur/delegation")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"nom\": \"DelegationTEST\", " +
-                                "\"nbMedailleOr\": \"0\", " +
-                                "\"nbMedailleArgent\": \"0\", " +
-                                "\"nbMedailleBronze\": \"0\"}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nom", is("DelegationTEST")))
-                .andExpect(jsonPath("$.nbMedailleOr", is(0)))
-                .andExpect(jsonPath("$.nbMedailleArgent", is(0)))
-                .andExpect(jsonPath("$.nbMedailleBronze", is(0)));
-    }
-
-    @Test
-    public void testGetDelegation() throws Exception {
-        mvc.perform(get("/api/organisateur/delegation/id/{id}", delegation_1.getIdDelegation()))
-                .andExpect(status().isOk());
-
-        mvc.perform(get("/api/organisateur/delegation/nom/{nom}", delegation_1.getNom()))
-                .andExpect(status().isOk());
-
-        mvc.perform(get("/api/organisateur/delegation/all"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testSupprimerDelegation() throws Exception {
-        mvc.perform(delete("/api/organisateur/delegation/delete/{id}",delegation_1.getIdDelegation()))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Delegation :"+ delegation_1.getIdDelegation() +" removed"));
-
-    }
-
-    @Test
-    public void testCreerParticipant() throws Exception {
-        mvc.perform(post("/api/organisateur/participant")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\n" +
-                                "\"nom\": \"Participant 3\",\n" +
-                                "\"prenom\": \"Participant 3\",\n" +
-                                "\"email\": \"Participant 3\",\n" +
-                                "\"epreuveList\": []\n" +
-                                "}"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testGetParticipant() throws Exception {
-        mvc.perform(get("/api/organisateur/participant/id/{id}", participant_1.getIdParticipant()))
-                .andExpect(status().isOk());
-
-        mvc.perform(get("/api/organisateur/participant/prenomNom/{prenom}/{nom}", participant_1.getPrenom(),participant_1.getNom()))
-                .andExpect(status().isOk());
-
-        mvc.perform(get("/api/organisateur/participant/all"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testSupprimerParticipant() throws Exception {
-
-        mvc.perform(delete("/api/organisateur/participant/delete/{id}",participant_1.getIdParticipant()))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Participant :"+ participant_1.getIdParticipant() +" removed"));
-
-    }
-
-    @Test
-    public void testCreerEpreuve() throws Exception {
-        mvc.perform(post("/api/organisateur/epreuve")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"nom\": \"EpreuveTest\", " +
-                                "\"dateEpreuve\": \"1970-01-01T00:00:00.012+00:00\", " +
-                                "\"nbPlacesDispo\": \"10\", " +
-                                "\"nbPlacesInit\": \"10\", " +
-                                "\"prixBillet\": \"200\"}"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testModifierEpreuve() throws Exception {
-        mvc.perform(put("/api/organisateur/epreuve/modifier/{nom}",e_1.getNomEpreuve())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"nom\": \"EpreuveTestModifier\", " +
-                                "\"dateEpreuve\": \"1970-01-01T00:00:00.012+00:00\", " +
-                                "\"nbPlacesDispo\": \"9\"}"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testSupprimerEpreuve() throws Exception {
-
-        mvc.perform(delete("/api/organisateur/epreuve/delete/{id}",e_1.getIdEpreuve()))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Epreuve :"+ e_1.getIdEpreuve() +" removed"));
-
-    }
-
-    @Test
-    public void testGetEpreuve() throws Exception {
-        mvc.perform(get("/api/organisateur/epreuve/id/{id}", e_1.getIdEpreuve()))
-                .andExpect(status().isOk());
-
-        mvc.perform(get("/api/organisateur/epreuve/nom/{nom}", e_1.getNomEpreuve()))
-                .andExpect(status().isOk());
-
-        mvc.perform(get("/api/organisateur/epreuve/all"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testCreerInfrastructure() throws Exception {
-        mvc.perform(post("/api/organisateur/infrastructure")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"nom\": \"InfraTest\", " +
-                                "\"adresse\": \"InfraTest\", " +
-                                "\"capacite\": \"200\"}"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testGetInfrastructure() throws Exception {
-        mvc.perform(get("/api/organisateur/infrastructure/id/{id}", infra_1.getIdInfrastructureSportive()))
-                .andExpect(status().isOk());
-
-        mvc.perform(get("/api/organisateur/infrastructure/nom/{nom}", infra_1.getNom()))
-                .andExpect(status().isOk());
-
-        mvc.perform(get("/api/organisateur/infrastructure/all"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testSupprimerInfrastructure() throws Exception {
-        mvc.perform(delete("/api/organisateur/infrastructure/delete/{id}",infra_1.getIdInfrastructureSportive()))
-                .andExpect(status().isOk());
-
-    }
-
-    @Test
-    public void testCreerBillet() throws Exception {
-        mvc.perform(post("/api/organisateur/billet")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"epreuveBillet\": \"{}\", " +
-                                "\"spectateurBillet\": \"{}\", " +
-                                "\"prix\": \"10\", " +
-                                "\"dateBillet\": \"1970-01-01T00:00:00.010+00:00\"}"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testGetBillet() throws Exception {
-        mvc.perform(get("/api/organisateur/billet/id/{id}", b_1_1.getIdBillet()))
-                .andExpect(status().isOk());
-
-        mvc.perform(get("/api/organisateur/billet/all"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testSupprimerBillet() throws Exception {
-        mvc.perform(delete("/api/organisateur/billet/delete/{id}",b_1_1.getIdBillet()))
-                .andExpect(status().isOk());
-
-    }
-
-
-    /** LE BILLET DE CE CONTROLEUR_1 EST DEJA UTILISER **/
-    @Test
-    public void testScannerBillet() throws Exception {
-        mvc.perform(get("/api/organisateur/scanner/{prenom}/{nom}/{idBillet}/{idSpectateur}",controleur_1.getPrenom(),controleur_1.getNom(),b_1_1.getIdBillet(),sp_1.getIdSpectateur()))
-                .andExpect(status().isOk());
-
     }
 }
 
