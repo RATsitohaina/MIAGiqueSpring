@@ -5,8 +5,6 @@ import com.miage.miagiquespring.entities.*;
 import com.miage.miagiquespring.metier.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class MiaGiqueSpringApplicationTests {
+class MiaGiqueSpringApplicationOrganisateurTests {
 
     /**
      * logger
