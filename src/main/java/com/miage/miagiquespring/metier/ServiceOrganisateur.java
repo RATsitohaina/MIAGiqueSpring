@@ -1,5 +1,7 @@
 package com.miage.miagiquespring.metier;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.miage.miagiquespring.dao.*;
 import com.miage.miagiquespring.entities.*;
 import com.miage.miagiquespring.utilities.OrganisateurInexistant;
@@ -113,8 +115,10 @@ public class ServiceOrganisateur {
         if (optionalOrganisateur.isEmpty()) {
             throw new OrganisateurInexistant("Organisateur inexistant");
         }
-        organisateurRepository.delete(optionalOrganisateur.get());
-        return "Organisateur :" + idOrganisateur + " removed";
+        Organisateur o = optionalOrganisateur.get();
+        o.setActif(false);
+        organisateurRepository.save(o);
+        return "Organisateur :" + o.getIdOrganisateur() + " removed";
     }
 
     /**
@@ -134,20 +138,41 @@ public class ServiceOrganisateur {
      * @param prenomOrganisateur
      * @return une hashmap avec comme clé le nom de l'épreuve et comme valeur la statistique des ventes
      */
-    //Processus supervision epreuve
-    public HashMap<String, Float> calculerStatDeVentes(String nomOrganisateur, String prenomOrganisateur) {
-        Organisateur organisateur = recupererOrganisateur(nomOrganisateur, prenomOrganisateur);
+    public String calculerStatDeVentes(String prenomOrganisateur, String nomOrganisateur) {
+        List<Organisateur> organisateurList = organisateurRepository.findByPrenomAndNom(prenomOrganisateur, nomOrganisateur);
+
+        if (organisateurList.isEmpty()) {
+            throw new OrganisateurInexistant("Organisateur introuvable");
+        }
+
+        Organisateur organisateur = organisateurList.get(0);
+
         if (!organisateur.getRoleOrganisateur()) {
             throw new RoleOrganisateurNonConforme("Cet organisateur est un controlleur!");
         }
-        //calcul des res
+
+        // Calcul des résultats
         Iterable<Epreuve> epreuves = epreuveRepository.findAll();
-        HashMap<String, Float> statistiques = new HashMap<String, Float>();
-        //boucler sur les epreuves (ratio: pourcentage des ventes)
+        HashMap<String, Float> statistiques = new HashMap<>();
+
+        // Boucler sur les épreuves (ratio: pourcentage des ventes)
         for (Epreuve epreuve : epreuves) {
-            statistiques.put(epreuve.getNomEpreuve(),
-                    (float) ((epreuve.getNbPlacesInit() - epreuve.getNbPlacesDispo()) / epreuve.getNbPlacesInit()) * 100);
+            int nbPlacesInit = epreuve.getNbPlacesInit();
+            int nbPlacesDispo = epreuve.getNbPlacesDispo();
+
+            if (nbPlacesInit > 0) {
+                float ratio = ((float) (nbPlacesInit - nbPlacesDispo) / nbPlacesInit) * 100;
+                statistiques.put(epreuve.getNomEpreuve(), ratio);
+            }
         }
-        return statistiques;
+
+        // Retourner les statistiques sous forme de JSON
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(statistiques);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Erreur lors de la conversion des statistiques en JSON", e);
+        }
     }
+
 }

@@ -50,4 +50,23 @@ public class Billet {
      */
     private Date dateBillet;
 
+    /**
+     * Pour s'il est encore actif
+     * true : actif
+     * false : nonactif
+     * @return
+     */
+    private boolean isActif = true;
+
+    @Override
+    public String toString() {
+        return "Billet{" +
+                "idBillet=" + idBillet +
+                ", idEpreuve=" + idEpreuve +
+                ", idSpectateur=" + idSpectateur +
+                ", prix=" + prix +
+                ", disponible=" + disponible +
+                ", dateBillet=" + dateBillet +
+                '}';
+    }
 }

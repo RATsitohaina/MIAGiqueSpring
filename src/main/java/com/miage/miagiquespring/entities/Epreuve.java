@@ -56,4 +56,25 @@ public class Epreuve {
      */
     @ManyToOne
     private InfrastructureSportive infrastructureAccueil;
+
+    /**
+     * Pour s'il est encore actif
+     * true : actif
+     * false : nonactif
+     * @return
+     */
+    private boolean isActif = true;
+
+    @Override
+    public String toString() {
+        return "Epreuve{" +
+                "idEpreuve=" + idEpreuve +
+                ", nomEpreuve='" + nomEpreuve + '\'' +
+                ", dateEpreuve=" + dateEpreuve +
+                ", nbPlacesDispo=" + nbPlacesDispo +
+                ", nbPlacesInit=" + nbPlacesInit +
+                ", prixBillet=" + prixBillet +
+                ", infrastructureAccueil=" + infrastructureAccueil +
+                '}';
+    }
 }

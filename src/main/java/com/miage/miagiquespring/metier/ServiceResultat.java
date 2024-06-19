@@ -106,8 +106,10 @@ public class ServiceResultat {
         if (optionalResultat.isEmpty()) {
             throw new ResultatInexistant("Resultat inexistant");
         }
-        resultatRepository.delete(optionalResultat.get());
-        return "Resultat :" + idResultat + " removed";
+        Resultat r = optionalResultat.get();
+        r.setActif(false);
+        resultatRepository.save(r);
+        return "Resultat :" + r.getIdResultat() + " removed";
     }
 
     /**
@@ -115,8 +117,12 @@ public class ServiceResultat {
      * Permet d'afficher un classement des résultats
      * <nomDelegation, nomEpreuve, nomParticipant, nbMedaille>
      */
+    /**
+     * AFFICHER CLASSEMENT
+     * Permet d'afficher un classement des résultats
+     * <nomDelegation, nomEpreuve, nomParticipant, nbMedaille>
+     */
     public Map<String, Map<String, Map<String, Integer>>> afficherClassement() {
-
         // Récupération de tous les résultats
         Iterable<Resultat> resultats = resultatRepository.findAll();
 
@@ -128,11 +134,11 @@ public class ServiceResultat {
             Long idEpreuve = resultat.getIdEpreuve();
             Optional<Epreuve> optionalEpreuve = epreuveRepository.findById(idEpreuve);
             if (optionalEpreuve.isEmpty()) {
-                throw new EpreuveInexistant("Epreuve inexistant");
+                throw new EpreuveInexistant("Epreuve inexistante");
             }
             Epreuve epreuve = optionalEpreuve.get();
 
-            // Récupération participant
+            // Récupération du participant
             Long idParticipant = resultat.getIdParticipant();
             Optional<Participant> optionalParticipant = participantRepository.findById(idParticipant);
             if (optionalParticipant.isEmpty()) {
@@ -140,23 +146,31 @@ public class ServiceResultat {
             }
             Participant participant = optionalParticipant.get();
 
-            // Récupération délégation du participant
+            // Récupération de la délégation du participant
             Delegation participantDelegation = participant.getDelegation();
+            String nomDelegation = participantDelegation.getNom();
+            String nomEpreuve = epreuve.getNomEpreuve();
+            String nomParticipant = participant.getNom();
+
+            // Vérification que les noms ne sont pas nuls
+            if (nomDelegation == null || nomEpreuve == null || nomParticipant == null) {
+                continue; // Ignorer cette entrée
+            }
 
             // Initialisation de la structure de classement
-            classement.putIfAbsent(participantDelegation.getNom(), new HashMap<>());
-            classement.get(participantDelegation.getNom()).putIfAbsent(epreuve.getNomEpreuve(), new HashMap<>());
-            classement.get(participantDelegation.getNom()).get(epreuve.getNomEpreuve()).putIfAbsent(participant.getNom(), 0);
+            classement.putIfAbsent(nomDelegation, new HashMap<>());
+            classement.get(nomDelegation).putIfAbsent(nomEpreuve, new HashMap<>());
+            classement.get(nomDelegation).get(nomEpreuve).putIfAbsent(nomParticipant, 0);
 
-            // MAJ du nombre de médailles
+            // Mise à jour du nombre de médailles
             if (resultat.getPosition() == 1) {
-                int nbMedaille = classement.get(participantDelegation.getNom()).get(epreuve.getNomEpreuve()).get(participant.getNom());
-                classement.get(participantDelegation.getNom()).get(epreuve.getNomEpreuve()).put(participant.getNom(), nbMedaille + 1);
+                classement.get(nomDelegation).get(nomEpreuve).compute(nomParticipant, (k, nbMedaille) -> nbMedaille + 1);
             }
         }
 
         return classement;
     }
+
 
 
     /**

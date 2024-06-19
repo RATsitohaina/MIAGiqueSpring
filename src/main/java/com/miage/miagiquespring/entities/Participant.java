@@ -47,4 +47,23 @@ public class Participant {
      */
     @OneToMany
     private List<Epreuve> epreuveList;
+
+    /**
+     * Pour s'il est encore actif
+     * true : actif
+     * false : nonactif
+     * @return
+     */
+    private boolean isActif = true;
+
+    @Override
+    public String toString() {
+        return "Participant{" +
+                "idParticipant=" + idParticipant +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", email='" + email + '\'' +
+                ", delegation=" + delegation +
+                '}';
+    }
 }

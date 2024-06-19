@@ -41,4 +41,24 @@ public class Resultat {
      * Position du participant
      */
     private int position;
+
+    /**
+     * Pour s'il est encore actif
+     * true : actif
+     * false : nonactif
+     * @return
+     */
+
+    private boolean isActif = true;
+
+    @Override
+    public String toString() {
+        return "Resultat{" +
+                "idResultat=" + idResultat +
+                ", idEpreuve=" + idEpreuve +
+                ", idParticipant=" + idParticipant +
+                ", temps=" + temps +
+                ", position=" + position +
+                '}';
+    }
 }

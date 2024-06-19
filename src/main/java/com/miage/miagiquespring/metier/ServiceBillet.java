@@ -107,8 +107,11 @@ public class ServiceBillet {
         if (optionalBillet.isEmpty())
             throw new EpreuveInexistant("Erreur epreuve inexistant");
         // sinon, on renvoie les infos
-        billetRepository.delete(optionalBillet.get());
-        return "Billet :" + idBillet + " removed";
+
+        Billet b = optionalBillet.get();
+        b.setActif(false);
+        billetRepository.save(b);
+        return "Billet :" + b.getIdBillet() + " removed";
     }
 
     /**

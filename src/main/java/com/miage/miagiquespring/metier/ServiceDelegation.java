@@ -108,7 +108,10 @@ public class ServiceDelegation {
         if (optionalDelegation.isEmpty()) {
             throw new DelegationInexistante("Délégation inexistante");
         }
-        delegationRepository.delete(optionalDelegation.get());
-        return "Delegation :" + IdDelegation + " removed";
+        Delegation d = optionalDelegation.get();
+        d.setActif(false);
+
+        delegationRepository.save(d);
+        return "Delegation :" + d.getIdDelegation() + " removed";
     }
 }

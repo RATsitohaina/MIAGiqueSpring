@@ -38,4 +38,23 @@ public class Organisateur {
      * True si organisateur, false si controlleur
      */
     private Boolean roleOrganisateur = true;
+
+    /**
+     * Pour s'il est encore actif
+     * true : actif
+     * false : nonactif
+     * @return
+     */
+    private boolean isActif = true;
+
+    @Override
+    public String toString() {
+        return "Organisateur{" +
+                "idOrganisateur=" + idOrganisateur +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", email='" + email + '\'' +
+                ", roleOrganisateur=" + roleOrganisateur +
+                '}';
+    }
 }

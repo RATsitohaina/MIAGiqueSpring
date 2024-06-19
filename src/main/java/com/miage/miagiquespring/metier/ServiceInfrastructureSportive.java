@@ -113,7 +113,10 @@ public class ServiceInfrastructureSportive {
         if (optionalInfrastructureSportive.isEmpty())
             throw new InfrastructureSportiveInexistante("Erreur infrastucture inexistant");
         // sinon, on renvoie les infos
-        sportiveRepository.delete(optionalInfrastructureSportive.get());
+
+        InfrastructureSportive inf = optionalInfrastructureSportive.get();
+        inf.setActif(false);
+        sportiveRepository.save(inf);
         return "InfrastructureSportive :" + idInfrastructureSportive + " removed";
     }
 }

@@ -128,7 +128,7 @@ public class RestServiceOrganisateur {
      * @throws Exception
      */
     @GetMapping("statistique/{prenom}/{nom}")
-    public HashMap<String, Float> getStatistique(@PathVariable("prenom") String prenomOrganisateur,
+    public String getStatistique(@PathVariable("prenom") String prenomOrganisateur,
                                                  @PathVariable("nom") String nomOrganisateur) throws Exception {
         return serviceOrganisateur.calculerStatDeVentes(prenomOrganisateur, nomOrganisateur);
     }
@@ -395,6 +395,18 @@ public class RestServiceOrganisateur {
     @DeleteMapping("epreuve/delete/{id}")
     public String supprimerEpreuve(@PathVariable("id") long idEpreuve) throws Exception {
         return serviceEpreuve.supprimerEpreuve(idEpreuve);
+    }
+
+    /**
+     * CONSULTER LES EPREUVES DISPONIBLES
+     * Récupérer la liste de toutes les épreuves
+     *
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("epreuve/all")
+    public Iterable<Epreuve> getAllEpreuve() throws Exception {
+        return serviceEpreuve.recupererAllEpreuve();
     }
 
     /**

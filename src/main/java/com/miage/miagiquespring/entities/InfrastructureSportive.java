@@ -32,4 +32,22 @@ public class InfrastructureSportive {
      * Capacité de l'infrastructure sportive
      */
     private int capacite;
+
+    /**
+     * Pour s'il est encore actif
+     * true : actif
+     * false : nonactif
+     * @return
+     */
+    private boolean isActif = true;
+
+    @Override
+    public String toString() {
+        return "InfrastructureSportive{" +
+                "idInfrastructureSportive=" + idInfrastructureSportive +
+                ", nom='" + nom + '\'' +
+                ", adresse='" + adresse + '\'' +
+                ", capacite=" + capacite +
+                '}';
+    }
 }

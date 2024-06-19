@@ -40,4 +40,22 @@ public class Spectateur {
      */
     @OneToMany
     private List<Billet> billets;
+
+    /**
+     * Pour s'il est encore actif
+     * true : actif
+     * false : nonactif
+     * @return
+     */
+    private boolean isActif = true;
+
+    @Override
+    public String toString() {
+        return "Spectateur{" +
+                "idSpectateur=" + idSpectateur +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

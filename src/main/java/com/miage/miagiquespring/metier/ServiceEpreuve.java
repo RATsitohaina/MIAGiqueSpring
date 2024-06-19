@@ -155,8 +155,10 @@ public class ServiceEpreuve {
         if (optionalEpreuve.isEmpty())
             throw new EpreuveInexistant("Erreur epreuve inexistant");
         // sinon, on renvoie les infos
-        epreuveRepository.delete(optionalEpreuve.get());
-        return "Epreuve :" + idEpreuve + " removed";
+        Epreuve e = optionalEpreuve.get();
+        e.setActif(false);
+        epreuveRepository.save(e);
+        return "Epreuve :" + e.getIdEpreuve() + " removed";
     }
 
     /**

@@ -40,4 +40,23 @@ public class Delegation {
      * Nombre de medailles de bronze
      */
     private int nbMedailleBronze;
+
+    /**
+     * Pour s'il est encore actif
+     * true : actif
+     * false : nonactif
+     * @return
+     */
+    private boolean isActif = true;
+
+    @Override
+    public String toString() {
+        return "Delegation{" +
+                "idDelegation=" + idDelegation +
+                ", nom='" + nom + '\'' +
+                ", nbMedailleOr=" + nbMedailleOr +
+                ", nbMedailleArgent=" + nbMedailleArgent +
+                ", nbMedailleBronze=" + nbMedailleBronze +
+                '}';
+    }
 }

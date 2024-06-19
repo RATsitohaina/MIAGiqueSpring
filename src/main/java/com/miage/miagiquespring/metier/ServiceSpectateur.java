@@ -119,8 +119,11 @@ public class ServiceSpectateur {
         if (optionalSpectateur.isEmpty()) {
             throw new SpectateurInexistant("Spectateur inexistant");
         }
-        spectateurRepository.delete(optionalSpectateur.get());
-        return "Spectateur :" + idSpectateur + " removed";
+
+        Spectateur sp = optionalSpectateur.get();
+        sp.setActif(false);
+        spectateurRepository.save(sp);
+        return "Spectateur :" + sp.getIdSpectateur() + " removed";
     }
 
     /**

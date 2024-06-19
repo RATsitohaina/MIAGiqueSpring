@@ -132,8 +132,10 @@ public class ServiceParticipant {
         if (optionalParticipant.isEmpty()) {
             throw new ParticipantInexistant("Participant inexistant");
         }
-        participantRepository.delete(optionalParticipant.get());
-        return "Participant :" + idParticipant + " removed";
+        Participant p = optionalParticipant.get();
+        p.setActif(false);
+        participantRepository.save(p);
+        return "Participant :" + p.getIdParticipant() + " removed";
     }
 
     /**
